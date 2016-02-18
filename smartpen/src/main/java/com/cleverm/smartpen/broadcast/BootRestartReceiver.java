@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.cleverm.smartpen.app.MainActivity;
+import com.cleverm.smartpen.app.VideoActivity;
 
 
 /**
@@ -19,7 +19,7 @@ public class BootRestartReceiver extends BroadcastReceiver {
     {
         if (intent.getAction().equals(ACTION)) ;
         {
-            Intent intent2 = new Intent(context, MainActivity.class);
+            Intent intent2 = new Intent(context, VideoActivity.class);
             intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent2);
             Log.d("DEBUG", "开机自动服务自动启动...");

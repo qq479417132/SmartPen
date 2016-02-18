@@ -13,8 +13,8 @@ import android.widget.GridView;
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.adapter.TableAdapter;
 import com.cleverm.smartpen.app.OrderManager;
+import com.cleverm.smartpen.database.DatabaseHelper;
 import com.cleverm.smartpen.modle.Table;
-
 import java.util.List;
 
 
@@ -65,9 +65,10 @@ public class SelectTableFragment extends Fragment {
             return;
         }
         /**
-         * ????????????????
+         * data of the Tables
          */
-        mTables =null;
+        mTables = DatabaseHelper.getsInstance(getActivity())
+                .obtainTablesByType(tableTypeId);
         mTableAdapter = new TableAdapter(getActivity(), mTables);
     }
 

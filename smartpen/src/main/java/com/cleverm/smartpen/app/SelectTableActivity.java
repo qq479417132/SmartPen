@@ -1,5 +1,6 @@
 package com.cleverm.smartpen.app;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ public class SelectTableActivity extends BaseSelectTableActivity {
                 } else {
                     OrderManager.getInstance(this).setTableId(mSelectedTableId);
                     onBackPressed();
+                    Log.v(TAG,"mSelectedTableId="+mSelectedTableId);
                 }
                 break;
             }

@@ -25,7 +25,7 @@ public class FutureActivity extends BaseActivity {
             switch (msg.what) {
                 case GOBack: {
                     Log.v(TAG, "come hand====");
-                    startActivity(new Intent(FutureActivity.this, MainActivity.class));
+                    startActivity(new Intent(FutureActivity.this, VideoActivity.class));
                     FutureActivity.this.finish();
                     break;
                 }
