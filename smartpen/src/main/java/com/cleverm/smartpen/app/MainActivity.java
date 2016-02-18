@@ -76,6 +76,10 @@ public class MainActivity extends BaseActivity implements penService.MessageList
         startActivity(new Intent(this, VideoActivity.class));
     }
 
+    public void SelectTable(View v){
+        startActivity(new Intent(this, SelectTableActivity.class));
+    }
+
     @Override
     public void receiveData(int id) {
 

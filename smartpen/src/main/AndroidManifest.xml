@@ -73,6 +73,7 @@
         <activity android:name=".app.DemoActivity" android:launchMode="singleTop"/>
         <activity android:name=".app.FutureActivity" android:launchMode="singleTop"/>
         <activity android:name=".app.VideoActivity" android:launchMode="singleTop"/>
+        <activity android:name=".app.SelectTableActivity" android:launchMode="singleTop"/>
 
         <service android:name=".service.penService" >
             <!--<intent-filter android:priority="100"/>-->

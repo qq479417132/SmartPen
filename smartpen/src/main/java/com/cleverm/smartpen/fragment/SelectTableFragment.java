@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.adapter.TableAdapter;
 import com.cleverm.smartpen.app.OrderManager;
 import com.cleverm.smartpen.modle.Table;
