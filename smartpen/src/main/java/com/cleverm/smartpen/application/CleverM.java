@@ -13,6 +13,11 @@ import com.umeng.analytics.MobclickAgent;
 public class CleverM extends Application {
     public static final String PATH= Environment.getExternalStorageDirectory().getPath()+"/logFile/log";
     private static final String PREFS_NAME = "com.Clever.myapp";
+
+
+    /**
+     * xiong
+     */
     @Override
     public void onCreate() {
         super.onCreate();
