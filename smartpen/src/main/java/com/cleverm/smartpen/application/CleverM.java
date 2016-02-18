@@ -18,6 +18,9 @@ public class CleverM extends Application {
     /**
      * xiong
      */
+    /**
+     * terry
+     */
     @Override
     public void onCreate() {
         super.onCreate();
