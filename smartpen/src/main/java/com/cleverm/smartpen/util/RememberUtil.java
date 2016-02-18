@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * Created by x on 2016/2/16.
+ * Created by xiong on 2016/2/16.
  */
 public class RememberUtil {
 
