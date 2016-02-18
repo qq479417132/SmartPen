@@ -11,6 +11,11 @@ import android.view.WindowManager;
  * Created by 95 on 2016/2/3.
  */
 public class BaseActivity extends Activity {
+
+    /**
+     * xiong
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
