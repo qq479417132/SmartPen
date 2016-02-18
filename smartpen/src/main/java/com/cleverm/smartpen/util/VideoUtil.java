@@ -1,0 +1,157 @@
+package com.cleverm.smartpen.util;
+
+import android.media.MediaPlayer;
+import android.widget.VideoView;
+
+
+import com.cleverm.smartpen.bean.VideoInfo;
+
+import java.io.File;
+import java.util.List;
+
+/**
+ * Created by x on 2016/2/15.
+ * 业务逻辑:将所有视频的URL地址的文件下载，然后存储到本地
+ * 从本地中取出文件,判断每个文件的时常大小，根据时常和排序规则来处理视频
+ */
+public class VideoUtil {
+
+
+
+    public int videoIndex = 0;
+    public VideoView mVideoView;
+
+    public VideoUtil(VideoView mVideoView) {
+        this.mVideoView = mVideoView;
+    }
+
+    /**
+     * 开启播放在线视频
+     * @param info
+     */
+    public void prepareOnlineVideo(List<VideoInfo> info) {
+        final String[] videoUrls = getOnlineVideoURI(info);
+        if (videoUrls == null) {
+            return;
+        }
+        mVideoView.setVideoPath(videoUrls[videoIndex]);
+        mVideoView.start();
+        mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                videoIndex++;
+                if (videoIndex >= videoUrls.length) {
+                    videoIndex = 0;
+                }
+                mVideoView.setVideoPath(videoUrls[videoIndex]);
+                mVideoView.start();
+            }
+        });
+    }
+
+    /**
+     * 开启播放本地视频
+     * @param mPath
+     */
+    public void prepareVideo(String mPath,int currentPosition) {
+        final String[] videoUrls = getVideoURIs(mPath);
+        if (videoUrls == null) {
+            return;
+        }
+
+
+
+        mVideoView.setVideoPath(videoUrls[videoIndex]);
+
+        if(currentPosition!=0){
+            mVideoView.seekTo(currentPosition);
+        }
+
+
+
+        mVideoView.start();
+        mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                videoIndex++;
+                if (videoIndex >= videoUrls.length) {
+                    videoIndex = 0;
+                }
+                mVideoView.setVideoPath(videoUrls[videoIndex]);
+                mVideoView.start();
+            }
+        });
+    }
+
+    /**
+     * 获取本地视频数组
+     * @param path
+     * @return
+     */
+    private String[] getVideoURIs(String path) {
+
+        File file = new File(path);
+        if (!file.exists()) {
+            return null;
+        }
+        File files[] = file.listFiles();
+        if (files.length == 0) {
+            return null;
+        }
+        String[] videoUrls = new String[files.length];
+        for (int i = 0; i < files.length; i++) {
+            videoUrls[i] = files[i].getAbsolutePath();
+        }
+        return videoUrls;
+    }
+
+    /**
+     * 获取在线视频数组
+     * @param info
+     * @return
+     */
+    private String[] getOnlineVideoURI(List<VideoInfo> info) {
+        if(info==null){
+            return null;
+        }
+        String[] videoUrls = new String[info.size()];
+        if (info != null) {
+            if (info.size() > 0) {
+                for (int i =0 ;i<info.size();i++) {
+                    videoUrls[i] = info.get(i).getVideoPath();
+                }
+            }
+        }
+        return videoUrls;
+    }
+
+
+
+
+
+
+    //-------------------------------------------------------------------------------
+
+    public static int getVideoSeconde(int dutaion) {
+
+        int second = dutaion / 1000;
+
+        return second;
+    }
+
+    public static void playOnlineVideo(VideoView videoView, String httpUrl) {
+        videoView.setVideoPath(httpUrl);
+        videoView.start();
+        //videoView.setOnPreparedListener(viewPreListener);
+    }
+
+
+    MediaPlayer.OnPreparedListener viewPreListener = new MediaPlayer.OnPreparedListener() {
+
+        @Override
+        public void onPrepared(MediaPlayer mp) {
+            //Toast.makeText(VideoActivity.this, VideoUtil.getVideoSeconde(mp.getDuration()) + "", Toast.LENGTH_LONG).show();
+        }
+    };
+
+}

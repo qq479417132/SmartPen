@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg_activity_common">
+
+    <ImageView
+        android:id="@+id/btn_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/select_table_cancel_btn_margin_end"
+        android:layout_marginTop="@dimen/select_table_cancel_btn_margin_top"
+        android:background="@drawable/btn_cancel" />
+
+    <ImageView
+        android:id="@+id/btn_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/select_table_confirm_btn_margin_bottom"
+        android:background="@drawable/btn_ok" />
+
+    <HorizontalScrollView
+        android:id="@+id/table_category_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/select_table_horizontal_scroll_view_margin_top"
+        android:background="@mipmap/bg_tab"
+        android:scrollbars="none">
+
+        <TabWidget
+            android:id="@+id/table_category_tab_host"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </HorizontalScrollView>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/table_panel_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/btn_confirm"
+        android:layout_below="@id/table_category_panel"
+        android:layout_marginBottom="@dimen/select_table_view_pager_margin_bottom"
+        android:layout_marginEnd="@dimen/select_table_view_pager_margin_end"
+        android:layout_marginStart="@dimen/select_table_view_pager_margin_start"
+        android:layout_marginTop="@dimen/select_table_view_pager_margin_top" />
+</RelativeLayout>

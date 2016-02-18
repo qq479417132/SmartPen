@@ -1,0 +1,66 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="service_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/service_textsize</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:layout_marginLeft">40dp</item>
+    </style>
+
+    <style name="RatingBar">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:stepSize">@integer/RatingBar_step</item>
+        <item name="android:max">@integer/RatingBar_maxValue</item>
+        <item name="android:numStars">@integer/RatingBar_maxSums</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginTop">-8dp</item>
+    </style>
+
+    <style name="AmusementFragment_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">left</item>
+        <item name="android:textSize">@dimen/AmusementFragment_textsize</item>
+        <item name="android:layout_marginLeft">@dimen/AmusementFragment_textmagin_left</item>
+    </style>
+
+    <style name="AmusementFragment_GridView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:numColumns">@integer/gridview_sums</item>
+        <item name="android:verticalSpacing">@dimen/gridview_verticalSpacing</item>
+        <item name="android:horizontalSpacing">@dimen/gridview_horizontalSpacing</item>
+    </style>
+
+    <style name="roomRatingBar" parent="@android:style/Widget.RatingBar">
+
+        <item name="android:progressDrawable">@drawable/ratingbar_drawable</item>
+
+        <!--<item name="android:minHeight">110dp</item>-->
+
+        <!--<item name="android:maxHeight">110dp</item>-->
+
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:stepSize">@integer/RatingBar_step</item>
+        <item name="android:max">@integer/RatingBar_maxValue</item>
+        <item name="android:numStars">@integer/RatingBar_maxSums</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginTop">-3dp</item>
+    </style>
+
+    <style name="MajorText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">#ffffffff</item>
+    </style>
+</resources>

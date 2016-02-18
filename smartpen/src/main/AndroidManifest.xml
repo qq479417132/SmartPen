@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.cleverm.smartpen" >
+
+    <uses-sdk android:minSdkVersion="19" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="ANDROID.PERMISSION.DEVICE_POWER" />
+    <uses-permission android:name="android.hardware.usb.host" />
+    <uses-permission android:name="android.hardware.usb.accessory" />
+    <!--连接网络权限，用于执行云端语音能力  -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--获取手机录音机使用权限，听写、识别、语义理解需要用到此权限  -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!--读取网络信息状态  -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--获取当前wifi状态  -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!--允许程序改变网络连接状态  -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <!--读取手机信息权限  -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--读取联系人权限，上传联系人需要用到此权限  -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- 使用GPS获取用户精确定位信息 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <!-- 获得sd卡读写的权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
+    <uses-permission android:name="android.permission.GET_TOP_ACTIVITY_INFO"/>
+    <uses-permission android:name="android.permission.REORDER_TASKS"/>
+    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
+
+    <uses-permission android:name="android.hardware.usb.host"/>
+    <uses-permission android:name="android.hardware.usb.accessory"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <application
+        android:label="@string/app_name"
+        android:name=".application.CleverM"
+        android:icon="@drawable/app">
+        <activity
+            android:name=".app.MainActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.HOME" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".app.BaseActivity" />
+        <activity android:name=".app.DriverActivity" android:launchMode="singleTop"/>
+        <activity android:name=".app.EvaluateActivity" android:launchMode="singleTop"/>
+        <activity android:name=".app.DemoActivity" android:launchMode="singleTop"/>
+        <activity android:name=".app.FutureActivity" android:launchMode="singleTop"/>
+        <activity android:name=".app.VideoActivity" android:launchMode="singleTop"/>
+
+        <service android:name=".service.penService" >
+            <!--<intent-filter android:priority="100"/>-->
+        </service>
+        <service android:name=".service.ScreenLockListenService"/>
+        <receiver android:name=".broadcast.BootRestartReceiver">            
+            <intent-filter>                
+                <action android:name="android.intent.action.BOOT_COMPLETED" />            
+            </intent-filter>
+        </receiver>
+        <meta-data android:value="56aa058767e58e9f95000206" android:name="UMENG_APPKEY"></meta-data>
+        <meta-data android:value="itcast" android:name="UMENG_CHANNEL"/>
+    </application>
+
+</manifest>
