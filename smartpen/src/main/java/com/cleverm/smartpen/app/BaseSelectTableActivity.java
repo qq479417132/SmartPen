@@ -59,7 +59,7 @@ public abstract class BaseSelectTableActivity extends Activity implements View.O
         mTableTabHost = (TabWidget) findViewById(R.id.table_category_tab_host);
         mTableViewPager = (ViewPager) findViewById(R.id.table_panel_container);
         mTableViewPager.setAdapter(mTablePagerAdapter);
-        mTableViewPager.addOnPageChangeListener(mTablePagerAdapter);
+        mTableViewPager.setOnPageChangeListener(mTablePagerAdapter);
         initTabHost();
     }
 
