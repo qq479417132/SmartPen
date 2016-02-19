@@ -2,6 +2,8 @@ package com.cleverm.smartpen.util;
 
 import android.os.Environment;
 
+import java.io.File;
+
 /**
  * Created by 95 on 2015/12/22.
  */
@@ -200,6 +202,172 @@ public class Constant {
     public static final String HAPPY="http://www.dianping.com/";
     public static final String SHOP="https://www.tmall.com/?ali_trackid=2:mm_26632325_6860397_24008452:1453968939_252_1805956268";
     public static final String CONCESSIONS="https://ju.taobao.com/?ali_trackid=2:mm_26866744_2384196_21258512:1453969006_2k1_86931745";
+
+
+
+
+
+
+
+    /**
+     * URL Field
+     */
+    public static final String DEFAULT_WEB_SOCKET_HOST = "ws://192.168.1.128:8080";
+    public static final String WEB_SOCKET_ADDRESS = "/cleverm/sockjs/simplepush";
+    public static final String WEB_SOCKET_SERVER = DEFAULT_WEB_SOCKET_HOST
+            + WEB_SOCKET_ADDRESS;
+    public static final String SERVER_IP = "";
+    public static final String SERVER_PORT = "8080";
+    public static final String HTTP_SERVER_ROOT = "http://1232321";
+    /**
+     * Service Key
+     */
+    public static final String KEY_TOKEN = "token";
+    public static final String KEY_DOWNLOAD_URL = "url";
+    public static final String KEY_SEQUENCE_ID = "sequence_id";
+    public static final String KEY_HEART_BEAT = "key-heart-beat";
+    /**
+     * Client Key
+     */
+    public static final String KEY_SOCKET_SERVER_HOST = "key-socket-server-host";
+    public static final String CONTENT_TYPE_JSON = "application/json";
+    public static final String KEY_MESSAGE = "key-message";
+    public static final String KEY_UPDATE_PACKAGE_PATH = "key-package-path";
+    public static final String KEY_CUSTOMER_NUMBER = "key-customer-number";
+    public static final String KEY_TABLE_TYPE = "key-table-type";
+    /**
+     * Service Action
+     */
+    public static final String ACTION_TABLE_INFO_UPDATED = "com.clevermodel.communication"
+            + ".INFO_UPDATED";
+    public static final String ACTION_SEND_MESSAGE = "com.clevermodel.communication.SEND_MESSAGE";
+    public static final String ACTION_UPDATE_PACKAGE = "com.clevermodel.communication.UPDATE_PACKAGE";
+    public static final String ACTION_CANCEL_OPERATION = "com.clevermodel.communication.CANCEL_OPERATION";
+    public static final String ACTION_UPDATE_PACKAGE_READY = "com.clevermodel.communication.PACKAGE_READY";
+    public static final String ACTION_CONNECT_SOCKET = "com.clevermodel.communication.CONNECT_SOCKET";
+    public static final String ACTION_DISCONNECT_SOCKET = "com.clevermodel.communication.DISCONNECT_SOCKET";
+    public static final String ACTION_UPLOAD_LOGGING = "com.clevermodel.communication.UPLOAD_LOGGING";
+    public static final String ACTION_INIT_APP = "com.clevermodel.communication.INIT_APP";
+    public static final String ACTION_RESET_DESK = "com.clevermodel.RESET_DESK";
+    public static final String ACTION_RESET_TABLE = "com.clevermodel.RESET_TABLE";
+    public static final String ACTION_RESET_QUEUE = "com.clevermodel.RESET_QUEUE";
+    public static final String ACTION_NOTIFY_REMOTE_INIT = "com.clevermodel.service.NOTIFY_INIT";
+    public static final String ACTION_NOTIFY_REMOTE_UPDATE_NUMBER = "com.clevermodel.service.NOTIFY_UPDATE_NUMBER";
+    public static final String ACTION_NOTIFY_REMOTE_UPDATE_TABLE = "com.clevermodel.service.NOTIFY_UPDATE_TABLE";
+    public static final String ACTION_SUPERSONIC_SWITCH = "com.clevermodel.settings.supersonic.UPDATE_SUPERSONIC_SWITCH";
+    public static final String ACTION_UPDATE_CONFIG = "com.clevermodel.settings.rf433.UPDATE_CONFIG";
+
+    public static final int ONE_SECOND = 1000;
+    public static final int ONE_MINUTE = 60 * ONE_SECOND;
+    public static final int HALF_HOUR = ONE_MINUTE * 30;
+
+    /**
+     * Preference Key
+     */
+    public static final String KEY_RESTAURANT_NAME = "restaurant_name";
+    public static final String KEY_RESTAURANT_ID = "key-restaurant-id";
+    public static final String KEY_CLIENT_ID = "key-client-id";
+    public static final String KEY_TABLE_TYPE_MD5 = "key-table_type_md5";
+    public static final String KEY_BT_ADDRESS = "bt_address";
+    public static final String KEY_QRCODE = "key-qrcode";
+
+    public static final String KEY_SERVER_IP = "server_ip";
+    public static final String KEY_SERVER_PORT = "server_port";
+
+    public static final String KEY_NUM_SWITCH = "num_switch";
+    public static final String KEY_BT_PRINTER_ENABLE = "bt_printer_enable";
+
+    public static final String KEY_CALLER_OUTPUT = "key-caller-output";
+    public static final String KEY_CALLER_REPEAT = "key-caller-repeat";
+
+    public static final String KEY_BONUS_ENABLE_DURATION = "key-bonus-enable-duration";
+    public static final String KEY_SECOND_BONUS_ENABLE_DURATION = "key-second-bonus-enable-duration";
+    public static final String KEY_BONUS_PRIZE = "key-bonus-prize";
+
+    public static final String KEY_FIRST_BONUS_THRESHOLD = "key-first-bonus-threshold";
+    public static final String KEY_SECOND_BONUS_THRESHOLD = "key-second-bonus-threshold";
+    public static final String KEY_THIRD_BONUS_THRESHOLD = "key-third-bonus-threshold";
+
+    public static final String KEY_SWITCH = "key-switch";
+    public static final String KEY_PROX_1 = "key-prox-timechecker1";
+    public static final String KEY_PROX_2 = "key-prox-timechecker2";
+    public static final String KEY_PROX_TIME_01_START_HOUR = "key-prox-time-01-start-hour";
+    public static final String KEY_PROX_TIME_01_START_MINUTE = "key-prox-time-01-start-minute";
+    public static final String KEY_PROX_TIME_01_END_HOUR = "key-prox-time-01-end-hour";
+    public static final String KEY_PROX_TIME_01_END_MINUTE = "key-prox-time-01-end-minute";
+    public static final String KEY_PROX_TIME_02_START_HOUR = "key-prox-time-02-start-hour";
+    public static final String KEY_PROX_TIME_02_START_MINUTE = "key-prox-time-02-start-minute";
+    public static final String KEY_PROX_TIME_02_END_HOUR = "key-prox-time-02-end-hour";
+    public static final String KEY_PROX_TIME_02_END_MINUTE = "key-prox-time-02-end-minute";
+    public static final String[] KEY_PROX_SWITCH = new String[] { KEY_PROX_1,
+            KEY_PROX_2 };
+    public static final String[] KEY_PROX_TIME_START_HOUR = new String[] {
+            KEY_PROX_TIME_01_START_HOUR, KEY_PROX_TIME_02_START_HOUR };
+    public static final String[] KEY_PROX_TIME_START_MINUTE = new String[] {
+            KEY_PROX_TIME_01_START_MINUTE, KEY_PROX_TIME_02_START_MINUTE };
+    public static final String[] KEY_PROX_TIME_END_HOUR = new String[] {
+            KEY_PROX_TIME_01_END_HOUR, KEY_PROX_TIME_02_END_HOUR };
+    public static final String[] KEY_PROX_TIME_END_MINUTE = new String[] {
+            KEY_PROX_TIME_01_END_MINUTE, KEY_PROX_TIME_02_END_MINUTE };
+    public static final String KEY_WELCOME_PERIOD_SWITCH_1 = "key-welcome-switch1";
+    public static final String KEY_WELCOME_PERIOD_SWITCH_2 = "key-welcome-switch2";
+    public static final String KEY_WELCOME_PERIOD_SWITCH_3 = "key-welcome-switch3";
+    public static final String[] KEY_WELCOME_SWITCH = new String[] {
+            KEY_WELCOME_PERIOD_SWITCH_1, KEY_WELCOME_PERIOD_SWITCH_2,
+            KEY_WELCOME_PERIOD_SWITCH_3 };
+    public static final String KEY_WELCOME_PERIOD_01_START_HOUR = "key-welcome-01-start-hour";
+    public static final String KEY_WELCOME_PERIOD_01_START_MINUTE = "key-welcome-01-start-minute";
+    public static final String KEY_WELCOME_PERIOD_01_END_HOUR = "key-welcome-01-end-hour";
+    public static final String KEY_WELCOME_PERIOD_01_END_MINUTE = "key-welcome-01-end-minute";
+    public static final String KEY_WELCOME_PERIOD_02_START_HOUR = "key-welcome-02-start-hour";
+    public static final String KEY_WELCOME_PERIOD_02_START_MINUTE = "key-welcome-02-start-minute";
+    public static final String KEY_WELCOME_PERIOD_02_END_HOUR = "key-welcome-02-end-hour";
+    public static final String KEY_WELCOME_PERIOD_02_END_MINUTE = "key-welcome-02-end-minute";
+    public static final String KEY_WELCOME_PERIOD_03_START_HOUR = "key-welcome-03-start-hour";
+    public static final String KEY_WELCOME_PERIOD_03_START_MINUTE = "key-welcome-03-start-minute";
+    public static final String KEY_WELCOME_PERIOD_03_END_HOUR = "key-welcome-03-end-hour";
+    public static final String KEY_WELCOME_PERIOD_03_END_MINUTE = "key-welcome-03-end-minute";
+    public static final String[] KEY_WELCOME_PERIOD_START_HOUR = new String[] {
+            KEY_WELCOME_PERIOD_01_START_HOUR, KEY_WELCOME_PERIOD_02_START_HOUR,
+            KEY_WELCOME_PERIOD_03_START_HOUR };
+    public static final String[] KEY_WELCOME_PERIOD_START_MINUTE = new String[] {
+            KEY_WELCOME_PERIOD_01_START_MINUTE,
+            KEY_WELCOME_PERIOD_02_START_MINUTE,
+            KEY_WELCOME_PERIOD_03_START_MINUTE };
+    public static final String[] KEY_WELCOME_PERIOD_END_HOUR = new String[] {
+            KEY_WELCOME_PERIOD_01_END_HOUR, KEY_WELCOME_PERIOD_02_END_HOUR,
+            KEY_WELCOME_PERIOD_03_END_HOUR };
+    public static final String[] KEY_WELCOME_PERIOD_END_MINUTE = new String[] {
+            KEY_WELCOME_PERIOD_01_END_MINUTE, KEY_WELCOME_PERIOD_02_END_MINUTE,
+            KEY_WELCOME_PERIOD_03_END_MINUTE };
+    public static final String KEY_WELCOME_PATH_01 = "key-welcome-path-01";
+    public static final String KEY_WELCOME_PATH_02 = "key-welcome-path-02";
+    public static final String KEY_WELCOME_PATH_03 = "key-welcome-path-03";
+    public static final String[] KEY_WELCOME_PATHS = new String[] {
+            KEY_WELCOME_PATH_01, KEY_WELCOME_PATH_02, KEY_WELCOME_PATH_03 };
+
+    public static final String KEY_BONUS_SWITCH = "key-bonus-switch";
+
+    /**
+     * path
+     */
+    public static final String RESOURCEPATH = new File(
+            Environment.getExternalStorageDirectory().getAbsolutePath(), "cleverm").getAbsolutePath();
+
+    public static final String LOCAL_PROFILE_PATH = RESOURCEPATH + "/local_profile.cfg";
+
+    public static final String PROP_PRODUCT_MODEL = "ro.product.model";
+    public static final String PRODUCT_MODEL_CLEVER_MODEL = "CleverModel";
+    public static final String KEY_IS_TEST_VERSION = "is_test_version";
+    public static final String KEY_RESTAURANT_COMMENTS = "restaurant_comments";
+
+    /**
+     * TV
+     */
+    public static final String TAG_TV = "tv";
+    public static final String NOTICE_TYPE_QUEUE_INFO = "QUEUE_INFO";
+    public static final String NOTICE_TYPE_REPAST_INFO = "REPAST_INFO";
+    public static final String NOTICE_TYPE_LOTTERY_INFO = "LOTTERY_INFO";
 }
 
 

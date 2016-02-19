@@ -78,6 +78,7 @@
             <!--<intent-filter android:priority="100"/>-->
         </service>
         <service android:name=".service.ScreenLockListenService"/>
+        <service android:name=".service.CommunicationService"/>
         <receiver android:name=".broadcast.BootRestartReceiver">            
             <intent-filter>                
                 <action android:name="android.intent.action.BOOT_COMPLETED" />            
