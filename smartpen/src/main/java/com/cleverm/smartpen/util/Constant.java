@@ -1,4 +1,4 @@
-package com.cleverm.smartpen.constant;
+package com.cleverm.smartpen.util;
 
 import android.os.Environment;
 
@@ -6,8 +6,6 @@ import android.os.Environment;
  * Created by 95 on 2015/12/22.
  */
 public class Constant {
-
-
     /**
      * Code 1
      */
@@ -156,7 +154,7 @@ public class Constant {
     public static final String ENTERAMUSEMENT = "enteramusement";
     public static final String PATH_KEY = "PATH";
     public static final String ISENTERAMUSEMENT_KEY = "isenteramusement_key";
-    public static final String DIAN_CAI_PACKAGE_NAME = "com.cleverm.myapp";
+    public static final String DIAN_CAI_PACKAGE_NAME = "com.cleverm.smartpen";
     public static final String MO_JI_PACKAGE_NAME = "com.moji.mjweather";
     public static final String TOU_TIAO_PACKAGE_NAME = "com.ss.android.article.news";
     public static final String BAI_DU_PACKAGE_NAME = "com.baidu.BaiduMap";

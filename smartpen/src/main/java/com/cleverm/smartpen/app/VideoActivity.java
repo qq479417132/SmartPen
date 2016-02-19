@@ -9,12 +9,14 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.util.Log;
 
 import com.cleverm.smartpen.R;
-import com.cleverm.smartpen.constant.Constant;
+
 import com.cleverm.smartpen.service.ScreenLockListenService;
 import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.ui.FullScreenVideoView;
+import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.DownloadUtil;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.cleverm.smartpen.util.VideoUtil;
@@ -25,7 +27,7 @@ import com.cleverm.smartpen.util.VideoUtil;
  * 已知待处理情况:第一次开启时无网络
  */
 public class VideoActivity extends Activity implements penService.MessageListener {
-
+    public static final String TAG=VideoActivity.class.getSimpleName();
     /**
      * 该参数由服务端给与
      */
@@ -169,7 +171,7 @@ public class VideoActivity extends Activity implements penService.MessageListene
      */
     @Override
     public void receiveData(int id) {
-        //Log.v(TAG, "receiveData id=" + id);
+        Log.v(TAG, "receiveData id=" + id);
         if (id == 0) {
             return;
         }
@@ -189,13 +191,35 @@ public class VideoActivity extends Activity implements penService.MessageListene
         //QuickUtils.toast(this,"code="+id);
 
         switch (id) {
-
-
             case Constant.ORDER_DISHES1:
             case Constant.ADD_WATER1:
             case Constant.PAY1:
             case Constant.TISSUE1:
-            case Constant.OTHER1: {
+            case Constant.OTHER1:
+
+            case Constant.ORDER_DISHES2:
+            case Constant.ADD_WATER2:
+            case Constant.PAY2:
+            case Constant.TISSUE2:
+            case Constant.OTHER2:
+
+            case Constant.ORDER_DISHES3:
+            case Constant.ADD_WATER3:
+            case Constant.PAY3:
+            case Constant.TISSUE3:
+            case Constant.OTHER3:
+
+            case Constant.ORDER_DISHES4:
+            case Constant.ADD_WATER4:
+            case Constant.PAY4:
+            case Constant.TISSUE4:
+            case Constant.OTHER4:
+
+            case Constant.ORDER_DISHES5:
+            case Constant.ADD_WATER5:
+            case Constant.PAY5:
+            case Constant.TISSUE5:
+            case Constant.OTHER5:{
 
                 break;
             }

@@ -5,7 +5,8 @@ import android.net.http.AndroidHttpClient;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
-import com.cleverm.smartpen.constant.Constant;
+import com.cleverm.smartpen.util.Constant;
+
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;

@@ -16,7 +16,8 @@ import android.widget.ImageView;
 
 
 import com.cleverm.smartpen.R;
-import com.cleverm.smartpen.constant.Constant;
+import com.cleverm.smartpen.util.Constant;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,7 @@ public class DemoActivity extends BaseActivity {
             switch (msg.what) {
                 case GOBack: {
                     Log.v(TAG, "come hand====");
-                    startActivity(new Intent(DemoActivity.this, MainActivity.class));
+                    startActivity(new Intent(DemoActivity.this, VideoActivity.class));
                     DemoActivity.this.finish();
                     break;
                 }

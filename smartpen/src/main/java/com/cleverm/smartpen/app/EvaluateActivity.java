@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cleverm.smartpen.R;
-import com.cleverm.smartpen.constant.Constant;
+import com.cleverm.smartpen.util.Constant;
 import com.google.gson.Gson;
 import com.umeng.analytics.MobclickAgent;
 
@@ -57,7 +57,7 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
                     InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(meatInput.getWindowToken(), 0);
                     imm.hideSoftInputFromWindow(mequipmentInput.getWindowToken(), 0);
-                    startActivity(new Intent(EvaluateActivity.this, MainActivity.class));
+                    startActivity(new Intent(EvaluateActivity.this, VideoActivity.class));
                     EvaluateActivity.this.finish();
                     break;
                 }

@@ -76,7 +76,7 @@ public class ScreenLockListenService extends Service{
                 String packageName = name.getPackageName();
                 Log.d("packagename", packageName);
                 am.moveTaskToFront(taskId, ActivityManager.MOVE_TASK_WITH_HOME);
-                startActivity(new Intent(ScreenLockListenService.this, VideoActivity.class));
+//                startActivity(new Intent(ScreenLockListenService.this, VideoActivity.class));
 //                if(!Constant.DIAN_CAI_PACKAGE_NAME.equals(packageName)){
 //                    am.moveTaskToFront(taskId, ActivityManager.MOVE_TASK_WITH_HOME);
 //                }

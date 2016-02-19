@@ -15,8 +15,10 @@ import android.widget.TextView;
 
 
 import com.cleverm.smartpen.R;
+import com.cleverm.smartpen.database.DatabaseHelper;
 import com.cleverm.smartpen.fragment.SelectTableFragment;
 import com.cleverm.smartpen.modle.TableType;
+import com.cleverm.smartpen.modle.impl.TableTypeImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +30,7 @@ public abstract class BaseSelectTableActivity extends Activity implements View.O
     SelectTableFragment.OnTableAdapterListener {
 
     @SuppressWarnings("unused")
-    private static final String TAG = BaseSelectTableActivity.class
-        .getSimpleName();
+    private static final String TAG = BaseSelectTableActivity.class.getSimpleName();
     protected TablePagerAdapter mTablePagerAdapter;
     protected long mSelectedTableId;
     private TabWidget mTableTabHost;
@@ -46,9 +47,9 @@ public abstract class BaseSelectTableActivity extends Activity implements View.O
 
     private void initData() {
         /**
-         * ?????????
+         * data of the TableTypes
          */
-        mTableTypes =null;
+        mTableTypes = DatabaseHelper.getsInstance(this).obtainAllTableTypes();;
         mSelectedTableId = OrderManager.getInstance(this).getTableId();
         mTablePagerAdapter = new TablePagerAdapter(getFragmentManager());
     }
@@ -64,13 +65,11 @@ public abstract class BaseSelectTableActivity extends Activity implements View.O
     }
 
     private void initTabHost() {
-        final LayoutInflater inflater = (LayoutInflater) getSystemService
-            (LAYOUT_INFLATER_SERVICE);
+        final LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View tabItem;
         for (int i = 0; i < mTableTypes.size(); ++i) {
             tabItem = inflater.inflate(R.layout.item_table_tab, null);
-            ((TextView) tabItem.findViewById(R.id.table_type)).setText
-                (mTableTypes.get(i).getName());
+            ((TextView) tabItem.findViewById(R.id.table_type)).setText(mTableTypes.get(i).getName());
             tabItem.setTag(i);
             mTableTabHost.addView(tabItem);
             tabItem.setOnClickListener(new View.OnClickListener() {
@@ -88,20 +87,18 @@ public abstract class BaseSelectTableActivity extends Activity implements View.O
 
         public TablePagerAdapter(FragmentManager fm) {
             super(fm);
-            if (mTableTypes == null || mTableTypes.isEmpty()) {
+            if (mTableTypes == null || mTableTypes.isEmpty()){
                 return;
             }
             mTablePagers = new ArrayList<Fragment>();
             for (TableType tableType : mTableTypes) {
-                mTablePagers.add(SelectTableFragment.newInstance(tableType
-                    .getId()));
+                mTablePagers.add(SelectTableFragment.newInstance(tableType.getId()));
             }
         }
 
         public void updateTablesDisplayStatus(long tableId) {
             for (Fragment fragment : mTablePagers) {
-                ((SelectTableFragment) fragment).updateTablesDisplayStatus
-                    (tableId);
+                ((SelectTableFragment) fragment).updateTablesDisplayStatus(tableId);
             }
         }
 

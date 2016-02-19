@@ -56,7 +56,7 @@
         android:name=".application.CleverM"
         android:icon="@drawable/app">
         <activity
-            android:name=".app.MainActivity"
+            android:name=".app.VideoActivity"
             android:launchMode="singleTop"
             android:screenOrientation="landscape"
             android:label="@string/app_name">
@@ -72,7 +72,7 @@
         <activity android:name=".app.EvaluateActivity" android:launchMode="singleTop"/>
         <activity android:name=".app.DemoActivity" android:launchMode="singleTop"/>
         <activity android:name=".app.FutureActivity" android:launchMode="singleTop"/>
-        <activity android:name=".app.VideoActivity" android:launchMode="singleTop"/>
+        <activity android:name=".app.SelectTableActivity" android:launchMode="singleTop"/>
 
         <service android:name=".service.penService" >
             <!--<intent-filter android:priority="100"/>-->
