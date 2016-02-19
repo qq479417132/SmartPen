@@ -26,7 +26,7 @@ public class DriverActivity extends BaseActivity {
             switch (msg.what) {
                 case GOBack: {
                     Log.v(TAG, "come hand====");
-                    startActivity(new Intent(DriverActivity.this, VideoActivity.class));
+                    //startActivity(new Intent(DriverActivity.this, VideoActivity.class));
                     DriverActivity.this.finish();
                     break;
                 }

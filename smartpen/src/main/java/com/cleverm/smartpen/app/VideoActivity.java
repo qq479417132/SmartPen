@@ -12,22 +12,28 @@ import android.os.Message;
 import android.util.Log;
 
 import com.cleverm.smartpen.R;
-
 import com.cleverm.smartpen.service.ScreenLockListenService;
 import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.ui.FullScreenVideoView;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.DownloadUtil;
+import com.cleverm.smartpen.util.IntentUtil;
+import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
-import com.cleverm.smartpen.util.VideoUtil;
+
 
 
 /**
- * Created by xiong on 2016/2/15.
- * 已知待处理情况:第一次开启时无网络
+ * Created by xiong,An android project Engineer,on 2016/2/15.
+ * Data:2016-02-16  11:25
+ * Base on clever-m.com(JAVA Service)
+ * Describe: 广告视频播放,该界面将作为基Activity存在,所有的其他点点笔的操作Activity都会覆盖于其上,该Activity将一直存在于栈内.
+ * Version:1.0
+ * Open source
  */
 public class VideoActivity extends Activity implements penService.MessageListener {
-    public static final String TAG=VideoActivity.class.getSimpleName();
+
+    public static final String TAG = VideoActivity.class.getSimpleName();
     /**
      * 该参数由服务端给与
      */
@@ -84,9 +90,12 @@ public class VideoActivity extends Activity implements penService.MessageListene
         bindService();
         initView();
         initData();
+        initCacheJson();
 
 
     }
+
+
 
     private void bindService() {
         bindService(new Intent(this, penService.class), mConn, BIND_AUTO_CREATE);
@@ -103,8 +112,6 @@ public class VideoActivity extends Activity implements penService.MessageListene
 
 
         //在处理Video前将特惠专区的json数据保存到本地的文件中，然后每天都是读取的该次数据
-
-
 
 
         //1.先判断服务器实现需要我们去更新
@@ -135,10 +142,12 @@ public class VideoActivity extends Activity implements penService.MessageListene
 
     }
 
-
     /**
-     *
+     * 将只取一次的数据放入Cache中
      */
+    private void initCacheJson() {
+        DownloadUtil.cacheJson("100");
+    }
 
     /**
      * 横竖屏数据处理逻辑
@@ -149,6 +158,7 @@ public class VideoActivity extends Activity implements penService.MessageListene
     @Override
     protected void onPause() {
         super.onPause();
+        QuickUtils.log("onPause()");
         RememberUtil.putInt("key", vvAdvertisement.getCurrentPosition());
     }
 
@@ -158,6 +168,7 @@ public class VideoActivity extends Activity implements penService.MessageListene
     @Override
     protected void onResume() {
         super.onResume();
+        QuickUtils.log("onResume()");
         videoValue = RememberUtil.getInt("key", 0);
         vvAdvertisement.seekTo(videoValue);
         vvAdvertisement.start();
@@ -188,10 +199,23 @@ public class VideoActivity extends Activity implements penService.MessageListene
 
     private void handlerCode(int id) {
 
-        //QuickUtils.toast(this,"code="+id);
+        QuickUtils.toast("code=" + id);
+        QuickUtils.log("code=" + id);
 
         switch (id) {
-            case Constant.ORDER_DISHES1:
+            case Constant.ORDER_DISHES1:{
+
+                Intent intent=new Intent(this, DriverActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                VideoActivity.this.startActivity(intent);
+                break;
+
+
+            }
+
+
+
+
             case Constant.ADD_WATER1:
             case Constant.PAY1:
             case Constant.TISSUE1:
@@ -219,7 +243,7 @@ public class VideoActivity extends Activity implements penService.MessageListene
             case Constant.ADD_WATER5:
             case Constant.PAY5:
             case Constant.TISSUE5:
-            case Constant.OTHER5:{
+            case Constant.OTHER5: {
 
                 break;
             }
@@ -227,18 +251,20 @@ public class VideoActivity extends Activity implements penService.MessageListene
 
                 //优惠推介
             case Constant.YOU_HUI1: {
-                //gotoDiscountFragment(id);
+                QuickUtils.toast("code="+id);
+                QuickUtils.log("YOU_HUI1");
+                IntentUtil.startPenddingActivity(VideoActivity.this, DiscountActivity.class);
                 break;
             }
 
 
             case Constant.DEMO1:
 
-                //商家特惠
-                //case Constant.RECOMMEND:{
-                //gotoDiscountFragment(id);
-                //    break;
-                //}
+            /*    //商家特惠
+            case Constant.RECOMMEND: {
+                gotoDiscountFragment(id);
+                break;
+            }*/
 
 
             case Constant.AMUSEMENTFRAGMENT1:
@@ -263,6 +289,7 @@ public class VideoActivity extends Activity implements penService.MessageListene
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        QuickUtils.log("onDestroy()");
         unbindService(mConn);
         unbindService(mConnection);
     }

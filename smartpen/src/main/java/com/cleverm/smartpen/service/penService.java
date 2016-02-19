@@ -15,6 +15,7 @@ import com.cleverm.smartpen.app.FutureActivity;
 import com.cleverm.smartpen.app.SelectTableActivity;
 import com.cleverm.smartpen.app.VideoActivity;
 import com.cleverm.smartpen.util.Constant;
+import com.cleverm.smartpen.util.QuickUtils;
 
 import java.util.List;
 
@@ -120,7 +121,10 @@ public class penService extends Service implements WandAPI.OnScanListener {
             case Constant.DA_ZONG1:
             case Constant.ZHI_ZHU1:
             case Constant.TWO_DIMENSION_CODE1:
-            case Constant.YOU_HUI1:
+            case Constant.YOU_HUI1:{
+                messageListener.receiveData(id);
+                break;
+            }
             case Constant.RECOMMEND1:
             case Constant.AMUSEMENTFRAGMENT1:
             case Constant.WEB1:
