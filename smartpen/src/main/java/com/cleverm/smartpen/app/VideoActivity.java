@@ -102,6 +102,11 @@ public class VideoActivity extends Activity implements penService.MessageListene
     private void initData() {
 
 
+        //在处理Video前将特惠专区的json数据保存到本地的文件中，然后每天都是读取的该次数据
+
+
+
+
         //1.先判断服务器实现需要我们去更新
 
 
