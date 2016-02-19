@@ -1,13 +1,17 @@
 package com.cleverm.smartpen.application;
 
 import android.app.Application;
+import android.content.Intent;
 import android.os.Environment;
+import android.util.Log;
 
 import com.cleverm.smartpen.database.DatabaseHelper;
 import com.cleverm.smartpen.log.CrashHandler;
 import com.cleverm.smartpen.modle.TableType;
 import com.cleverm.smartpen.modle.impl.TableImpl;
 import com.cleverm.smartpen.modle.impl.TableTypeImpl;
+import com.cleverm.smartpen.service.CommunicationService;
+import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.umeng.analytics.MobclickAgent;
 
@@ -24,6 +28,8 @@ public class CleverM extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        application=this;
+
         CrashHandler.getInstance().init(this, PATH);
 
         MobclickAgent.setCatchUncaughtExceptions(true);
