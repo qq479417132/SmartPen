@@ -1,11 +1,8 @@
 package com.cleverm.smartpen.app;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
-
-
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -13,12 +10,10 @@ import android.view.View;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
-
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.database.DatabaseHelper;
 import com.cleverm.smartpen.fragment.SelectTableFragment;
 import com.cleverm.smartpen.modle.TableType;
-import com.cleverm.smartpen.modle.impl.TableTypeImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +21,7 @@ import java.util.List;
 /**
  * Created by Jimmy on 2015/9/16.
  */
-public abstract class BaseSelectTableActivity extends Activity implements View.OnClickListener,
+public abstract class BaseSelectTableActivity extends BaseActivity implements View.OnClickListener,
     SelectTableFragment.OnTableAdapterListener {
 
     @SuppressWarnings("unused")
@@ -38,7 +33,7 @@ public abstract class BaseSelectTableActivity extends Activity implements View.O
     private List<TableType> mTableTypes;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_table);
         initData();
