@@ -19,8 +19,8 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <!--读取手机信息权限  -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!--读取联系人权限，上传联系人需要用到此权限  -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!--读取联系人权限，上传联系人需要用到此权限  -->
     <!-- 使用GPS获取用户精确定位信息 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <!-- 获得sd卡读写的权限 -->
@@ -68,11 +68,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".app.BaseActivity" />
-        <activity android:name=".app.DriverActivity" android:launchMode="singleTop"/>
-        <activity android:name=".app.EvaluateActivity" android:launchMode="singleTop"/>
-        <activity android:name=".app.DemoActivity" android:launchMode="singleTop"/>
-        <activity android:name=".app.FutureActivity" android:launchMode="singleTop"/>
-        <activity android:name=".app.SelectTableActivity" android:launchMode="singleTop"/>
+        <activity android:name=".app.DriverActivity"/>
+        <activity android:name=".app.EvaluateActivity" />
+        <activity android:name=".app.DemoActivity" />
+        <activity android:name=".app.FutureActivity" />
+        <activity android:name=".app.SelectTableActivity"/>
+        <activity android:name=".app.DiscountActivity"/>
 
         <service android:name=".service.penService" >
             <!--<intent-filter android:priority="100"/>-->
