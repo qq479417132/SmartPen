@@ -71,7 +71,7 @@ public class CommunicationService extends Service {
             }
             com.cleverm.smartpen.pushtable.Message message =
                     com.cleverm.smartpen.pushtable.Message.create().boardNumber(
-                    Utils.getSerialNumber()).messageType(
+                    Utils.getSerialNumber(CommunicationService.this)).messageType(
                     MessageType.PING).build();
             mConnectClient.sendMessage(message);
             mHandler.postDelayed(this, DELAY_HEART_BEAT);
@@ -157,7 +157,7 @@ public class CommunicationService extends Service {
     }
 
     private void startStomp() {
-        Config config = Config.create(Config.Mode.REMOTE, Utils.getSerialNumber());
+        Config config = Config.create(Config.Mode.REMOTE, Utils.getSerialNumber(this));
         config.setWebsocketUrl(WS_URL);
         config.setHttpUrl(SYNCHRO_URL);
         mConnectClient = new ClevermClient(getApplicationContext(), config);
