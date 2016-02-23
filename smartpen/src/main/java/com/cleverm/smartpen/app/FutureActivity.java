@@ -15,6 +15,11 @@ import com.cleverm.smartpen.R;
  * Created by 95 on 2016/2/3.
  */
 public class FutureActivity extends BaseActivity {
+
+    private static final  String demo="";
+
+
+
     public static final String TAG = FutureActivity.class.getSimpleName();
     private ImageView mClose;
     public static final int GOBack = 200;
@@ -25,8 +30,8 @@ public class FutureActivity extends BaseActivity {
             switch (msg.what) {
                 case GOBack: {
                     Log.v(TAG, "come hand====");
-                    startActivity(new Intent(FutureActivity.this, VideoActivity.class));
                     FutureActivity.this.finish();
+                    startActivity(new Intent(FutureActivity.this, VideoActivity.class));
                     break;
                 }
             }
