@@ -21,14 +21,15 @@ import com.umeng.analytics.MobclickAgent;
 public class CleverM extends Application {
 
     private static Application application;
-    
-    public static final String TAG=CleverM.class.getSimpleName();
-    public static final String PATH= Environment.getExternalStorageDirectory().getPath()+"/logFile/log";
+
+    public static final String TAG = CleverM.class.getSimpleName();
+    public static final String PATH = Environment.getExternalStorageDirectory().getPath() + "/logFile/log";
     private static final String PREFS_NAME = "com.Clever.myapp";
+
     @Override
     public void onCreate() {
         super.onCreate();
-        application=this;
+        application = this;
 
         CrashHandler.getInstance().init(this, PATH);
 
@@ -63,7 +64,7 @@ public class CleverM extends Application {
         stopService(intent);
     }
 
-    public void onExit(){
+    public void onExit() {
         closeNet();
         System.exit(0);
     }

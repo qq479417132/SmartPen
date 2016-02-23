@@ -87,6 +87,7 @@ public class VideoActivity extends Activity implements penService.MessageListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
+        QuickUtils.hideHighApiBottomStatusBar();
         bindService();
         initView();
         initData();

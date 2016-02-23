@@ -22,7 +22,7 @@ public class IntentUtil {
      * @param clazz 要跳转的界面
      */
     public static void startPenddingActivity(Activity activity,Class clazz){
-        Intent intent=new Intent(activity, DriverActivity.class);
+        Intent intent=new Intent(activity, clazz);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(intent);
     }
