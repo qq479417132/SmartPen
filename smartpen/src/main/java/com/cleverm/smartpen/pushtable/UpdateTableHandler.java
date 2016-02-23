@@ -13,6 +13,7 @@ import com.cleverm.smartpen.pushtable.bean.TableInfo;
 import com.cleverm.smartpen.pushtable.bean.TableResult;
 import com.cleverm.smartpen.pushtable.bean.TableTypeInfo;
 import com.cleverm.smartpen.util.Constant;
+import com.cleverm.smartpen.util.RememberUtil;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -34,6 +35,8 @@ public class UpdateTableHandler extends NoticeHandler<RestaurantVo, Void> {
     private static final String BASIC_SETTINGS_FILE = SYSTEMCFG_DIR + "basic_settings.cfg";
     private static final String REPEATER_SETTINGS_FILE = SYSTEMCFG_DIR + "rep_settings.cfg";
     private static final String CALLER_SETTINGS_FILE = SYSTEMCFG_DIR + "caller_settings.cfg";
+    private static final String ORGID ="OrgID";
+
 
     private Context mContext;
 
@@ -79,6 +82,8 @@ public class UpdateTableHandler extends NoticeHandler<RestaurantVo, Void> {
         Log.v(TAG,"parserGson()");
         Gson gson=new Gson();
         TableResult tableResult=gson.fromJson(data,TableResult.class);
+        String OrgID=tableResult.getOrgID();
+        RememberUtil.putString(ORGID,OrgID);
         List<TableInfo> ListTableInfo=tableResult.getTableList();
         List<TableTypeInfo> ListTableTypeInfo=tableResult.getTableTypeList();
         insertTableData(ListTableInfo, ListTableTypeInfo);
