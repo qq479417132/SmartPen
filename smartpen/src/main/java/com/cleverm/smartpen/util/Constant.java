@@ -196,17 +196,12 @@ public class Constant {
     public static final int OTHER_SERVICE = 5;
     public static final int TEMPLATEID_DELAY = 30000;
 
-    //���H5����
+
     public static final String WEATHER="http://www.weather.com.cn/weather/101020100.shtml";
     public static final String NEWS="http://news.baidu.com/";
     public static final String HAPPY="http://www.dianping.com/";
     public static final String SHOP="https://www.tmall.com/?ali_trackid=2:mm_26632325_6860397_24008452:1453968939_252_1805956268";
     public static final String CONCESSIONS="https://ju.taobao.com/?ali_trackid=2:mm_26866744_2384196_21258512:1453969006_2k1_86931745";
-
-
-
-
-
 
 
     /**

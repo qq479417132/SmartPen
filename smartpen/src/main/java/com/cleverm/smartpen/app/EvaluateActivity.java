@@ -18,17 +18,22 @@ import android.widget.Toast;
 
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.util.Constant;
+import com.cleverm.smartpen.util.RememberUtil;
 import com.google.gson.Gson;
 import com.umeng.analytics.MobclickAgent;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
+import okhttp3.Call;
+
 /**
  * Created by 95 on 2016/2/3.
  */
-public class EvaluateActivity extends BaseActivity implements View.OnClickListener{
+public class EvaluateActivity extends BaseActivity implements View.OnClickListener {
     public static final String TAG = EvaluateActivity.class.getSimpleName();
     private View mRoot;
     private ImageView mClose;
@@ -46,6 +51,14 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
     private String mEnvirmentTextValue;
     private String meatInputValue;
     private String mequipmentInputValue;
+    public static final int EVALUATE_1 = 20;
+    public static final int EVALUATE_2 = 40;
+    public static final int EVALUATE_3 = 60;
+    public static final int EVALUATE_4 = 80;
+    public static final int EVALUATE_5 = 100;
+    public static final String SELECTEDTABLEID = "SelectedTableId";
+    public static final String URL = "http://www.myee.online/api/api/v10/evaluation/save";
+
 
     private Handler mHandler = new Handler() {
         @Override
@@ -74,7 +87,7 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
 
 
     private void init() {
-        mClose = (ImageView)findViewById(R.id.service_close);
+        mClose = (ImageView) findViewById(R.id.service_close);
         mClose.setOnClickListener(this);
         mSubmit = (Button) findViewById(R.id.other_confirm);
         mSubmit.setOnClickListener(this);
@@ -127,13 +140,13 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
 
         mgeneralEvaluation = (TextView) findViewById(R.id.general_evaluation_RatingBar_text);
         mgeneralEvaluation.setText("");
-        mtasteText = (TextView)findViewById(R.id.taste_RatingBar_text);
+        mtasteText = (TextView) findViewById(R.id.taste_RatingBar_text);
         mtasteText.setText("");
         mServiceText = (TextView) findViewById(R.id.service_RatingBar_text);
         mServiceText.setText("");
         mEnvirmentText = (TextView) findViewById(R.id.huanjing_RatingBar_text);
         mEnvirmentText.setText("");
-        meatInput = (EditText)findViewById(R.id.eat_input);
+        meatInput = (EditText) findViewById(R.id.eat_input);
         meatInput.addTextChangedListener(watcher);
         mequipmentInput = (EditText) findViewById(R.id.equipment_input);
         mequipmentInput.addTextChangedListener(watcher);
@@ -203,7 +216,67 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
         String gsonData = gson.toJson(map);
         Log.v(TAG, "gsonData=" + gsonData);
 
+        sendToService();
+    }
 
+    private void sendToService() {
+        int feelWhole = getRatingBarValue(mgeneralEvaluationRatingBar.getNumStars());
+        int feelFlavor = getRatingBarValue(mtaste.getNumStars());
+        int feelService = getRatingBarValue(mService.getNumStars());
+        int feelEnvironment = getRatingBarValue(mEnvirment.getNumStars());
+        OkHttpUtils.post()
+                .url(URL)
+                .addParams("deviceRemark", mequipmentInputValue)
+                .addParams("feelEnvironment",feelEnvironment+"")
+                .addParams("feelFlavor",feelFlavor+"")
+                .addParams("feelService",feelService+"")
+                .addParams("feelWhole",feelWhole+"")
+                .addParams("mealsRemark",meatInputValue)
+                .addParams("tableId", RememberUtil.getLong(SELECTEDTABLEID, Constant.DESK_ID_DEF_DEFAULT)+"")
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        e.printStackTrace();
+                        Log.v(TAG, "Exception");
+                    }
+
+                    @Override
+                    public void onResponse(String s) {
+                        Log.v(TAG, "onResponse=" + s);
+                    }
+                });
+    }
+
+    private int getRatingBarValue(int NumStars) {
+        int value = 20;
+        switch (NumStars) {
+            case EVALUATE_1: {
+                value = 20;
+                break;
+            }
+            case EVALUATE_2: {
+                value = 40;
+                break;
+            }
+            case EVALUATE_3: {
+                value = 60;
+                break;
+            }
+            case EVALUATE_4: {
+                value = 80;
+                break;
+            }
+            case EVALUATE_5: {
+                value = 100;
+                break;
+            }
+            default: {
+                value = 20;
+                break;
+            }
+        }
+        return value;
     }
 
     private TextWatcher watcher = new TextWatcher() {
