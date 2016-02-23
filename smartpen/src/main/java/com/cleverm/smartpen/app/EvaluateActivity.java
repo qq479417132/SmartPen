@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cleverm.smartpen.R;
-import com.cleverm.smartpen.bean.EvaluationView;
 import com.cleverm.smartpen.util.Constant;
 import com.google.gson.Gson;
 import com.umeng.analytics.MobclickAgent;
