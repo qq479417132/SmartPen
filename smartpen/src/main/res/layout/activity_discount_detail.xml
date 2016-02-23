@@ -43,25 +43,23 @@
             android:layout_height="wrap_content">
 
             <!---->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="20dp"
-                android:layout_weight="3"
-                android:orientation="horizontal">
+
 
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="0.3"
                     android:orientation="vertical">
 
-                    <com.cleverm.smartpen.ui.banner.BGABanner
+                    <com.cleverm.smartpen.ui.banner.NoTouchBGABanner
                         android:id="@+id/BGADetailImage"
                         style="@style/BannerDefaultStyle"
                         app:banner_pointTopBottomMargin="20dp"
                         android:layout_height="410dp"
+                        android:clickable="false"
                         android:layout_width="match_parent"
                         app:banner_transitionEffect="defaultEffect" />
 
@@ -87,42 +85,42 @@
                     <TextView
                         android:id="@+id/tvDiscountDetailDesc"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginTop="10dp"
                         android:textColor="#000000"
-                        android:text="活动说明：具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体具体安装餐厅制定活动细则具体"
+                        android:text="活动说明：具体安装餐餐厅体定制定活动细则具体"
                         android:textSize="20sp" />
 
 
                 </LinearLayout>
 
 
-            </LinearLayout>
+
 
             <!---->
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="30dp"
                 android:layout_marginTop="20dp"
-                android:layout_weight="0.5"
+                android:layout_weight="0.7"
                 android:orientation="vertical">
 
 
                 <ImageView
                     android:id="@+id/ivDiscountDetailImage1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="330dp"
+                    android:layout_height="180dp"
                     android:src="@mipmap/test_image1"
                     android:visibility="invisible"
                     android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/ivDiscountDetailImage2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="330dp"
+                    android:layout_height="180dp"
                     android:layout_marginTop="20dp"
                     android:visibility="invisible"
                     android:src="@mipmap/test_image2"
@@ -130,8 +128,8 @@
 
                 <ImageView
                     android:id="@+id/ivDiscountDetailImage3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="330dp"
+                    android:layout_height="180dp"
                     android:layout_marginTop="20dp"
                     android:src="@mipmap/test_image3"
                     android:visibility="invisible"
