@@ -31,7 +31,7 @@ import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.DownloadUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
-import com.cleverm.smartpen.version.VersionManager;
+
 
 import java.util.HashMap;
 
@@ -162,13 +162,13 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     }
 
     private void initVersion() {
-        boolean isUpdata=RememberUtil.getBoolean(ISUPDATA,false);
+        boolean isUpdata=RememberUtil.getBoolean(ISUPDATA, false);
         if(isUpdata==false){
-            new VersionManager(this).uddateVersion();
+            new com.cleverm.smartpen.version.VersionManager(this).uddateVersion();
             RememberUtil.putBoolean(ISUPDATA, true);
             Log.v(TAG,"isUpdata==");
         }
-        Log.v(TAG,"is not Updata==");
+        Log.v(TAG, "is not Updata==");
     }
 
     private void initIntent() {
@@ -337,7 +337,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         InfoSendSMSVo infoSendSMSVo = new InfoSendSMSVo();
         infoSendSMSVo.setTemplateID(templateID);
         infoSendSMSVo.setTableID(2137);
-        Log.v(TAG, "id=" + id + " deskId=" + deskId+"isSend="+isSend);
+        Log.v(TAG, "id=" + id + " deskId=" + deskId + "isSend=" + isSend);
         sendMessageToService(infoSendSMSVo, id, isSend);
     }
 
@@ -479,6 +479,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         mrlNotice.startAnimation(set);
         Log.v(TAG, "AnimationStart mrlNotice.startAnimation(set)"+i);
     }
+
 
 
 }
