@@ -173,14 +173,14 @@ public class Constant {
 
 //    public static final String NET_PATH = "http://192.168.1.72:8080/sockjs/execCommand";
 
-    public static final String APP_NAME = "��ζ����";//app���
+    public static final String APP_NAME = "美味点点笔";//app���
     public static final String PSW = "123456";//����
 
     public static final String SHARE = "CleverM";//����
 
     public static final String KEY_ID = "key_id";//����
 
-    public static final long DESK_ID_DEF_DEFAULT=8888l;
+    public static final long DESK_ID_DEF_DEFAULT=8888L;
     public static final int USB_DISCONNECT=100;
 
     public static final String DB_NAME="clevermodel1.db";

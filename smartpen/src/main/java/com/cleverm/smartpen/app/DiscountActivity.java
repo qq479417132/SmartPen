@@ -3,21 +3,18 @@ package com.cleverm.smartpen.app;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cleverm.smartpen.R;
-import com.cleverm.smartpen.bean.DiscountInfo;
 import com.cleverm.smartpen.ui.banner.BGABanner;
-import com.cleverm.smartpen.util.AlgorithmUtil;
-import com.cleverm.smartpen.util.DownloadUtil;
 import com.cleverm.smartpen.util.FileCacheUtil;
+import com.cleverm.smartpen.util.DownloadUtil;
 import com.cleverm.smartpen.util.QuickUtils;
-import com.cleverm.smartpen.util.ServiceUtil;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +23,7 @@ import java.util.List;
  * Created by xiong,An android project Engineer,on 2016/2/19.
  * Data:2016-02-19  11:25
  * Base on clever-m.com(JAVA Service)
- * Describe: 特惠专区
+ * Describe:
  * Version:1.0
  * Open source
  */
@@ -46,6 +43,9 @@ public class DiscountActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_discount);
         mContext=this;
+
+        //QuickUtils.toast(FileCacheUtil.get(this).getAsString(DownloadUtil.DISOUNT_JSON));
+
         initView();
         initDate();
         initClick();
@@ -161,6 +161,7 @@ public class DiscountActivity extends Activity implements View.OnClickListener {
         switch (view.getId()) {
 
             case R.id.ivClose:
+                //QuickUtils.toast("ivClose");
                 finish();
                 break;
 
