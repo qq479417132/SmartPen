@@ -79,7 +79,7 @@ public class VersionManager {
     }
 
     /**
-     * ȥ���°汾
+     *
      */
     public void uddateVersion(){
         new Thread(){
@@ -265,7 +265,6 @@ public class VersionManager {
     }
 
     /**
-     * ��ȡ�汾���
      * @param context
      * @return
      */
