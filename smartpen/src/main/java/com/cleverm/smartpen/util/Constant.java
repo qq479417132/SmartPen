@@ -368,6 +368,14 @@ public class Constant {
     public static final String NOTICE_TYPE_QUEUE_INFO = "QUEUE_INFO";
     public static final String NOTICE_TYPE_REPAST_INFO = "REPAST_INFO";
     public static final String NOTICE_TYPE_LOTTERY_INFO = "LOTTERY_INFO";
+
+
+    /**
+     * Discount
+     */
+    public static final String DEFALUT_ORGID="100";
+
+
 }
 
 

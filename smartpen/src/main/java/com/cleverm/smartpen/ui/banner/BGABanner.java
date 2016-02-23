@@ -81,7 +81,7 @@ public class BGABanner extends RelativeLayout {
     private Handler mAutoPlayHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+            mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1,true);
             if(mBAGInterface!=null){
                 mBAGInterface.setNum();
             }
@@ -219,8 +219,8 @@ public class BGABanner extends RelativeLayout {
      * @param tips  每一页的提示文案集合
      */
     public void setViewsAndTips(List<View> views, List<String> tips) {
-        if (mAutoPlayAble && views.size() < 3) {
-            throw new IllegalArgumentException("开启指定轮播时至少有三个页面");
+        if (mAutoPlayAble && views.size() < 1) {
+            throw new IllegalArgumentException("开启指定轮播时至少有一个页面");
         }
         if (tips != null && tips.size() < views.size()) {
             throw new IllegalArgumentException("提示文案数必须等于页面数量");
@@ -269,7 +269,8 @@ public class BGABanner extends RelativeLayout {
         for (int i = 0; i < mViews.size(); i++) {
             imageView = new ImageView(getContext());
             imageView.setLayoutParams(lp);
-            imageView.setBackgroundResource(mPointDrawableResId);
+            imageView.setImageDrawable(getResources().getDrawable(mPointDrawableResId));
+            //imageView.setBackgroundResource(mPointDrawableResId);
             //imageView.setImageResource(mPointDrawableResId);
             mPointRealContainerLl.addView(imageView);
         }
@@ -278,7 +279,7 @@ public class BGABanner extends RelativeLayout {
     private void processAutoPlay() {
         if (mAutoPlayAble) {
             int zeroItem = Integer.MAX_VALUE / 2 - (Integer.MAX_VALUE / 2) % mViews.size();
-            mViewPager.setCurrentItem(zeroItem);
+            mViewPager.setCurrentItem(zeroItem,true);
 
             startAutoPlay();
         } else {
@@ -327,7 +328,7 @@ public class BGABanner extends RelativeLayout {
             stopAutoPlay();
             startAutoPlay();
         } else {
-            mViewPager.setCurrentItem(item, false);
+            mViewPager.setCurrentItem(item, true);
         }
     }
 

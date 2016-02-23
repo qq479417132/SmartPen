@@ -151,6 +151,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
+        QuickUtils.hideHighApiBottomStatusBar();
         bindService();
         initView();
         initData();
