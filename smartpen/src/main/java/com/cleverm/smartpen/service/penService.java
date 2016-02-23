@@ -25,6 +25,8 @@ public class penService extends Service implements WandAPI.OnScanListener {
     public static final String TAG = penService.class.getSimpleName();
     private WandAPI mWandAPI;
     private MessageListener messageListener;
+    private String mActivityFlag = "VideoActivity";
+    public static final String VIDEO_ACTIVITY_KEY="video_activity_key";
 
     public void setMessageListener(MessageListener messageListener) {
         this.messageListener = messageListener;
@@ -39,8 +41,8 @@ public class penService extends Service implements WandAPI.OnScanListener {
     @Override
     public void onScan(int id) {
         Log.v(TAG, "onScan() id=" + id);
-        if(id==0){
-           return;
+        if (id == 0) {
+            return;
         }
         switch (id) {
             //5个服务
@@ -69,13 +71,15 @@ public class penService extends Service implements WandAPI.OnScanListener {
             case Constant.PAY5:
             case Constant.TISSUE5:
             case Constant.OTHER5: {
-                Intent intent = new Intent(this, VideoActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
-                        Intent.FLAG_ACTIVITY_NEW_TASK |
-                        Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                messageListener.receiveData(id);
+                if (!"VideoActivity".equals(mActivityFlag)) {
+                    Intent intent = new Intent(this, VideoActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra(VIDEO_ACTIVITY_KEY,id);
+                    startActivity(intent);
+                    mActivityFlag = "VideoActivity";
+                }else {
+                    messageListener.receiveData(id);
+                }
                 break;
             }
             case Constant.DEMO1:
@@ -83,9 +87,12 @@ public class penService extends Service implements WandAPI.OnScanListener {
             case Constant.DEMO3:
             case Constant.DEMO4:
             case Constant.DEMO5: {
-                Intent intent = new Intent(this, DemoActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                if (!"DemoActivity".equals(mActivityFlag)) {
+                    Intent intent = new Intent(this, DemoActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    mActivityFlag = "DemoActivity";
+                }
                 break;
             }
             case Constant.EVALUATE1:
@@ -93,9 +100,12 @@ public class penService extends Service implements WandAPI.OnScanListener {
             case Constant.EVALUATE3:
             case Constant.EVALUATE4:
             case Constant.EVALUATE5: {
-                Intent intent = new Intent(this, EvaluateActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                if (!"EvaluateActivity".equals(mActivityFlag)) {
+                    Intent intent = new Intent(this, EvaluateActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    mActivityFlag = "EvaluateActivity";
+                }
                 break;
             }
             case Constant.E_JIA1:
@@ -103,12 +113,15 @@ public class penService extends Service implements WandAPI.OnScanListener {
             case Constant.E_JIA3:
             case Constant.E_JIA4:
             case Constant.E_JIA5: {
-                Intent intent = new Intent(this, DriverActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
-                        Intent.FLAG_ACTIVITY_NEW_TASK |
-                        Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                if (!"DriverActivity".equals(mActivityFlag)) {
+                    Intent intent = new Intent(this, DriverActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
+                            Intent.FLAG_ACTIVITY_NEW_TASK |
+                            Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    mActivityFlag = "DriverActivity";
+                }
                 break;
             }
             case Constant.SET1:
@@ -116,12 +129,15 @@ public class penService extends Service implements WandAPI.OnScanListener {
             case Constant.SET3:
             case Constant.SET4:
             case Constant.SET5: {
-                Intent intent = new Intent(this, SelectTableActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
-                        Intent.FLAG_ACTIVITY_NEW_TASK |
-                        Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                if (!"SelectTableActivity".equals(mActivityFlag)) {
+                    Intent intent = new Intent(this, SelectTableActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
+                            Intent.FLAG_ACTIVITY_NEW_TASK |
+                            Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    mActivityFlag = "SelectTableActivity";
+                }
                 break;
             }
             case Constant.YOU_HUI1:
@@ -133,13 +149,16 @@ public class penService extends Service implements WandAPI.OnScanListener {
             case Constant.YOU_HUI4:
             case Constant.RECOMMEND4:
             case Constant.YOU_HUI5:
-            case Constant.RECOMMEND5:{
-                Intent intent = new Intent(this, DiscountActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
-                        Intent.FLAG_ACTIVITY_NEW_TASK |
-                        Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+            case Constant.RECOMMEND5: {
+                if (!"DiscountActivity".equals(mActivityFlag)) {
+                    Intent intent = new Intent(this, DiscountActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
+                            Intent.FLAG_ACTIVITY_NEW_TASK |
+                            Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    mActivityFlag = "DiscountActivity";
+                }
                 break;
             }
 
@@ -192,43 +211,46 @@ public class penService extends Service implements WandAPI.OnScanListener {
             case Constant.TWO_DIMENSION_CODE5:
             case Constant.AMUSEMENTFRAGMENT5:
             case Constant.WEB5: {
-                Intent intent = new Intent(this, FutureActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
-                        Intent.FLAG_ACTIVITY_NEW_TASK |
-                        Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                if (!"FutureActivity".equals(mActivityFlag)) {
+                    Intent intent = new Intent(this, FutureActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
+                            Intent.FLAG_ACTIVITY_NEW_TASK |
+                            Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    mActivityFlag = "FutureActivity";
+                }
                 break;
             }
         }
     }
 
-        @Override
-        public void onCreate () {
-            super.onCreate();
-            mWandAPI = new WandAPI(this, this);
-            mWandAPI.onCreate();
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mWandAPI = new WandAPI(this, this);
+        mWandAPI.onCreate();
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return new penServiceBind();
+    }
+
+
+    @Override
+    public void onDestroy() {
+        mWandAPI.onDestroy();
+        super.onDestroy();
+    }
+
+    public class penServiceBind extends Binder {
+
+        public penService getService() {
+            return penService.this;
         }
 
-        @Override
-        public IBinder onBind (Intent intent){
-            return new penServiceBind();
-        }
-
-
-        @Override
-        public void onDestroy () {
-            mWandAPI.onDestroy();
-            super.onDestroy();
-        }
-
-        public class penServiceBind extends Binder {
-
-            public penService getService() {
-                return penService.this;
-            }
-
-        }
+    }
 
 
     private void gotoFront(String PackageName) {
