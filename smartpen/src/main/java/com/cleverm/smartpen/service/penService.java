@@ -1,10 +1,11 @@
 package com.cleverm.smartpen.service;
 
-import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.util.Log;
 
 import com.cleverm.smartpen.app.DemoActivity;
@@ -14,19 +15,25 @@ import com.cleverm.smartpen.app.EvaluateActivity;
 import com.cleverm.smartpen.app.FutureActivity;
 import com.cleverm.smartpen.app.SelectTableActivity;
 import com.cleverm.smartpen.app.VideoActivity;
+import com.cleverm.smartpen.bean.TemplateIDState;
 import com.cleverm.smartpen.util.Constant;
 
-import java.util.List;
+import java.util.HashMap;
 
 /**
  * Created by 95 on 2015/12/21.
  */
 public class penService extends Service implements WandAPI.OnScanListener {
+
+    public static final String DEMO="DEMO";
+
+
     public static final String TAG = penService.class.getSimpleName();
     private WandAPI mWandAPI;
     private MessageListener messageListener;
     private String mActivityFlag = "VideoActivity";
     public static final String VIDEO_ACTIVITY_KEY="video_activity_key";
+    public static final String VIDEO_ACTIVITY_ISSEND="video_activity_isSend";
 
     public void setMessageListener(MessageListener messageListener) {
         this.messageListener = messageListener;
@@ -71,14 +78,16 @@ public class penService extends Service implements WandAPI.OnScanListener {
             case Constant.PAY5:
             case Constant.TISSUE5:
             case Constant.OTHER5: {
+                TemplateIDState templateIDState=ChoiceTemplateIDState(id);
                 if (!"VideoActivity".equals(mActivityFlag)) {
                     Intent intent = new Intent(this, VideoActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.putExtra(VIDEO_ACTIVITY_KEY,id);
+                    intent.putExtra(VIDEO_ACTIVITY_KEY, templateIDState.getId());
+                    intent.putExtra(VIDEO_ACTIVITY_ISSEND,templateIDState.isSend());
                     startActivity(intent);
                     mActivityFlag = "VideoActivity";
                 }else {
-                    messageListener.receiveData(id);
+                    messageListener.receiveData(templateIDState.getId(),templateIDState.isSend());
                 }
                 break;
             }
@@ -253,24 +262,116 @@ public class penService extends Service implements WandAPI.OnScanListener {
     }
 
 
-    private void gotoFront(String PackageName) {
-        ActivityManager mAm = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+    public interface MessageListener {
+        void receiveData(int id,boolean isSend);
+    }
 
-        List<ActivityManager.RunningTaskInfo> taskList = mAm.getRunningTasks(100);
-
-        for (ActivityManager.RunningTaskInfo rti : taskList) {
-            Log.v(TAG, rti.topActivity.getPackageName() + "============");
-            if (rti != null && rti.topActivity.getPackageName().equals(PackageName)) {
-                Log.v(TAG, "######################");
-                mAm.moveTaskToFront(rti.id, 0);
-                return;
+    /**
+     * ************************************************
+     *      30s内短信发送一次
+     * ************************************************
+     */
+    private TemplateIDState ChoiceTemplateIDState(int id){
+        TemplateIDState templateIDState=new TemplateIDState();
+        int templateID=0;
+        switch (id){
+            case Constant.ORDER_DISHES1:
+            case Constant.ORDER_DISHES2:
+            case Constant.ORDER_DISHES3:
+            case Constant.ORDER_DISHES4:
+            case Constant.ORDER_DISHES5:{
+                templateID=Constant.FOOD_ADD;
+                break;
+            }
+            case Constant.ADD_WATER1:
+            case Constant.ADD_WATER2:
+            case Constant.ADD_WATER3:
+            case Constant.ADD_WATER4:
+            case Constant.ADD_WATER5:{
+                templateID=Constant.WATER_ADD;
+                break;
+            }
+            case Constant.PAY1:
+            case Constant.PAY2:
+            case Constant.PAY3:
+            case Constant.PAY4:
+            case Constant.PAY5:{
+                templateID=Constant.PAY_MONRY;
+                break;
+            }
+            case Constant.TISSUE1:
+            case Constant.TISSUE2:
+            case Constant.TISSUE3:
+            case Constant.TISSUE4:
+            case Constant.TISSUE5:{
+                templateID=Constant.TISSUE_ADD;
+                break;
+            }
+            case Constant.OTHER1:
+            case Constant.OTHER2:
+            case Constant.OTHER3:
+            case Constant.OTHER4:
+            case Constant.OTHER5:{
+                templateID=Constant.OTHER_SERVICE;
+                break;
+            }
+            default:{
+                break;
             }
         }
+        boolean isSend=getTemplateIDState(templateID);
+        if(isSend){
+            templateIDState.setId(id);
+            templateIDState.setIsSend(true);
+        }else {
+            setTemplateIDState(templateID);
+            templateIDState.setId(id);
+            templateIDState.setIsSend(false);
+        }
+        return templateIDState;
     }
 
-    public interface MessageListener {
-        void receiveData(int id);
+    private HashMap<Integer,Boolean> mHashMap=new HashMap<Integer, Boolean>();
+    public void setTemplateIDState(int TemplateID){
+        mHashMap.put(TemplateID,true);
+        mSMSHand.sendEmptyMessageDelayed(TemplateID,Constant.TEMPLATEID_DELAY);
     }
 
+    public boolean getTemplateIDState(int TemplateID){
+        Boolean flag=mHashMap.get(TemplateID);
+        if(flag==null){
+            return false;
+        }else {
+            return flag;
+        }
 
+    }
+
+    private Handler mSMSHand=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case Constant.FOOD_ADD:{
+                    mHashMap.put(Constant.FOOD_ADD,false);
+                    break;
+                }
+                case Constant.WATER_ADD:{
+                    mHashMap.put(Constant.WATER_ADD,false);
+                    break;
+                }
+                case Constant.TISSUE_ADD:{
+                    mHashMap.put(Constant.TISSUE_ADD,false);
+                    break;
+                }
+                case Constant.PAY_MONRY:{
+                    mHashMap.put(Constant.PAY_MONRY,false);
+                    break;
+                }
+                case Constant.OTHER_SERVICE:{
+                    mHashMap.put(Constant.OTHER_SERVICE,false);
+                    break;
+                }
+            }
+        }
+    };
 }
