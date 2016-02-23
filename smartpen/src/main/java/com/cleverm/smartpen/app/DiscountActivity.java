@@ -10,11 +10,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cleverm.smartpen.R;
+import com.cleverm.smartpen.bean.DiscountInfo;
 import com.cleverm.smartpen.ui.banner.BGABanner;
+import com.cleverm.smartpen.util.AlgorithmUtil;
 import com.cleverm.smartpen.util.FileCacheUtil;
 import com.cleverm.smartpen.util.DownloadUtil;
 import com.cleverm.smartpen.util.QuickUtils;
+import com.cleverm.smartpen.util.ServiceUtil;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
