@@ -1,6 +1,7 @@
 package com.cleverm.smartpen.util;
 
 import android.app.Activity;
+import android.os.Environment;
 import android.support.annotation.DrawableRes;
 import android.util.Log;
 import android.view.View;
@@ -11,7 +12,9 @@ import android.widget.Toast;
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.bean.DiscountInfo;
+import com.cleverm.smartpen.pushtable.UpdateTableHandler;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -176,5 +179,62 @@ public class QuickUtils {
         String what_month = date.substring(5, 7);
         return what_month;
     }
+
+    /**
+     * 从SP中去拿餐厅号
+     * @return
+     */
+    public static String getOrgIdFromSp(){
+        return RememberUtil.getString(UpdateTableHandler.ORGID, "100");
+    }
+
+    /**
+     * 判断目录路径,比如storage/emulated/0/muye是否存在
+     * @return
+     */
+    public static boolean isHasVideoFolder(){
+        File file = new File(AlgorithmUtil.VIDEO_FILE);
+        //如果目录不存在public
+        if(!file.exists()&&!file.isDirectory()){
+            //先创建目录，然后返回false
+            file.mkdir();
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    /**
+     * 判断目录下是否有文件
+     * @return
+     */
+    public static boolean isVideoFolderHaveFile(){
+        File file = new File(AlgorithmUtil.VIDEO_FILE);
+        File[] files = file.listFiles();
+
+        if(files!=null){
+            QuickUtils.log("files="+files.toString());
+        }
+
+
+        if((files ==null) || (files.length==0)){
+            return false;
+        }else{
+            for(int i =0 ; i<files.length ;i++){
+
+                if(files[i].isDirectory()){
+                    files[i].delete();
+                }
+
+                if(files[i].getName().equals("1.mp4")){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+
 
 }

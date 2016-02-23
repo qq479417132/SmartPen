@@ -31,12 +31,12 @@ public class DownloadUtil {
     public static String  DISOUNT_JSON="DISOUNT_JSON";
 
 
-    public static void preVideoFile(final FullScreenVideoView vvAdvertisement) {
+    public static void preVideoFileFromService(final FullScreenVideoView vvAdvertisement) {
         String url = "http://120.25.159.173:8280/api/api/v10/video/list";
         OkHttpUtils
                 .get()
                 .url(url)
-                .addParams("orgId", "100")
+                .addParams("orgId", QuickUtils.getOrgIdFromSp())
                 .addParams("type", "1")
                 .build()
                 .execute(new StringCallback() {
@@ -59,19 +59,8 @@ public class DownloadUtil {
                                 DownloadUtil.downloadFile(info.get(i).getVideoPath(), (i + 1) + "");
                             }
 
-
                             VideoUtil videoUtil = new VideoUtil(vvAdvertisement);
                             videoUtil.prepareOnlineVideo(info);
-
-
-                            //vvAdvertisement.setVideoPath(info.get(0).getVideoPath());
-                            //vvAdvertisement.start();
-
-
-                            //vvAdvertisement.setVideoPath(info.get(0).getVideoPath());
-                            // vvAdvertisement.start();
-                            //vvAdvertisement.setOnPreparedListener(viewPreListener);
-
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -88,7 +77,7 @@ public class DownloadUtil {
      *
      * @param orgId 餐厅Id
      */
-    public static void cacheJson(String orgId) {
+    public static void cacheDiscountJson(String orgId) {
 
         String url = "http://120.25.159.173:8280/api/api/v10/roll/main/list";
         OkHttpUtils
@@ -123,22 +112,22 @@ public class DownloadUtil {
                 .get()//
                 .url(path)//
                 .build()//
-                .execute(new FileCallBack(Environment.getExternalStorageDirectory().getAbsolutePath() + "/muye", num + ".mp4")//
+                .execute(new FileCallBack(AlgorithmUtil.VIDEO_FILE, num + ".mp4")//
                 {
                     @Override
                     public void inProgress(float progress) {
-                        //Log.e("FILE", "onResponse :" + progress);
+                        Log.i("FILE", "onResponse :" + progress);
                     }
 
                     @Override
                     public void onError(okhttp3.Call call, Exception e) {
-                        Log.e("FILE", "onResponse :" + e.getMessage());
+                        Log.i("FILE", "onResponse :" + e.getMessage());
                     }
 
 
                     @Override
                     public void onResponse(File file) {
-                        Log.e("FILE", "onResponse :" + file.getAbsolutePath());
+                        Log.i("FILE", "onResponse :" + file.getAbsolutePath());
                     }
                 });
     }

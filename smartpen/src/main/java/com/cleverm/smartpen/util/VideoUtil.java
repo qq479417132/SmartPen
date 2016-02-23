@@ -53,23 +53,21 @@ public class VideoUtil {
      * 开启播放本地视频
      * @param mPath
      */
-    public void prepareVideo(String mPath,int currentPosition) {
+    public void prepareLocalVideo(String mPath,int currentPosition) {
+        //初始化videoIndex=0;
+        videoIndex=0;
+
         final String[] videoUrls = getVideoURIs(mPath);
         if (videoUrls == null) {
             return;
         }
 
-
-
         mVideoView.setVideoPath(videoUrls[videoIndex]);
-
         if(currentPosition!=0){
             mVideoView.seekTo(currentPosition);
         }
-
-
-
         mVideoView.start();
+
         mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {

@@ -24,13 +24,16 @@ import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.net.InfoSendSMSVo;
 import com.cleverm.smartpen.net.RequestNet;
+import com.cleverm.smartpen.pushtable.UpdateTableHandler;
 import com.cleverm.smartpen.service.ScreenLockListenService;
 import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.ui.FullScreenVideoView;
+import com.cleverm.smartpen.util.AlgorithmUtil;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.DownloadUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
+import com.cleverm.smartpen.util.VideoUtil;
 
 
 import java.util.HashMap;
@@ -47,6 +50,8 @@ import java.util.HashMap;
 public class VideoActivity extends BaseActivity implements penService.MessageListener {
 
     public static final String TAG = VideoActivity.class.getSimpleName();
+
+
     /**
      * 该参数由服务端给与
      */
@@ -57,7 +62,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
      */
     private boolean isHaveVideo = true;
 
-    private String VIDEO_MAIN_URI = Environment.getExternalStorageDirectory().getAbsolutePath() + "/muye";
+
     FullScreenVideoView vvAdvertisement;
 
     private RelativeLayout mrlNotice;
@@ -206,9 +211,6 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     private void initData() {
 
 
-        //在处理Video前将特惠专区的json数据保存到本地的文件中，然后每天都是读取的该次数据
-
-
         //1.先判断服务器实现需要我们去更新
 
 
@@ -217,31 +219,30 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
 
         //3.根据排序规则进行视频的依次播放
 
-        DownloadUtil.preVideoFile(vvAdvertisement);
 
 
-        /*if (isNotChange) {
-            if (isHaveVideo) {
+        if (isNotChange) {
+            if (QuickUtils.isHasVideoFolder()&&QuickUtils.isVideoFolderHaveFile()) {
                 //拿本地的Video：本地Video的顺序是文件名的顺序
                 VideoUtil videoUtil = new VideoUtil(vvAdvertisement);
-                videoUtil.prepareVideo(VIDEO_MAIN_URI, 0);
+                videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE, 0);
             } else {
                 //本地没有视频的话,就重新去服务器取地址并下载存储
-                DownloadUtil.preVideoFile(vvAdvertisement);
+                DownloadUtil.preVideoFileFromService(vvAdvertisement);
             }
         } else {
             //如果更新Video,直接去读取Video,并存储所有的Video
-            DownloadUtil.preVideoFile(vvAdvertisement);
-        }*/
-
+            DownloadUtil.preVideoFileFromService(vvAdvertisement);
+        }
 
     }
 
     /**
+     * 在处理Video前将特惠专区的json数据保存到本地的文件中，然后每天都是读取的该次数据
      * 将只取一次的数据放入Cache中
      */
     private void initCacheJson() {
-        DownloadUtil.cacheJson("100");
+        DownloadUtil.cacheDiscountJson(QuickUtils.getOrgIdFromSp());
     }
 
     /**
@@ -253,8 +254,8 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     @Override
     protected void onPause() {
         super.onPause();
-        QuickUtils.log("onPause()");
         RememberUtil.putInt("key", vvAdvertisement.getCurrentPosition());
+        QuickUtils.log("onPause()=" + videoValue);
     }
 
     int videoValue = 0;
@@ -263,10 +264,18 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     @Override
     protected void onResume() {
         super.onResume();
-        QuickUtils.log("onResume()");
         videoValue = RememberUtil.getInt("key", 0);
         vvAdvertisement.seekTo(videoValue);
         vvAdvertisement.start();
+        QuickUtils.log("onResume()" + videoValue);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        QuickUtils.log("onDestroy()");
+        unbindService(mConnection);
     }
 
 
@@ -342,12 +351,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     }
 
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        QuickUtils.log("onDestroy()");
-        unbindService(mConnection);
-    }
+
 
     /**
      * SEND ems

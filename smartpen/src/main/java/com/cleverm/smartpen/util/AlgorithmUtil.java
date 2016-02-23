@@ -1,7 +1,10 @@
 package com.cleverm.smartpen.util;
 
+import android.os.Environment;
+
 import com.cleverm.smartpen.bean.DiscountInfo;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +20,8 @@ import java.util.List;
  */
 public class AlgorithmUtil {
 
+
+    public static final String VIDEO_FILE= Environment.getExternalStorageDirectory().getAbsolutePath() + "/muyevideo";
 
 
     private static AlgorithmUtil INSTANCE =new AlgorithmUtil();
@@ -152,7 +157,15 @@ public class AlgorithmUtil {
 
     }
 
+    //-------------------------------------------------------------
+    // 视频处理算法
+    //-------------------------------------------------------------
+    public void getSimpleVideo(String orgId){
 
+
+
+
+    }
 
 
 

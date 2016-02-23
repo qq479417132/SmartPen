@@ -35,7 +35,7 @@ public class UpdateTableHandler extends NoticeHandler<RestaurantVo, Void> {
     private static final String BASIC_SETTINGS_FILE = SYSTEMCFG_DIR + "basic_settings.cfg";
     private static final String REPEATER_SETTINGS_FILE = SYSTEMCFG_DIR + "rep_settings.cfg";
     private static final String CALLER_SETTINGS_FILE = SYSTEMCFG_DIR + "caller_settings.cfg";
-    private static final String ORGID ="OrgID";
+    public static final String ORGID ="OrgID";
 
 
     private Context mContext;
