@@ -3,6 +3,7 @@ package com.cleverm.smartpen.app;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import com.cleverm.smartpen.bean.DiscountAdInfo;
 import com.cleverm.smartpen.bean.DiscountInfo;
 import com.cleverm.smartpen.bean.DiscountRollInfo;
 import com.cleverm.smartpen.ui.banner.BGABanner;
+import com.cleverm.smartpen.ui.banner.NoTouchBGABanner;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.squareup.picasso.Picasso;
 
@@ -34,7 +36,7 @@ public class DiscountDetailActivity extends Activity {
     private boolean isMoreInfo = true;
 
     DiscountInfo info;
-    BGABanner vpImage;
+    NoTouchBGABanner vpImage;
     TextView tvDiscountDetailTime;
     TextView tvDiscountDetailDesc;
     TextView tvDiscountDetailTitle;
@@ -78,7 +80,13 @@ public class DiscountDetailActivity extends Activity {
 
     private void initView() {
         if (isMoreInfo) {
-            vpImage = (BGABanner) findViewById(R.id.BGADetailImage);
+            vpImage = (NoTouchBGABanner) findViewById(R.id.BGADetailImage);
+            /*vpImage.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return true;
+                }
+            });*/
             tvDiscountDetailTime = (TextView) findViewById(R.id.tvDiscountDetailTime);
             tvDiscountDetailTitle = (TextView) findViewById(R.id.tvDiscountDetailTitle);
             tvDiscountDetailDesc = (TextView) findViewById(R.id.tvDiscountDetailDesc);
