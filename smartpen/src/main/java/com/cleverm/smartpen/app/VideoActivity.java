@@ -1,6 +1,5 @@
 package com.cleverm.smartpen.app;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -10,17 +9,31 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.RotateAnimation;
+import android.view.animation.ScaleAnimation;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.cleverm.smartpen.R;
+import com.cleverm.smartpen.application.CleverM;
+import com.cleverm.smartpen.net.InfoSendSMSVo;
+import com.cleverm.smartpen.net.RequestNet;
 import com.cleverm.smartpen.service.ScreenLockListenService;
 import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.ui.FullScreenVideoView;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.DownloadUtil;
-import com.cleverm.smartpen.util.IntentUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
+import com.cleverm.smartpen.version.VersionManager;
 
+import java.util.HashMap;
 
 
 /**
@@ -31,7 +44,7 @@ import com.cleverm.smartpen.util.RememberUtil;
  * Version:1.0
  * Open source
  */
-public class VideoActivity extends Activity implements penService.MessageListener {
+public class VideoActivity extends BaseActivity implements penService.MessageListener {
 
     public static final String TAG = VideoActivity.class.getSimpleName();
     /**
@@ -45,27 +58,27 @@ public class VideoActivity extends Activity implements penService.MessageListene
     private boolean isHaveVideo = true;
 
     private String VIDEO_MAIN_URI = Environment.getExternalStorageDirectory().getAbsolutePath() + "/muye";
-
-
     FullScreenVideoView vvAdvertisement;
 
+    private RelativeLayout mrlNotice;
+    private ImageView mivNoticeImage;
+    private TextView mrlNoticeText;
+    public static final int ANIMATION_TIME = 500;
+    public static final int STOP_ANIMATION = 1;
+    public static final int HANDLER_DATA = 2;
+    public static final int GET_PENSERVICE = 3;
+    public static final int DELAY_TIME = 3000;
+    public static final int FOOD_ADD = Constant.FOOD_ADD;
+    public static final int WATER_ADD = Constant.WATER_ADD;
+    public static final int TISSUE_ADD =Constant.TISSUE_ADD;
+    public static final int PAY_MONRY = Constant.PAY_MONRY;
+    public static final int OTHER_SERVICE = Constant.OTHER_SERVICE;
+    public static final String SELECTEDTABLEID="SelectedTableId";
 
-    /**
-     * ServiceConnection
-     */
-    private penService mpenService;
-    private ServiceConnection mConn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mpenService = ((penService.penServiceBind) service).getService();
-            mpenService.setMessageListener(VideoActivity.this);
-        }
+    public static final String VIDEO_ACTIVITY_KEY="video_activity_key";
+    public static final String VIDEO_ACTIVITY_ISSEND="video_activity_isSend";
+    public static final String ISUPDATA="isUpdata";
 
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };
 
     private ScreenLockListenService.ScreenLockListenServiceStub mStub;
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -82,29 +95,110 @@ public class VideoActivity extends Activity implements penService.MessageListene
         }
     };
 
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case Constant.ORDER_DISHES1:
+                case Constant.ADD_WATER1:
+                case Constant.PAY1:
+                case Constant.TISSUE1:
+                case Constant.OTHER1:
+                case Constant.ORDER_DISHES2:
+                case Constant.ADD_WATER2:
+                case Constant.PAY2:
+                case Constant.TISSUE2:
+                case Constant.OTHER2:
+                case Constant.ORDER_DISHES3:
+                case Constant.ADD_WATER3:
+                case Constant.PAY3:
+                case Constant.TISSUE3:
+                case Constant.OTHER3:
+                case Constant.ORDER_DISHES4:
+                case Constant.ADD_WATER4:
+                case Constant.PAY4:
+                case Constant.TISSUE4:
+                case Constant.OTHER4:
+                case Constant.ORDER_DISHES5:
+                case Constant.ADD_WATER5:
+                case Constant.PAY5:
+                case Constant.TISSUE5:
+                case Constant.OTHER5: {
+                    Log.v(TAG,"AnimationStart(msg.what)="+msg.what);
+                    AnimationStart(msg.what);
+                    break;
+                }
+                case STOP_ANIMATION: {
+                    mrlNotice.setVisibility(View.GONE);
+                    break;
+                }
+                case HANDLER_DATA:{
+                    handlerCode(msg.arg1,(Boolean)msg.obj);
+                    break;
+                }
+                case GET_PENSERVICE:{
+                    initPenServiceListener();
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+        }
+    };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
         bindService();
         initView();
         initData();
         initCacheJson();
-
-
+        initIntent();
+        mHandler.sendEmptyMessage(GET_PENSERVICE);
+        initVersion();
     }
 
+    private void initVersion() {
+        boolean isUpdata=RememberUtil.getBoolean(ISUPDATA,false);
+        if(isUpdata==false){
+            new VersionManager(this).uddateVersion();
+            RememberUtil.putBoolean(ISUPDATA, true);
+            Log.v(TAG,"isUpdata==");
+        }
+        Log.v(TAG,"is not Updata==");
+    }
 
+    private void initIntent() {
+        Intent in=getIntent();
+        if(in==null){
+           return;
+        }
+        int id=in.getIntExtra(VIDEO_ACTIVITY_KEY,0);
+        boolean isSend=in.getBooleanExtra(VIDEO_ACTIVITY_ISSEND,false);
+        handlerCode(id,isSend);
+    }
 
+    private void initPenServiceListener(){
+        penService penService=((CleverM) getApplication()).getpenService();
+        if(penService==null){
+            mHandler.sendEmptyMessageDelayed(GET_PENSERVICE,500);
+        }else {
+            penService.setMessageListener(this);
+        }
+
+    }
     private void bindService() {
-        bindService(new Intent(this, penService.class), mConn, BIND_AUTO_CREATE);
         bindService(new Intent(this, ScreenLockListenService.class), mConnection, BIND_AUTO_CREATE);
     }
 
 
     private void initView() {
         vvAdvertisement = (FullScreenVideoView) findViewById(R.id.vvAdvertisement);
+        mrlNotice= (RelativeLayout) findViewById(R.id.rlNotice);
+        mivNoticeImage= (ImageView) findViewById(R.id.ivNoticeImage);
+        mrlNoticeText=(TextView) findViewById(R.id.rlNoticeText);
     }
 
 
@@ -181,108 +275,69 @@ public class VideoActivity extends Activity implements penService.MessageListene
      * @param id
      */
     @Override
-    public void receiveData(int id) {
+    public void receiveData(int id,boolean isSend) {
         Log.v(TAG, "receiveData id=" + id);
-        if (id == 0) {
-            return;
-        }
-        mHandler.sendEmptyMessage(id);
+        Message mes= mHandler.obtainMessage();
+        mes.arg1=id;
+        mes.what=HANDLER_DATA;
+        mes.obj=isSend;
+        mes.sendToTarget();
     }
 
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            handlerCode(msg.what);
-        }
-    };
-
-
-    private void handlerCode(int id) {
-
-        QuickUtils.toast("code=" + id);
+    private void handlerCode(int id,boolean isSend) {
         QuickUtils.log("code=" + id);
-
-        switch (id) {
-            case Constant.ORDER_DISHES1:{
-
-                Intent intent=new Intent(this, DriverActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                VideoActivity.this.startActivity(intent);
-                break;
-
-
-            }
-
-
-
-
-            case Constant.ADD_WATER1:
-            case Constant.PAY1:
-            case Constant.TISSUE1:
-            case Constant.OTHER1:
-
+        int templateID=0;
+        switch (id){
+            case Constant.ORDER_DISHES1:
             case Constant.ORDER_DISHES2:
-            case Constant.ADD_WATER2:
-            case Constant.PAY2:
-            case Constant.TISSUE2:
-            case Constant.OTHER2:
-
             case Constant.ORDER_DISHES3:
-            case Constant.ADD_WATER3:
-            case Constant.PAY3:
-            case Constant.TISSUE3:
-            case Constant.OTHER3:
-
             case Constant.ORDER_DISHES4:
+            case Constant.ORDER_DISHES5:{
+                templateID=FOOD_ADD;
+                break;
+            }
+            case Constant.ADD_WATER1:
+            case Constant.ADD_WATER2:
+            case Constant.ADD_WATER3:
             case Constant.ADD_WATER4:
-            case Constant.PAY4:
+            case Constant.ADD_WATER5:{
+                templateID=WATER_ADD;
+                break;
+            }
+            case Constant.TISSUE1:
+            case Constant.TISSUE2:
+            case Constant.TISSUE3:
             case Constant.TISSUE4:
+            case Constant.TISSUE5:{
+                templateID=TISSUE_ADD;
+                break;
+            }
+            case Constant.PAY1:
+            case Constant.PAY2:
+            case Constant.PAY3:
+            case Constant.PAY4:
+            case Constant.PAY5:{
+                templateID=PAY_MONRY;
+                break;
+            }
+            case Constant.OTHER1:
+            case Constant.OTHER2:
+            case Constant.OTHER3:
             case Constant.OTHER4:
-
-            case Constant.ORDER_DISHES5:
-            case Constant.ADD_WATER5:
-            case Constant.PAY5:
-            case Constant.TISSUE5:
-            case Constant.OTHER5: {
-
-                break;
-            }
-            case Constant.TWO_DIMENSION_CODE1:
-
-                //优惠推介
-            case Constant.YOU_HUI1: {
-                QuickUtils.toast("code="+id);
-                QuickUtils.log("YOU_HUI1");
-                IntentUtil.startPenddingActivity(VideoActivity.this, DiscountActivity.class);
-                break;
-            }
-
-
-            case Constant.DEMO1:
-
-            /*    //商家特惠
-            case Constant.RECOMMEND: {
-                gotoDiscountFragment(id);
-                break;
-            }*/
-
-
-            case Constant.AMUSEMENTFRAGMENT1:
-            case Constant.WEB1:
-            case Constant.MO_JI1:
-            case Constant.TOU_TIAO1:
-            case Constant.BAI_DU1:
-            case Constant.ONE_SHOP1:
-            case Constant.DA_ZONG1:
-            case Constant.E_JIA1:
-            case Constant.ZHI_ZHU1:
-
-
-            case Constant.EVALUATE1: {
-
+            case Constant.OTHER5:{
+                templateID=OTHER_SERVICE;
                 break;
             }
         }
+        long deskId =RememberUtil.getLong(SELECTEDTABLEID,Constant.DESK_ID_DEF_DEFAULT);
+        if(deskId==Constant.DESK_ID_DEF_DEFAULT){
+            return;
+        }
+        InfoSendSMSVo infoSendSMSVo = new InfoSendSMSVo();
+        infoSendSMSVo.setTemplateID(templateID);
+        infoSendSMSVo.setTableID(2137);
+        Log.v(TAG, "id=" + id + " deskId=" + deskId+"isSend="+isSend);
+        sendMessageToService(infoSendSMSVo, id, isSend);
     }
 
 
@@ -290,7 +345,139 @@ public class VideoActivity extends Activity implements penService.MessageListene
     protected void onDestroy() {
         super.onDestroy();
         QuickUtils.log("onDestroy()");
-        unbindService(mConn);
         unbindService(mConnection);
     }
+
+    /**
+     * SEND ems
+     * @param infoSendSMSVo
+     * @param code
+     */
+    private void sendMessageToService(final InfoSendSMSVo infoSendSMSVo, final int code,final boolean isSend) {
+        new Thread() {
+            @Override
+            public void run() {
+                if(isSend==false){
+                    InfoSendSMSVo getSMSVo = RequestNet.getData(infoSendSMSVo);
+                    Log.v(TAG, "sendMessageToService()===");
+                    if (getSMSVo != null && getSMSVo.getSuccess()) {
+                        Log.v(TAG, "sendMessageToService()===isSuccess");
+                        mHandler.sendEmptyMessage(code);
+                    } else {
+                        Log.v(TAG,"sendMessageToService()===isfalse");
+                    }
+                }else {
+                    mHandler.sendEmptyMessage(code);
+                }
+            }
+        }.start();
+    }
+
+    /**
+     * Animation
+     * @param id
+     */
+    int i=0;
+    private void AnimationStart(final int id) {
+        mrlNotice.clearAnimation();
+        mHandler.removeMessages(STOP_ANIMATION);
+        mrlNotice.setVisibility(View.VISIBLE);
+        AnimationSet set = new AnimationSet(false);
+        RotateAnimation rotate = new RotateAnimation(0, 360,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+                0.5f);
+        rotate.setDuration(ANIMATION_TIME);
+        rotate.setFillAfter(true);
+        rotate.setInterpolator(new BounceInterpolator());
+
+
+        ScaleAnimation scale = new ScaleAnimation(0, 1, 0, 1,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+                0.5f);
+        scale.setDuration(ANIMATION_TIME);
+        scale.setFillAfter(true);
+
+
+        AlphaAnimation alpha = new AlphaAnimation(0, 1);
+        alpha.setDuration(ANIMATION_TIME);
+        alpha.setFillAfter(true);
+
+        set.addAnimation(rotate);
+        set.addAnimation(scale);
+        set.addAnimation(alpha);
+
+
+        set.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                String text = null;
+                Log.v(TAG, "nimationStart onAnimationEnd" + id);
+                switch (id) {
+                    case Constant.ORDER_DISHES1:
+                    case Constant.ORDER_DISHES2:
+                    case Constant.ORDER_DISHES3:
+                    case Constant.ORDER_DISHES4:
+                    case Constant.ORDER_DISHES5: {
+                        mivNoticeImage.setImageResource(R.mipmap.icon_dish);
+                        text = getString(R.string.add_greens);
+                        break;
+                    }
+                    case Constant.ADD_WATER1:
+                    case Constant.ADD_WATER2:
+                    case Constant.ADD_WATER3:
+                    case Constant.ADD_WATER4:
+                    case Constant.ADD_WATER5: {
+                        mivNoticeImage.setImageResource(R.mipmap.icon_water);
+                        text = getString(R.string.add_water);
+                        break;
+                    }
+                    case Constant.TISSUE1:
+                    case Constant.TISSUE2:
+                    case Constant.TISSUE3:
+                    case Constant.TISSUE4:
+                    case Constant.TISSUE5: {
+                        mivNoticeImage.setImageResource(R.mipmap.icon_tissue);
+                        text = getString(R.string.tissue);
+                        break;
+                    }
+                    case Constant.PAY1:
+                    case Constant.PAY2:
+                    case Constant.PAY3:
+                    case Constant.PAY4:
+                    case Constant.PAY5: {
+                        mivNoticeImage.setImageResource(R.mipmap.icon_pay);
+                        text = getString(R.string.pay);
+                        break;
+                    }
+                    case Constant.OTHER1:
+                    case Constant.OTHER2:
+                    case Constant.OTHER3:
+                    case Constant.OTHER4:
+                    case Constant.OTHER5: {
+                        mivNoticeImage.setImageResource(R.mipmap.icon_service);
+                        text = getString(R.string.other);
+                        break;
+                    }
+                }
+                Log.v(TAG, "AnimationStart=" + id);
+                mrlNoticeText.setText(text);
+                mHandler.sendEmptyMessageDelayed(STOP_ANIMATION, DELAY_TIME);
+            }
+        });
+        mrlNotice.startAnimation(set);
+        Log.v(TAG, "AnimationStart mrlNotice.startAnimation(set)"+i);
+    }
+
+
 }

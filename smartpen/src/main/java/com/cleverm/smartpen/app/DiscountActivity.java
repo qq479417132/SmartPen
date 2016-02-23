@@ -11,8 +11,6 @@ import android.widget.Toast;
 
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.ui.banner.BGABanner;
-import com.cleverm.smartpen.util.FileCacheUtil;
-import com.cleverm.smartpen.util.DownloadUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.squareup.picasso.Picasso;
 
@@ -44,7 +42,7 @@ public class DiscountActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_discount);
         mContext=this;
 
-        QuickUtils.toast(FileCacheUtil.get(this).getAsString(DownloadUtil.DISOUNT_JSON));
+        //QuickUtils.toast(FileCacheUtil.get(this).getAsString(DownloadUtil.DISOUNT_JSON));
 
         initView();
         initDate();
@@ -142,7 +140,7 @@ public class DiscountActivity extends Activity implements View.OnClickListener {
         switch (view.getId()) {
 
             case R.id.ivClose:
-                QuickUtils.toast("ivClose");
+                //QuickUtils.toast("ivClose");
                 finish();
                 break;
 
