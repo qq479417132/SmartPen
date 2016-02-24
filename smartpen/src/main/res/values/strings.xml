@@ -88,17 +88,17 @@
 
 
     <string name="currentversion">当前版本：</string>
-    <string name="findnew"> ,发现新版本：</string>
+    <string name="findnew">&#160;&#160;发现新版本：</string>
     <string name="isupdate">是否更新？</string>
-    <string name="update">软件更新</string>
+    <string name="update">发现软件新版本</string>
     <string name="isdownloading">正在下载</string>
     <string name="wait">请稍候...</string>
-    <string name="nowversion">当前版本:</string>
+    <string name="nowversion">当前版本：</string>
     <string name="sure">确定</string>
     <string name="nowisnew">已是最新版,无需更新</string>
     <string name="change">更新</string>
     <string name="nochange">不更新</string>
-    <string name="description">更新描述:</string>
+    <string name="description">更新描述：</string>
 
     <string name="input_psw">请输入密码:</string>
     <string name="input_psw_area">输入密码区域</string>
