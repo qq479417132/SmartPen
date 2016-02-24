@@ -1,6 +1,5 @@
 package com.cleverm.smartpen.util;
 
-import android.os.Environment;
 import android.util.Log;
 
 import com.cleverm.smartpen.application.CleverM;
@@ -116,7 +115,7 @@ public class DownloadUtil {
                 {
                     @Override
                     public void inProgress(float progress) {
-                        Log.i("FILE", "onResponse :" + progress);
+//                        Log.i("FILE", "onResponse :" + progress);
                     }
 
                     @Override

@@ -13,6 +13,7 @@ import com.cleverm.smartpen.app.DiscountActivity;
 import com.cleverm.smartpen.app.DriverActivity;
 import com.cleverm.smartpen.app.EvaluateActivity;
 import com.cleverm.smartpen.app.FutureActivity;
+import com.cleverm.smartpen.app.GameActivity;
 import com.cleverm.smartpen.app.SelectTableActivity;
 import com.cleverm.smartpen.app.VideoActivity;
 import com.cleverm.smartpen.bean.TemplateIDState;
@@ -34,6 +35,14 @@ public class penService extends Service implements WandAPI.OnScanListener {
     private String mActivityFlag = "VideoActivity";
     public static final String VIDEO_ACTIVITY_KEY="video_activity_key";
     public static final String VIDEO_ACTIVITY_ISSEND="video_activity_isSend";
+    public static final String WEATHER="weather";
+    public static final String HEADLINE="headline";
+    public static final String HAPPY="happy";
+    public static final String SHOP="shop";
+    public static final String DISCOUNT="discount";
+    public static final String MAGAZINE="magazine";
+    public static final String VIDEO_ENTERTAINMENT="video_entertainment";
+    public static final String GAME_ACTIVITY="game_activity";
 
     public void setMessageListener(MessageListener messageListener) {
         this.messageListener = messageListener;
@@ -170,56 +179,105 @@ public class penService extends Service implements WandAPI.OnScanListener {
                 }
                 break;
             }
-
             case Constant.MO_JI1:
-            case Constant.TOU_TIAO1:
-            case Constant.BAI_DU1:
-            case Constant.ONE_SHOP1:
-            case Constant.DA_ZONG1:
-            case Constant.ZHI_ZHU1:
-            case Constant.TWO_DIMENSION_CODE1:
-            case Constant.AMUSEMENTFRAGMENT1:
-            case Constant.WEB1:
-
             case Constant.MO_JI2:
-            case Constant.TOU_TIAO2:
-            case Constant.BAI_DU2:
-            case Constant.ONE_SHOP2:
-            case Constant.DA_ZONG2:
-            case Constant.ZHI_ZHU2:
-            case Constant.TWO_DIMENSION_CODE2:
-            case Constant.AMUSEMENTFRAGMENT2:
-            case Constant.WEB2:
-
             case Constant.MO_JI3:
-            case Constant.TOU_TIAO3:
-            case Constant.BAI_DU3:
-            case Constant.ONE_SHOP3:
-            case Constant.DA_ZONG3:
-            case Constant.ZHI_ZHU3:
-            case Constant.TWO_DIMENSION_CODE3:
-            case Constant.AMUSEMENTFRAGMENT3:
-            case Constant.WEB3:
-
             case Constant.MO_JI4:
+            case Constant.MO_JI5:{
+                if(!WEATHER.equals(mActivityFlag)){
+                    LauncherApp(Constant.MO_JI_PACKAGE_NAME);
+                    mActivityFlag =WEATHER;
+                }
+                break;
+            }
+            case Constant.TOU_TIAO1:
+            case Constant.TOU_TIAO2:
+            case Constant.TOU_TIAO3:
             case Constant.TOU_TIAO4:
+            case Constant.TOU_TIAO5:{
+                if(!HEADLINE.equals(mActivityFlag)){
+                    LauncherApp(Constant.TOU_TIAO_PACKAGE_NAME);
+                    mActivityFlag =HEADLINE;
+                }
+                break;
+            }
+            case Constant.BAI_DU1:
+            case Constant.BAI_DU2:
+            case Constant.BAI_DU3:
             case Constant.BAI_DU4:
+            case Constant.BAI_DU5:{
+                if(!HAPPY.equals(mActivityFlag)){
+                    LauncherApp(Constant.BAI_DU_PACKAGE_NAME);
+                    mActivityFlag =HAPPY;
+                }
+                break;
+            }
+            case Constant.ONE_SHOP1:
+            case Constant.ONE_SHOP2:
+            case Constant.ONE_SHOP3:
             case Constant.ONE_SHOP4:
+            case Constant.ONE_SHOP5:{
+                if(!SHOP.equals(mActivityFlag)){
+                    LauncherApp(Constant.ONE_SHOP_PACKAGE_NAME);
+                    mActivityFlag =SHOP;
+                }
+                break;
+            }
+            case Constant.DA_ZONG1:
+            case Constant.DA_ZONG2:
+            case Constant.DA_ZONG3:
             case Constant.DA_ZONG4:
+            case Constant.DA_ZONG5:{
+                if(!DISCOUNT.equals(mActivityFlag)){
+                    LauncherApp(Constant.DA_ZONG_PACKAGE_NAME);
+                    mActivityFlag =DISCOUNT;
+                }
+                break;
+            }
+            case Constant.ZHI_ZHU1:
+            case Constant.ZHI_ZHU2:
+            case Constant.ZHI_ZHU3:
             case Constant.ZHI_ZHU4:
-            case Constant.TWO_DIMENSION_CODE4:
+            case Constant.ZHI_ZHU5:{
+                if(!MAGAZINE.equals(mActivityFlag)){
+                    LauncherApp(Constant.ZHIZ_ZHU_PACKAGE_NAME);
+                    mActivityFlag =MAGAZINE;
+                }
+                break;
+            }
+            case Constant.AMUSEMENTFRAGMENT1:
+            case Constant.AMUSEMENTFRAGMENT2:
+            case Constant.AMUSEMENTFRAGMENT3:
             case Constant.AMUSEMENTFRAGMENT4:
+            case Constant.AMUSEMENTFRAGMENT5:{
+                if(!VIDEO_ENTERTAINMENT.equals(mActivityFlag)){
+                    LauncherApp(Constant.VIDEO_ENTERTAINMENT);
+                    mActivityFlag =VIDEO_ENTERTAINMENT;
+                }
+                break;
+            }
+            case Constant.WEB1:
+            case Constant.WEB2:
+            case Constant.WEB3:
             case Constant.WEB4:
-
-            case Constant.MO_JI5:
-            case Constant.TOU_TIAO5:
-            case Constant.BAI_DU5:
-            case Constant.ONE_SHOP5:
-            case Constant.DA_ZONG5:
-            case Constant.ZHI_ZHU5:
+            case Constant.WEB5:{
+                if (!"GAME_ACTIVITY".equals(mActivityFlag)) {
+                    Intent intent = new Intent(this, GameActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
+                            Intent.FLAG_ACTIVITY_NEW_TASK |
+                            Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    mActivityFlag = "GAME_ACTIVITY";
+                }
+                break;
+            }
+            case Constant.TWO_DIMENSION_CODE1:
+            case Constant.TWO_DIMENSION_CODE2:
+            case Constant.TWO_DIMENSION_CODE3:
+            case Constant.TWO_DIMENSION_CODE4:
             case Constant.TWO_DIMENSION_CODE5:
-            case Constant.AMUSEMENTFRAGMENT5:
-            case Constant.WEB5: {
+             {
                 if (!"FutureActivity".equals(mActivityFlag)) {
                     Intent intent = new Intent(this, FutureActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
@@ -234,6 +292,9 @@ public class penService extends Service implements WandAPI.OnScanListener {
         }
     }
 
+    public void setActivityFlag(String flag){
+        mActivityFlag=flag;
+    }
     @Override
     public void onCreate() {
         super.onCreate();
@@ -374,4 +435,14 @@ public class penService extends Service implements WandAPI.OnScanListener {
             }
         }
     };
+
+
+    private void LauncherApp(String packageName){
+        Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
+                Intent.FLAG_ACTIVITY_NEW_TASK |
+                Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
+                Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
 }

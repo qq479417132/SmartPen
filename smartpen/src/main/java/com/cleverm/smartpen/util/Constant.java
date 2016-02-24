@@ -132,10 +132,7 @@ public class Constant {
     public static final int RECOMMEND5 = 1189;
     public static final int SET5 = 1190;
 
-    public static final String URL = "http://huodong.37" +
-            ".com/zt/rxjh/201509_20/?refer=tg_baidu&ad_param=28494PKjhye&wd" +
-            "=JUU3JUJEJTkxJUU5JUExJUI1JUU2JUI4JUI4JUU2JTg4JThG&ad_type=152&uid=1114556&wd" +
-            "=JUU3JUJEJTkxJUU5JUExJUI1JUU2JUI4JUI4JUU2JTg4JThG";
+    public static final String URL = "http://cbzz.5153.com/s/bd/?dsfrom=baidu_14891/20151026";
     public static final String MAIN_VIDEO_PATH = Environment.getExternalStorageDirectory().getPath() +
             "/muye/mainVideo";
     public static final String AD_VIDEO_PATH = Environment.getExternalStorageDirectory().getPath() + "/muye/ad";
@@ -162,8 +159,8 @@ public class Constant {
     public static final String BAI_DU_PACKAGE_NAME = "com.baidu.BaiduMap";
     public static final String ONE_SHOP_PACKAGE_NAME = "com.thestore.main";
     public static final String DA_ZONG_PACKAGE_NAME = "com.dianping.v1";
-    public static final String E_PACKAGE_NAME = "cn.edaijia.android.client";
     public static final String ZHIZ_ZHU_PACKAGE_NAME = "com.spider.reader";
+    public static final String VIDEO_ENTERTAINMENT = "com.qiyi.video.pad";
 
     public static final String OTHER_STATE = "other_state";
     public static final String WEB_URL = "web_url";
@@ -173,12 +170,12 @@ public class Constant {
 
 //    public static final String NET_PATH = "http://192.168.1.72:8080/sockjs/execCommand";
 
-    public static final String APP_NAME = "美味点点笔";//app���
-    public static final String PSW = "123456";//����
+    public static final String APP_NAME = "美味点点笔";
+    public static final String PSW = "123456";
 
-    public static final String SHARE = "CleverM";//����
+    public static final String SHARE = "CleverM";
 
-    public static final String KEY_ID = "key_id";//����
+    public static final String KEY_ID = "key_id";
 
     public static final long DESK_ID_DEF_DEFAULT=8888L;
     public static final int USB_DISCONNECT=100;

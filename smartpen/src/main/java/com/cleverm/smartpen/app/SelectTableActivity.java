@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.cleverm.smartpen.R;
+import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.util.RememberUtil;
 
 
@@ -42,6 +43,7 @@ public class SelectTableActivity extends BaseSelectTableActivity {
         Intent intent = new Intent(this, VideoActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+        ((CleverM) getApplication()).getpenService().setActivityFlag("VideoActivity");
     }
 
     @Override

@@ -16,9 +16,11 @@ import com.cleverm.smartpen.log.CrashHandler;
 import com.cleverm.smartpen.net.InfoSendSMSVo;
 import com.cleverm.smartpen.net.RequestNet;
 import com.cleverm.smartpen.service.CommunicationService;
+import com.cleverm.smartpen.service.ScreenLockListenService;
 import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.RememberUtil;
+import com.cleverm.smartpen.version.VersionManager;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -37,13 +39,26 @@ public class CleverM extends Application {
     public static final String SELECTEDTABLEID="SelectedTableId";
     private Object object=new Object();
     private PowerReceiver mPowerReceiver = new PowerReceiver();
-    public static final String ISUPDATA="isUpdata";
+    private boolean isUpdata=true;
 
     private penService mpenService;
     private ServiceConnection mConn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mpenService = ((penService.penServiceBind) service).getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+
+    private ScreenLockListenService.ScreenLockListenServiceStub mStub;
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mStub = (ScreenLockListenService.ScreenLockListenServiceStub) service;
         }
 
         @Override
@@ -74,7 +89,6 @@ public class CleverM extends Application {
     public void onTerminate() {
         super.onTerminate();
         onExit();
-        RememberUtil.putBoolean(ISUPDATA, false);
     }
 
 
@@ -86,6 +100,7 @@ public class CleverM extends Application {
 
 
         bindService(new Intent(this, penService.class), mConn, BIND_AUTO_CREATE);
+        bindService(new Intent(this, ScreenLockListenService.class), mConnection, BIND_AUTO_CREATE);
     }
 
     private void closeNet() {
@@ -93,6 +108,7 @@ public class CleverM extends Application {
         intent.setAction(Constant.ACTION_CONNECT_SOCKET);
         stopService(intent);
         unbindService(mConn);
+        unbindService(mConnection);
     }
 
     public void onExit(){
@@ -103,6 +119,10 @@ public class CleverM extends Application {
 
     public penService getpenService(){
         return mpenService;
+    }
+
+    public ScreenLockListenService.ScreenLockListenServiceStub getStub(){
+        return mStub;
     }
 
 
@@ -159,6 +179,13 @@ public class CleverM extends Application {
                 }
             }.start();
         }
+    }
+
+    public void UpdataApp(Context context){
+           if(isUpdata){
+               new VersionManager(context).uddateVersion();
+               isUpdata=false;
+           }
     }
 
 }

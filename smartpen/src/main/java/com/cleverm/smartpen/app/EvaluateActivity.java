@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cleverm.smartpen.R;
+import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.google.gson.Gson;
@@ -72,6 +73,7 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
                     imm.hideSoftInputFromWindow(mequipmentInput.getWindowToken(), 0);
                     startActivity(new Intent(EvaluateActivity.this, VideoActivity.class));
                     EvaluateActivity.this.finish();
+                    ((CleverM) getApplication()).getpenService().setActivityFlag("VideoActivity");
                     break;
                 }
             }

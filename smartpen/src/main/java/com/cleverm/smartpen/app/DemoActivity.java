@@ -16,6 +16,7 @@ import android.widget.ImageView;
 
 
 import com.cleverm.smartpen.R;
+import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.util.Constant;
 
 
@@ -46,6 +47,7 @@ public class DemoActivity extends BaseActivity {
                     Log.v(TAG, "come hand====");
                     startActivity(new Intent(DemoActivity.this, VideoActivity.class));
                     DemoActivity.this.finish();
+                    ((CleverM) getApplication()).getpenService().setActivityFlag("VideoActivity");
                     break;
                 }
             }
@@ -82,11 +84,11 @@ public class DemoActivity extends BaseActivity {
             List<View> list = new ArrayList<View>();
             View pagerView1 = View.inflate(this, R.layout.viewpageritem, null);
             ImageView mImageView1 = (ImageView) pagerView1.findViewById(R.id.viewpagerItemImage);
-            mImageView1.setImageResource(drawableRes[0]);
+            mImageView1.setBackgroundResource(drawableRes[0]);
             list.add(pagerView1);
             View pagerView2 = View.inflate(this, R.layout.viewpageritem, null);
             ImageView mImageView2 = (ImageView) pagerView2.findViewById(R.id.viewpagerItemImage);
-            mImageView2.setImageResource(drawableRes[1]);
+            mImageView2.setBackgroundResource(drawableRes[1]);
             list.add(pagerView2);
             mDemoPagerAdapter = new DemoPagerAdapter(this, list);
         }

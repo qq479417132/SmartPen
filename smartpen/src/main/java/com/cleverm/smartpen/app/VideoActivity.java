@@ -1,12 +1,8 @@
 package com.cleverm.smartpen.app;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
@@ -24,7 +20,6 @@ import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.net.InfoSendSMSVo;
 import com.cleverm.smartpen.net.RequestNet;
-import com.cleverm.smartpen.pushtable.UpdateTableHandler;
 import com.cleverm.smartpen.service.ScreenLockListenService;
 import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.ui.FullScreenVideoView;
@@ -34,9 +29,6 @@ import com.cleverm.smartpen.util.DownloadUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.cleverm.smartpen.util.VideoUtil;
-
-
-import java.util.HashMap;
 
 
 /**
@@ -72,6 +64,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     public static final int STOP_ANIMATION = 1;
     public static final int HANDLER_DATA = 2;
     public static final int GET_PENSERVICE = 3;
+    public static final int GET_STUB = 4;
     public static final int DELAY_TIME = 3000;
     public static final int FOOD_ADD = Constant.FOOD_ADD;
     public static final int WATER_ADD = Constant.WATER_ADD;
@@ -82,23 +75,6 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
 
     public static final String VIDEO_ACTIVITY_KEY="video_activity_key";
     public static final String VIDEO_ACTIVITY_ISSEND="video_activity_isSend";
-    public static final String ISUPDATA="isUpdata";
-
-
-    private ScreenLockListenService.ScreenLockListenServiceStub mStub;
-    private ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mStub = (ScreenLockListenService.ScreenLockListenServiceStub) service;
-            mStub.setWindow(getWindow());
-            mStub.setTaskId(getTaskId());
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };
 
     private Handler mHandler = new Handler(){
         @Override
@@ -138,11 +114,15 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                     break;
                 }
                 case HANDLER_DATA:{
-                    handlerCode(msg.arg1,(Boolean)msg.obj);
+                    handlerCode(msg.arg1, (Boolean) msg.obj);
                     break;
                 }
                 case GET_PENSERVICE:{
                     initPenServiceListener();
+                    break;
+                }
+                case GET_STUB:{
+                    initStubListener();
                     break;
                 }
                 default: {
@@ -157,7 +137,6 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
         QuickUtils.hideHighApiBottomStatusBar();
-        bindService();
         initView();
         initData();
         initCacheJson();
@@ -167,13 +146,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     }
 
     private void initVersion() {
-        boolean isUpdata=RememberUtil.getBoolean(ISUPDATA, false);
-        if(isUpdata==false){
-            new com.cleverm.smartpen.version.VersionManager(this).uddateVersion();
-            RememberUtil.putBoolean(ISUPDATA, true);
-            Log.v(TAG,"isUpdata==");
-        }
-        Log.v(TAG, "is not Updata==");
+        ((CleverM)CleverM.getApplication()).UpdataApp(this);
     }
 
     private void initIntent() {
@@ -182,8 +155,8 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
            return;
         }
         int id=in.getIntExtra(VIDEO_ACTIVITY_KEY,0);
-        boolean isSend=in.getBooleanExtra(VIDEO_ACTIVITY_ISSEND,false);
-        handlerCode(id,isSend);
+        boolean isSend=in.getBooleanExtra(VIDEO_ACTIVITY_ISSEND, false);
+        handlerCode(id, isSend);
     }
 
     private void initPenServiceListener(){
@@ -195,10 +168,16 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         }
 
     }
-    private void bindService() {
-        bindService(new Intent(this, ScreenLockListenService.class), mConnection, BIND_AUTO_CREATE);
-    }
 
+    private void initStubListener(){
+        ScreenLockListenService.ScreenLockListenServiceStub stub=((CleverM) getApplication()).getStub();
+        if(stub==null){
+            mHandler.sendEmptyMessageDelayed(GET_STUB,500);
+        }else {
+            stub.setTaskId(getTaskId());
+            stub.setWindow(getWindow());
+        }
+    }
 
     private void initView() {
         vvAdvertisement = (FullScreenVideoView) findViewById(R.id.vvAdvertisement);
@@ -275,7 +254,6 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     protected void onDestroy() {
         super.onDestroy();
         QuickUtils.log("onDestroy()");
-        unbindService(mConnection);
     }
 
 
