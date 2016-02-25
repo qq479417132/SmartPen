@@ -9,6 +9,16 @@ public class VideoInfo {
     private String type;
 
 
+    private int videoId;
+
+    public int getVideoId() {
+        return videoId;
+    }
+
+    public void setVideoId(int videoId) {
+        this.videoId = videoId;
+    }
+
     public String getVideoPath() {
         return videoPath;
     }

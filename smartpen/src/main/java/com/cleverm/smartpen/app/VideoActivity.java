@@ -209,32 +209,11 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
 
 
     private void initData() {
-
-
         //1.先判断服务器实现需要我们去更新
-
-
         //2.如果不需要更新,直接检查我们的视频目录是否存在视频
-
-
         //3.根据排序规则进行视频的依次播放
-
-
-
-        if (isNotChange) {
-            if (QuickUtils.isHasVideoFolder()&&QuickUtils.isVideoFolderHaveFile()) {
-                //拿本地的Video：本地Video的顺序是文件名的顺序
-                VideoUtil videoUtil = new VideoUtil(vvAdvertisement);
-                videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE, 0);
-            } else {
-                //本地没有视频的话,就重新去服务器取地址并下载存储
-                DownloadUtil.preVideoFileFromService(vvAdvertisement);
-            }
-        } else {
-            //如果更新Video,直接去读取Video,并存储所有的Video
-            DownloadUtil.preVideoFileFromService(vvAdvertisement);
-        }
-
+        //AlgorithmUtil.getInstance().getSimpleVideo(vvAdvertisement);
+        AlgorithmUtil.getInstance().startVideoPlayAlgorithm(vvAdvertisement);
     }
 
     /**

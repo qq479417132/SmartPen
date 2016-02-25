@@ -3,6 +3,11 @@ package com.cleverm.smartpen.util;
 import android.os.Environment;
 
 import com.cleverm.smartpen.bean.DiscountInfo;
+import com.cleverm.smartpen.bean.VideoInfo;
+import com.cleverm.smartpen.ui.FullScreenVideoView;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
 
 import java.io.File;
 import java.lang.reflect.Array;
@@ -158,14 +163,93 @@ public class AlgorithmUtil {
     }
 
     //-------------------------------------------------------------
-    // 视频处理算法
+    // 视频处理算法:
     //-------------------------------------------------------------
-    public void getSimpleVideo(String orgId){
+    @Deprecated
+    public void getSimpleVideo(final FullScreenVideoView vvAdvertisement){
 
 
+        //1.去服务端拿标记位来判断是否需要更新视频
+        DownloadUtil.getVideoFlag(new ServiceUtil.JsonInterface() {
+            @Override
+            public void onSucced(String json) {
+                try {
+                    List<VideoInfo> infos = JsonUtil.parser(json, VideoInfo.class);
+
+                    boolean serviceFlagNoChange = true;
+
+
+                    if (serviceFlagNoChange) {
+                        //2.去本地拿是否存在视频目录及文件
+                        if (QuickUtils.isHasVideoFolder()&&QuickUtils.isVideoFolderHaveFile()) {
+                            //拿本地的Video：本地Video的顺序是文件名的顺序
+                            VideoUtil videoUtil = new VideoUtil(vvAdvertisement);
+                            videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE, 0);
+                        } else {
+                            //本地没有视频的话,就重新去服务器取地址并下载存储
+                            DownloadUtil.preVideoFileFromService(vvAdvertisement);
+                        }
+                    } else {
+                       //3.服务端拿视频
+                        //如果更新Video,直接去读取Video,并存储所有的Video
+                        DownloadUtil.preVideoFileFromService(vvAdvertisement);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    //4.发生任何异常后都去本地拿
+
+
+                }
+            }
+
+            @Override
+            public void onFail(String error) {
+                //4.发生任何异常后都去本地拿
+
+            }
+        });
+
+    }
+
+
+    /**
+     * 核心点在于每天只播放服务器API上的列表的视频
+     *  1.将这些视频的id值和本地存储的id比较,没有的id的视频就不会播放,然后取出要
+     *  播放的那些id值;
+     *  2.对于新的id的视频要进行下载后再进行播放;
+     *  3.根据这些视频的type属性进行视频播放的排序;
+     *  具体代码层面操作步骤：
+     * 1.先判断本地是否有Video文件夹
+     * 2.如果木有就表示这是第一次使用,直接走服务端请求并存储video,video的name就是：videoId这一唯一标识符+"_"+video的type类型
+     * 3.如果有,那么就直接循环遍历去判断服务端这次给的videoId是否存在于了存储中.对于没有的videId就进行下载(只下载该视频)
+     * 4.然后进行播放的排序操作,播放的顺序存入一个Map集合
+     * 5.根据最后的排序进行播放
+     *
+     * 算法三部曲:
+     * 1.下载和存储(finished)
+     * 2.排序(waiting2.0)
+     * 3.裁剪播放(waiting2.0)
+     *
+     */
+    public void startVideoPlayAlgorithm(FullScreenVideoView videoView){
+        //访问API,存储所有数据到DB
+        if(QuickUtils.isHasVideoFolder()&&QuickUtils.isVideoFolderHaveFiel2()){
+            QuickUtils.log("Video----nofirst----");
+            //3.如果有,那么就直接循环遍历去判断服务端这次给的videoId是否存在于了存储中.对于没有的videoId就进行下载
+            VideoAlgorithmUtil.getInstance().loopFileName(videoView);
+        }else{
+            //2.木有就表示这是第一次使用,直接走服务端请求并存储video
+            QuickUtils.log("Video----first----");
+            VideoAlgorithmUtil.getInstance().getVideoFirst(videoView);
+        }
 
 
     }
+
+
+
+
 
 
 

@@ -6,7 +6,9 @@ import android.util.Log;
 import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.bean.VideoInfo;
 import com.cleverm.smartpen.ui.FullScreenVideoView;
+import com.lidroid.xutils.DbUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.Callback;
 import com.zhy.http.okhttp.callback.FileCallBack;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -16,6 +18,7 @@ import java.io.File;
 import java.util.List;
 
 import okhttp3.Call;
+import okhttp3.Response;
 
 
 /**
@@ -29,6 +32,37 @@ import okhttp3.Call;
 public class DownloadUtil {
 
     public static String  DISOUNT_JSON="DISOUNT_JSON";
+
+
+
+
+
+    public static void getVideoFlag(final ServiceUtil.JsonInterface jsonInterface){
+        String url = "http://120.25.159.173:8280/api/api/v10/video/list";
+        OkHttpUtils
+                .get()
+                .url(url)
+                .addParams("orgId", QuickUtils.getOrgIdFromSp())
+                .addParams("type", "1")
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        jsonInterface.onFail(e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        jsonInterface.onSucced(response.toString());
+
+                    }
+                });
+    }
+
+
+
+
+
 
 
     public static void preVideoFileFromService(final FullScreenVideoView vvAdvertisement) {

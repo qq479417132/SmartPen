@@ -213,6 +213,33 @@ public class QuickUtils {
         File[] files = file.listFiles();
 
         if(files!=null){
+            QuickUtils.log("files.length="+files.length);
+        }
+
+        if((files ==null) || (files.length==0)){
+            return false;
+        }else{
+            for(int i =0 ; i<files.length ;i++){
+                QuickUtils.log("files.name="+files[i]);
+                if(files[i].isDirectory()){
+                    //递归删除目录
+                    deleteDir(files[i]);
+                }
+            }
+            //在经过一轮删除目录中的目录后，如果该目录中还有length,那么就代表一定有文件
+            if(files.length>0){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    }
+
+    public static boolean isVideoFolderHaveFiel2(){
+        File file = new File(AlgorithmUtil.VIDEO_FILE);
+        File[] files = file.listFiles();
+
+        if(files!=null){
             QuickUtils.log("files="+files.toString());
         }
 
@@ -220,21 +247,67 @@ public class QuickUtils {
         if((files ==null) || (files.length==0)){
             return false;
         }else{
-            for(int i =0 ; i<files.length ;i++){
-
-                if(files[i].isDirectory()){
-                    files[i].delete();
-                }
-
-                if(files[i].getName().equals("1.mp4")){
-                    return true;
-                }
-            }
+            return true;
         }
-        return false;
+    }
+
+    public static File[] getVideoFolderFiles(){
+        File file = new File(AlgorithmUtil.VIDEO_FILE);
+        File[] files = file.listFiles();
+        return files;
     }
 
 
+    /**
+     * 递归删除目录
+     * @param dir
+     * @return
+     */
+    private static boolean deleteDir(File dir) {
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            //递归删除目录中的子目录下
+            for (int i=0; i<children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        // 目录此时为空，可以删除
+        return dir.delete();
+    }
+
+    /**
+     * 删除单个文件
+     * @param   sPath    被删除文件的文件名
+     * @return 单个文件删除成功返回true，否则返回false
+     */
+    public static boolean deleteFile(String sPath) {
+        boolean flag = false;
+        File file = new File(sPath);
+        // 路径为文件且不为空则进行删除
+        if (file.isFile() && file.exists()) {
+            file.delete();
+            flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * 文件是否存在
+     * @param path
+     * @return
+     */
+    public static boolean isFileExists(String path){
+        boolean flag = false;
+        File file = new File(path);
+        // 路径为文件且不为空则进行删除
+        if (file.isFile() && file.exists()) {
+            flag = true;
+        }
+        return flag;
+    }
 
 
 }

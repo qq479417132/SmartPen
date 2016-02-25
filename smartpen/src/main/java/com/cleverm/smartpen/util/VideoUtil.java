@@ -53,7 +53,7 @@ public class VideoUtil {
      * 开启播放本地视频
      * @param mPath
      */
-    public void prepareLocalVideo(String mPath,int currentPosition) {
+    public void prepareLocalVideo(final String mPath,int currentPosition) {
         //初始化videoIndex=0;
         videoIndex=0;
 
@@ -71,6 +71,10 @@ public class VideoUtil {
         mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
+
+                //重置一次VideoView
+                String[] videoUrls=getVideoURIs(mPath);
+
                 videoIndex++;
                 if (videoIndex >= videoUrls.length) {
                     videoIndex = 0;
