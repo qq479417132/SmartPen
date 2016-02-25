@@ -210,18 +210,19 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     @Override
     protected void onResume() {
         super.onResume();
-        videoValue = RememberUtil.getInt(Constant.MEMORY_PLAY_KEY, 0);
+        //videoValue = RememberUtil.getInt(Constant.MEMORY_PLAY_KEY, 0);
         /**
          * 因为VideoActivity会被不断的重启,算法太耗时导致必须延迟
          */
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 QuickUtils.log("videoValue" + videoValue);
-                vvAdvertisement.seekTo(videoValue);
-                vvAdvertisement.start();
+                QuickUtils.log("videoValueURI:" + RememberUtil.getInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY, 0));
+
             }
-        },250);
+        },300);
 
         QuickUtils.log("onResume()" + videoValue);
     }

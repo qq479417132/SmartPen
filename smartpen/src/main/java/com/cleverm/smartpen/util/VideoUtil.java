@@ -1,6 +1,7 @@
 package com.cleverm.smartpen.util;
 
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.widget.VideoView;
 
 
@@ -15,7 +16,6 @@ import java.util.List;
  * 从本地中取出文件,判断每个文件的时常大小，根据时常和排序规则来处理视频
  */
 public class VideoUtil {
-
 
 
     public int videoIndex = 0;
@@ -63,23 +63,50 @@ public class VideoUtil {
         }
 
         mVideoView.setVideoPath(videoUrls[videoIndex]);
+
+
+        if(RememberUtil.getInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY,0)!=0){
+            mVideoView.setVideoPath(videoUrls[RememberUtil.getInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY, 0)]);
+            videoIndex=RememberUtil.getInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY,0);
+            QuickUtils.log("算法中的videoUrl=" + RememberUtil.getInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY, 0));
+
+        }
+
+
         if(currentPosition!=0){
             mVideoView.seekTo(currentPosition);
         }
+
+        if(RememberUtil.getInt(Constant.MEMORY_PLAY_KEY, 0)!=0){
+            QuickUtils.log("算法中的videoValue=" + RememberUtil.getInt(Constant.MEMORY_PLAY_KEY, 0));
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    //seekTo是异步操作
+                    mVideoView.seekTo(RememberUtil.getInt(Constant.MEMORY_PLAY_KEY, 0));
+                }
+            }, 200);
+
+        }
+
+
         mVideoView.start();
 
         mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
 
-                //重置一次VideoView
-                String[] videoUrls=getVideoURIs(mPath);
+                //重置一次VideoView.因为VideoView会每次都运行,所以无需重置
+                //String[] videoUrls=getVideoURIs(mPath);
 
                 videoIndex++;
                 if (videoIndex >= videoUrls.length) {
                     videoIndex = 0;
                 }
                 mVideoView.setVideoPath(videoUrls[videoIndex]);
+
+                RememberUtil.putInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY, videoIndex);
+
                 mVideoView.start();
             }
         });

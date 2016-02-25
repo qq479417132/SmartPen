@@ -3,9 +3,13 @@ package com.cleverm.smartpen.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.VideoView;
-
 /**
- * Created by x on 2016/2/15.
+ * Created by xiong,An android project Engineer,on 2016/2/15.
+ * Data:2016-02-15  15:08
+ * Base on clever-m.com(JAVA Service)
+ * Describe: 设置VideoView全屏
+ * Version:1.0
+ * Open source
  */
 public class FullScreenVideoView extends VideoView {
 
