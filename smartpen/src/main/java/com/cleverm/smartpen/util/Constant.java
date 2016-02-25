@@ -366,6 +366,7 @@ public class Constant {
      * Discount
      */
     public static final String DEFALUT_ORGID="100";
+    public static final String MEMORY_PLAY_KEY="MEMORY_PLAY_KEY";
 
 
 }

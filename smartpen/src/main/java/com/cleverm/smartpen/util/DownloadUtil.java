@@ -128,6 +128,7 @@ public class DownloadUtil {
 
                     @Override
                     public void onResponse(String response) {
+                        QuickUtils.log("cacheDiscountJson");
                         //存储起来,准备特惠专区界面使用
                         FileCacheUtil.get(CleverM.getApplication()).put(DISOUNT_JSON,response);
                     }
