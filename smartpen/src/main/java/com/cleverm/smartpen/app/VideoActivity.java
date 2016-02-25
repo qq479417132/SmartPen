@@ -43,18 +43,6 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
 
     public static final String TAG = VideoActivity.class.getSimpleName();
 
-
-    /**
-     * 该参数由服务端给与
-     */
-    private boolean isNotChange = true;
-
-    /**
-     * 该参数由本地存储判断获取
-     */
-    private boolean isHaveVideo = true;
-
-
     FullScreenVideoView vvAdvertisement;
 
     private RelativeLayout mrlNotice;
@@ -212,7 +200,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     @Override
     protected void onPause() {
         super.onPause();
-        RememberUtil.putInt("key", vvAdvertisement.getCurrentPosition());
+        RememberUtil.putInt(Constant.MEMORY_PLAY_KEY, vvAdvertisement.getCurrentPosition());
         QuickUtils.log("onPause()=" + videoValue);
     }
 
@@ -222,9 +210,19 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     @Override
     protected void onResume() {
         super.onResume();
-        videoValue = RememberUtil.getInt("key", 0);
-        vvAdvertisement.seekTo(videoValue);
-        vvAdvertisement.start();
+        videoValue = RememberUtil.getInt(Constant.MEMORY_PLAY_KEY, 0);
+        /**
+         * 因为VideoActivity会被不断的重启,算法太耗时导致必须延迟
+         */
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                QuickUtils.log("videoValue" + videoValue);
+                vvAdvertisement.seekTo(videoValue);
+                vvAdvertisement.start();
+            }
+        },250);
+
         QuickUtils.log("onResume()" + videoValue);
     }
 
