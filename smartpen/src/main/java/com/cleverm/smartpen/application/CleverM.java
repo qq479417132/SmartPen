@@ -20,6 +20,7 @@ import com.cleverm.smartpen.service.ScreenLockListenService;
 import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.RememberUtil;
+
 import com.cleverm.smartpen.Version.VersionManager;
 import com.umeng.analytics.MobclickAgent;
 

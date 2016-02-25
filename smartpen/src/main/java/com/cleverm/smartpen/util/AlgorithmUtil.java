@@ -133,7 +133,6 @@ public class AlgorithmUtil {
             }
         }
 
-
         //2.根据json顺序进行集合内排序,该操作服务端已处理
 
 
@@ -152,7 +151,7 @@ public class AlgorithmUtil {
 
             index++;
 
-            if(bussinessList.size()<index&&bussinessList.size()<index){
+            if(bussinessList.size()<index&&muyeList.size()<index){
                 break;
             }
 
@@ -161,6 +160,15 @@ public class AlgorithmUtil {
         return sequenceList;
 
     }
+
+    public void clearImageSequence(){
+        bussinessList.clear();
+        muyeList.clear();
+        sequenceList.clear();
+        index=0;
+    }
+
+
 
     //-------------------------------------------------------------
     // 视频处理算法:

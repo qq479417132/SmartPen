@@ -39,16 +39,17 @@ public class ServiceUtil {
 
     /**
      * Url地址:http://120.25.159.173:8280/api/api/v10/roll/main/list?orgId=100&type=1
-     *
+     * 1代表 优惠专区
+     * 2代表 本店推介
      * @param orgId
      */
-    public void getDiscountData(String orgId, final JsonInterface jsonInterface) {
+    public void getDiscountData(String orgId, String type, final JsonInterface jsonInterface) {
         String url = "http://120.25.159.173:8280/api/api/v10/roll/main/list";
         OkHttpUtils
                 .get()
                 .url(url)
                 .addParams("orgId", orgId)
-                .addParams("type", "1")
+                .addParams("type", type)
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -75,7 +76,6 @@ public class ServiceUtil {
         JSONObject json = new JSONObject(result);
         String data = json.getString("data");
         List<DiscountInfo> list = JSON.parseArray(data, DiscountInfo.class);
-        QuickUtils.log("list=" + list.get(0).getType());
         return list;
     }
 
