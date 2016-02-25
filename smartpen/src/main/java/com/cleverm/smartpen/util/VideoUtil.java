@@ -68,8 +68,6 @@ public class VideoUtil {
         if(RememberUtil.getInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY,0)!=0){
             mVideoView.setVideoPath(videoUrls[RememberUtil.getInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY, 0)]);
             videoIndex=RememberUtil.getInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY,0);
-            QuickUtils.log("算法中的videoUrl=" + RememberUtil.getInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY, 0));
-
         }
 
 
@@ -78,14 +76,13 @@ public class VideoUtil {
         }
 
         if(RememberUtil.getInt(Constant.MEMORY_PLAY_KEY, 0)!=0){
-            QuickUtils.log("算法中的videoValue=" + RememberUtil.getInt(Constant.MEMORY_PLAY_KEY, 0));
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     //seekTo是异步操作
                     mVideoView.seekTo(RememberUtil.getInt(Constant.MEMORY_PLAY_KEY, 0));
                 }
-            }, 200);
+            }, 50);
 
         }
 
