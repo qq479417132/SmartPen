@@ -7,7 +7,9 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.app.DemoActivity;
 import com.cleverm.smartpen.app.DiscountActivity;
 import com.cleverm.smartpen.app.DriverActivity;
@@ -43,7 +45,7 @@ public class penService extends Service implements WandAPI.OnScanListener {
     public static final String MAGAZINE="magazine";
     public static final String VIDEO_ENTERTAINMENT="video_entertainment";
     public static final String GAME_ACTIVITY="game_activity";
-
+    public static final String GAME_URL="game_url";
     public void setMessageListener(MessageListener messageListener) {
         this.messageListener = messageListener;
     }
@@ -438,11 +440,25 @@ public class penService extends Service implements WandAPI.OnScanListener {
 
 
     private void LauncherApp(String packageName){
-        Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
-                Intent.FLAG_ACTIVITY_NEW_TASK |
-                Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
-                Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
+        try{
+            Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
+                    Intent.FLAG_ACTIVITY_NEW_TASK |
+                    Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }catch (Exception e){
+            Log.v(TAG, "no this APK packageName=" + packageName);
+            e.printStackTrace();
+            Toast.makeText(this,getString(R.string.no_find_app),Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, GameActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
+                    Intent.FLAG_ACTIVITY_NEW_TASK |
+                    Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra(GAME_URL,Constant.WAN_DOU_JIA);
+            startActivity(intent);
+            mActivityFlag = "GAME_ACTIVITY";
+        }
     }
 }

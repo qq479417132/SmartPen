@@ -118,4 +118,5 @@
     <!-- 滴滴代驾-->
     <string name="e_driver_text1">滴滴代驾</string>
     <string name="e_driver_text2">使用微信扫描二维码</string>
+    <string name="no_find_app">平板上没有找到相应APP,请去下载！</string>
 </resources>

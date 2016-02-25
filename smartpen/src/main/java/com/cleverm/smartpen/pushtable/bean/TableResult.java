@@ -7,6 +7,7 @@ import java.util.List;
  */
 public class TableResult {
     private String orgID;
+    private String clientID;
     private String orgName;
     private List<TableInfo> tableList;
     private List<TableTypeInfo> tableTypeList;
@@ -17,6 +18,14 @@ public class TableResult {
 
     public void setOrgID(String orgID) {
         this.orgID = orgID;
+    }
+
+    public String getClientID() {
+        return clientID;
+    }
+
+    public void setClientID(String clientID) {
+        this.clientID = clientID;
     }
 
     public String getOrgName() {
@@ -47,6 +56,7 @@ public class TableResult {
     public String toString() {
         return "TableResult{" +
                 "orgID='" + orgID + '\'' +
+                ", clientID='" + clientID + '\'' +
                 ", orgName='" + orgName + '\'' +
                 ", tableList=" + tableList +
                 ", tableTypeList=" + tableTypeList +
