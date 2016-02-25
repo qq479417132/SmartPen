@@ -10,6 +10,7 @@ import android.view.Window;
 import android.widget.ImageView;
 
 import com.cleverm.smartpen.R;
+import com.cleverm.smartpen.application.CleverM;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -28,6 +29,7 @@ public class DriverActivity extends BaseActivity {
                     Log.v(TAG, "come hand====");
                     startActivity(new Intent(DriverActivity.this, VideoActivity.class));
                     DriverActivity.this.finish();
+                    ((CleverM) getApplication()).getpenService().setActivityFlag("VideoActivity");
                     break;
                 }
             }

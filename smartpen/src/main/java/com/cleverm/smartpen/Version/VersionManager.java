@@ -1,4 +1,4 @@
-package com.cleverm.smartpen.version;
+package com.cleverm.smartpen.Version;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -143,11 +143,9 @@ public class VersionManager {
         int verCode =getVerCode(context);
         String verName = getVerName(context);
 
-        String str = context.getString(R.string.currentversion) + verName + " Code:" + verCode + context.getString(R.string.findnew) + m_newVerName +
-                " Code:" + m_newVerCode +"\n"+ context.getString(R.string.description)+m_description+"\n\n"+context.getString(R.string.isupdate);
+        String str = context.getString(R.string.currentversion) + verName + context.getString(R.string.findnew) + m_newVerName+"\n"+ context.getString(R.string.description)+m_description+"\n\n"+context.getString(R.string.isupdate);
         Dialog dialog = new AlertDialog.Builder(context).setTitle(context.getString(R.string.update)).setMessage(str)
-                // ��������
-                .setPositiveButton(context.getString(R.string.change),// ����ȷ����ť
+                .setPositiveButton(context.getString(R.string.change),//
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog,

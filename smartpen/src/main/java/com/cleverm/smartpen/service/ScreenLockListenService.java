@@ -15,6 +15,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.cleverm.smartpen.app.VideoActivity;
+import com.cleverm.smartpen.application.CleverM;
 
 
 /**
@@ -76,10 +77,13 @@ public class ScreenLockListenService extends Service{
                 String packageName = name.getPackageName();
                 Log.d("packagename", packageName);
                 am.moveTaskToFront(taskId, ActivityManager.MOVE_TASK_WITH_HOME);
-//                startActivity(new Intent(ScreenLockListenService.this, VideoActivity.class));
-//                if(!Constant.DIAN_CAI_PACKAGE_NAME.equals(packageName)){
-//                    am.moveTaskToFront(taskId, ActivityManager.MOVE_TASK_WITH_HOME);
-//                }
+                Intent in=new Intent(ScreenLockListenService.this, VideoActivity.class);
+                in.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
+                        Intent.FLAG_ACTIVITY_NEW_TASK |
+                        Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(in);
+                ((CleverM) getApplication()).getpenService().setActivityFlag("VideoActivity");
                 if(mWindow != null){
                     mWindow.getAttributes().flags |= WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
                 }
