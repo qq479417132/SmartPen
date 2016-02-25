@@ -27,7 +27,7 @@ import java.util.List;
  * Version:1.0
  * Open source
  */
-public class DiscountDetailActivity extends Activity {
+public class DiscountDetailActivity extends BaseBackActivity {
 
     public static final String INTENT_NAME = "DiscountDetailActivity";
 
@@ -50,9 +50,9 @@ public class DiscountDetailActivity extends Activity {
 
     ImageView ivDisountImage;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate() {
         mContext = this;
         initIntent();
         initContent();
@@ -61,9 +61,16 @@ public class DiscountDetailActivity extends Activity {
         initData();
     }
 
+    @Override
+    protected ImageView getBackResId() {
+        return (ImageView) findViewById(R.id.ivClose);
+    }
+
+
+
     private void initContent() {
         if (info.getTitle() == null && info.getDescriptionText() == null) {
-            setContentView(R.layout.image_discount);
+            setContentView(R.layout.image_discount_detail);
             isMoreInfo = false;
         } else {
             setContentView(R.layout.activity_discount_detail);
@@ -81,12 +88,6 @@ public class DiscountDetailActivity extends Activity {
     private void initView() {
         if (isMoreInfo) {
             vpImage = (NoTouchBGABanner) findViewById(R.id.BGADetailImage);
-            /*vpImage.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    return true;
-                }
-            });*/
             tvDiscountDetailTime = (TextView) findViewById(R.id.tvDiscountDetailTime);
             tvDiscountDetailTitle = (TextView) findViewById(R.id.tvDiscountDetailTitle);
             tvDiscountDetailDesc = (TextView) findViewById(R.id.tvDiscountDetailDesc);
@@ -113,10 +114,10 @@ public class DiscountDetailActivity extends Activity {
             tvDiscountDetailTitle.setText(info.getTitle() + "");
             tvDiscountDetailDesc.setText(info.getDescriptionText() + "");
             //处理时间区间
-            if(QuickUtils.isSameDay(info.getStartTime(),info.getEndTime())){
-                tvDiscountDetailTime.setText("活动时间："+QuickUtils.timeStamp2Date(info.getEndTime().toString(),"yyyy-MM-dd"));
-            }else{
-                tvDiscountDetailTime.setText("活动时间："+QuickUtils.timeStamp2Date(info.getStartTime().toString(),"yyyy-MM-dd")+"至"+QuickUtils.timeStamp2Date(info.getEndTime().toString(),"yyyy-MM-dd"));
+            if (QuickUtils.isSameDay(info.getStartTime(), info.getEndTime())) {
+                tvDiscountDetailTime.setText("活动时间：" + QuickUtils.timeStamp2Date(info.getEndTime().toString(), "yyyy-MM-dd"));
+            } else {
+                tvDiscountDetailTime.setText("活动时间：" + QuickUtils.timeStamp2Date(info.getStartTime().toString(), "yyyy-MM-dd") + "至" + QuickUtils.timeStamp2Date(info.getEndTime().toString(), "yyyy-MM-dd"));
             }
             handlerAd();
             handlerBanner();
@@ -166,5 +167,8 @@ public class DiscountDetailActivity extends Activity {
         }
     }
 
-
+    @Override
+    protected void onBack() {
+        finish();
+    }
 }

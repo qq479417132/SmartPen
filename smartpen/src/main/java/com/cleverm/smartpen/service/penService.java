@@ -161,17 +161,32 @@ public class penService extends Service implements WandAPI.OnScanListener {
                 break;
             }
             case Constant.YOU_HUI1:
-            case Constant.RECOMMEND1:
+
             case Constant.YOU_HUI2:
-            case Constant.RECOMMEND2:
             case Constant.YOU_HUI3:
-            case Constant.RECOMMEND3:
             case Constant.YOU_HUI4:
+            case Constant.YOU_HUI5:{
+                if (!"DiscountActivity".equals(mActivityFlag)) {
+                    Intent intent = new Intent(this, DiscountActivity.class);
+                    intent.putExtra(DiscountActivity.DISOUNT_INTENT,true);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
+                            Intent.FLAG_ACTIVITY_NEW_TASK |
+                            Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    mActivityFlag = "DiscountActivity";
+                }
+                break;
+            }
+
+            case Constant.RECOMMEND1:
+            case Constant.RECOMMEND2:
+            case Constant.RECOMMEND3:
             case Constant.RECOMMEND4:
-            case Constant.YOU_HUI5:
             case Constant.RECOMMEND5: {
                 if (!"DiscountActivity".equals(mActivityFlag)) {
                     Intent intent = new Intent(this, DiscountActivity.class);
+                    intent.putExtra(DiscountActivity.DISOUNT_INTENT,false);
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
                             Intent.FLAG_ACTIVITY_NEW_TASK |
                             Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |

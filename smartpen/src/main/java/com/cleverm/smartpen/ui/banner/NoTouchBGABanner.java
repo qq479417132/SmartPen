@@ -12,7 +12,7 @@ import com.cleverm.smartpen.util.QuickUtils;
  * Created by xiong,An android project Engineer,on 2016/2/23.
  * Data:2016-02-23  15:08
  * Base on clever-m.com(JAVA Service)
- * Describe:
+ * Describe: 不可手动滑动BGABanner
  * Version:1.0
  * Open source
  */

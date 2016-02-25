@@ -30,9 +30,10 @@ import okhttp3.Response;
  */
 public class DownloadUtil {
 
-    public static String  DISOUNT_JSON="DISOUNT_JSON";
-
-
+    //优惠专区
+    public static final String  DISOUNT_JSON="DISOUNT_JSON";
+    //本店推荐
+    public static final String  DISOUNT_HEADOFFICE_JSON="DISOUNT_HEADOFFICE_JSON";
 
 
 
@@ -107,7 +108,7 @@ public class DownloadUtil {
 
     /**
      * 优惠专区的Json数据
-     *
+     *   type ： 0表示只显示商户，即请求本店推荐数据，1表示显示商户和商业，即请求优惠专区的数据
      * @param orgId 餐厅Id
      */
     public static void cacheDiscountJson(String orgId) {
@@ -127,10 +128,33 @@ public class DownloadUtil {
 
                     @Override
                     public void onResponse(String response) {
+                        QuickUtils.log("cacheDiscountJson");
                         //存储起来,准备特惠专区界面使用
                         FileCacheUtil.get(CleverM.getApplication()).put(DISOUNT_JSON,response);
                     }
                 });
+
+        OkHttpUtils
+                .get()
+                .url(url)
+                .addParams("orgId", orgId)
+                .addParams("type", "0")
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        //存储起来,准备本店推荐界面使用
+                        FileCacheUtil.get(CleverM.getApplication()).put(DISOUNT_HEADOFFICE_JSON,response);
+                    }
+                });
+
+
+
     }
 
     /**
