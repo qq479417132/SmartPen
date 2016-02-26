@@ -2,18 +2,24 @@ package com.cleverm.smartpen.app;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
 import com.cleverm.smartpen.R;
+import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.database.DatabaseHelper;
 import com.cleverm.smartpen.fragment.SelectTableFragment;
 import com.cleverm.smartpen.modle.TableType;
+import com.cleverm.smartpen.util.Constant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +37,28 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
     private TabWidget mTableTabHost;
     private ViewPager mTableViewPager;
     private List<TableType> mTableTypes;
-
+    public static final int GOBack = 200;
+    public Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case GOBack: {
+                    Log.v(TAG, "come hand====");
+                    BaseSelectTableActivity.this.finish();
+                    startActivity(new Intent(BaseSelectTableActivity.this, VideoActivity.class));
+                    ((CleverM) getApplication()).getpenService().setActivityFlag("VideoActivity");
+                    break;
+                }
+            }
+        }
+    };
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_table);
         initData();
         initView();
+        mHandler.sendEmptyMessageDelayed(GOBack, Constant.DELAY_BACK);
     }
 
     private void initData() {

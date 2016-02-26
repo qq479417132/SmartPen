@@ -58,6 +58,8 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
     public static final int EVALUATE_4 = 80;
     public static final int EVALUATE_5 = 100;
     public static final String SELECTEDTABLEID = "SelectedTableId";
+    public static final String ORGID ="OrgID";
+    public static final String CLIENTID ="clientId";
     public static final String URL = "http://www.myee.online/api/api/v10/evaluation/save";
 
 
@@ -213,7 +215,10 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
         map.put("Envirment", mEnvirmentTextValue);
         map.put("eatInput", meatInputValue);
         map.put("equipmentInput", mequipmentInputValue);
-        map.put("date", df.format(new Date()));
+        map.put("tableId", RememberUtil.getLong(SELECTEDTABLEID, Constant.DESK_ID_DEF_DEFAULT)+"");
+        map.put("orgId", RememberUtil.getString(ORGID, ""));
+        map.put("clientId", RememberUtil.getString(CLIENTID, ""));
+        map.put("time", df.format(new Date()));
         Gson gson = new Gson();
         String gsonData = gson.toJson(map);
         Log.v(TAG, "gsonData=" + gsonData);
@@ -226,6 +231,7 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
         int feelFlavor = getRatingBarValue(mtaste.getNumStars());
         int feelService = getRatingBarValue(mService.getNumStars());
         int feelEnvironment = getRatingBarValue(mEnvirment.getNumStars());
+        Log.v(TAG,"tableId="+RememberUtil.getLong(SELECTEDTABLEID, Constant.DESK_ID_DEF_DEFAULT)+""+" orgId="+RememberUtil.getString(ORGID, " ")+" clientId="+RememberUtil.getString(CLIENTID, " "));
         OkHttpUtils.post()
                 .url(URL)
                 .addParams("deviceRemark", mequipmentInputValue)
@@ -235,6 +241,8 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
                 .addParams("feelWhole",feelWhole+"")
                 .addParams("mealsRemark",meatInputValue)
                 .addParams("tableId", RememberUtil.getLong(SELECTEDTABLEID, Constant.DESK_ID_DEF_DEFAULT)+"")
+                .addParams("orgId", RememberUtil.getString(ORGID, " "))
+                .addParams("clientId", RememberUtil.getString(CLIENTID, " "))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -249,6 +257,7 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
                     }
                 });
     }
+
 
     private int getRatingBarValue(int NumStars) {
         int value = 20;

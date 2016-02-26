@@ -1,6 +1,9 @@
 package com.cleverm.smartpen.app;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,6 +14,8 @@ import android.widget.ImageView;
 
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
+import com.cleverm.smartpen.util.RememberUtil;
+import com.github.yoojia.zxing.qrcode.Encoder;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -21,6 +26,14 @@ public class DriverActivity extends BaseActivity {
     private ImageView mClose;
     public static final int GOBack = 200;
     public static final int TIME = 60000;
+    public static final String ORGID ="OrgID";
+    public static final String CLIENTID ="clientId";
+    public static final String SELECTEDTABLEID="SelectedTableId";
+    private String morgId;
+    private String mclientId;
+    private String mtableId;
+    private String mCodeText = "http://www.myee.online/api/api/v10/forward/driveCar?orgId="+morgId+"&clientId="+mclientId+"&tableId="+mtableId;
+    private ImageView mdriveCode;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -46,6 +59,11 @@ public class DriverActivity extends BaseActivity {
 
     private void init() {
         mClose= (ImageView) findViewById(R.id.e_driver_close);
+        mdriveCode=(ImageView) findViewById(R.id.drive_code);
+        morgId= RememberUtil.getString(ORGID,"");
+        mclientId= RememberUtil.getString(CLIENTID,"");
+        mtableId= RememberUtil.getString(SELECTEDTABLEID,"");
+        creatTwoDimensionCode(mCodeText);
         mClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,5 +88,19 @@ public class DriverActivity extends BaseActivity {
         MobclickAgent.onEvent(this, "E_JIA");
     }
 
+    private void creatTwoDimensionCode(String code){
+        final int dimension = 268;
+        Encoder mEncoder = new Encoder.Builder()
+                .setBackgroundColor(0xFFFFFF)
+                .setCodeColor(0xFF000000)
+                .setOutputBitmapPadding(0)
+                .setOutputBitmapWidth(dimension)
+                .setOutputBitmapHeight(dimension)
+                .build();
+        Bitmap Bitmap=mEncoder.encode(code);
+        Log.v(TAG,"code="+code);
+        Drawable drawable =new BitmapDrawable(Bitmap);
+        mdriveCode.setBackground(drawable);
+    }
 
 }

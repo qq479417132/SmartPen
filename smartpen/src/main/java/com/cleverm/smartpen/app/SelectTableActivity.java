@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
+import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.RememberUtil;
 
 
@@ -40,6 +41,7 @@ public class SelectTableActivity extends BaseSelectTableActivity {
             default:
                 break;
         }
+        mHandler.removeCallbacksAndMessages(null);
         Intent intent = new Intent(this, VideoActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
@@ -50,5 +52,8 @@ public class SelectTableActivity extends BaseSelectTableActivity {
     public void onTableSelected(long tableId) {
         mSelectedTableId = tableId;
         mTablePagerAdapter.updateTablesDisplayStatus(tableId);
+        mHandler.removeCallbacksAndMessages(null);
+        mHandler.sendEmptyMessageDelayed(GOBack, Constant.DELAY_BACK);
+        Log.v(TAG,"onTableSelected()  tableId="+tableId);
     }
 }

@@ -132,7 +132,7 @@ public class Constant {
     public static final int RECOMMEND5 = 1189;
     public static final int SET5 = 1190;
 
-    public static final String URL = "http://cbzz.5153.com/s/bd/?dsfrom=baidu_14891/20151026";
+    public static final String URL = "http://cn.vonvon.net/quiz/r/546/6116/v1GiNqZBv4fzmVf";
     public static final String MAIN_VIDEO_PATH = Environment.getExternalStorageDirectory().getPath() +
             "/muye/mainVideo";
     public static final String AD_VIDEO_PATH = Environment.getExternalStorageDirectory().getPath() + "/muye/ad";
@@ -161,6 +161,7 @@ public class Constant {
     public static final String DA_ZONG_PACKAGE_NAME = "com.dianping.v1";
     public static final String ZHIZ_ZHU_PACKAGE_NAME = "com.spider.reader";
     public static final String VIDEO_ENTERTAINMENT = "com.qiyi.video.pad";
+    public static final String WAN_DOU_JIA = "http://www.wandoujia.com/apps";
 
     public static final String OTHER_STATE = "other_state";
     public static final String WEB_URL = "web_url";

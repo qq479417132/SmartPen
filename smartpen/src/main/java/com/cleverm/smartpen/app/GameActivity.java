@@ -27,6 +27,8 @@ public class GameActivity extends BaseActivity implements MyWebView.WebViewTouch
     //关闭按钮
     private ImageView mClose;
     private ProgressDialog mProgressDialog;
+    private String mURL=Constant.URL;
+    public static final String GAME_URL="game_url";
     public static final int ENTER=0;
     public static final int EXIT=1;
     private Handler mHandler =new Handler(){
@@ -53,7 +55,17 @@ public class GameActivity extends BaseActivity implements MyWebView.WebViewTouch
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_activity);
+        initIntent();
         initView();
+
+    }
+
+    private void initIntent() {
+        Intent in=getIntent();
+        if(in==null){
+           return;
+        }
+        mURL=in.getStringExtra(GAME_URL);
     }
 
     private void initView() {
@@ -67,7 +79,7 @@ public class GameActivity extends BaseActivity implements MyWebView.WebViewTouch
             }
         });
         mWebView.setWebViewTouchEventListener(this);
-        mWebView.loadUrl(Constant.URL);
+        mWebView.loadUrl(mURL);
         mHandler.sendEmptyMessageDelayed(EXIT, Constant.DELAY_BACK);
         WebSettings sets=mWebView.getSettings();
         sets.setJavaScriptEnabled(true);

@@ -35,7 +35,7 @@
             android:layout_height="@dimen/e_drive_icon2_heigh"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="35dp"
-            android:src="@mipmap/e_drive_code" />
+            android:id="@+id/drive_code"/>
 
     </LinearLayout>
 

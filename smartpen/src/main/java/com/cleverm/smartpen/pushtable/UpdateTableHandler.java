@@ -36,6 +36,7 @@ public class UpdateTableHandler extends NoticeHandler<RestaurantVo, Void> {
     private static final String REPEATER_SETTINGS_FILE = SYSTEMCFG_DIR + "rep_settings.cfg";
     private static final String CALLER_SETTINGS_FILE = SYSTEMCFG_DIR + "caller_settings.cfg";
     public static final String ORGID ="OrgID";
+    public static final String CLIENTID ="clientId";
 
 
     private Context mContext;
@@ -83,7 +84,9 @@ public class UpdateTableHandler extends NoticeHandler<RestaurantVo, Void> {
         Gson gson=new Gson();
         TableResult tableResult=gson.fromJson(data,TableResult.class);
         String OrgID=tableResult.getOrgID();
+        Log.v(TAG,"OrgID="+OrgID+" ClientID="+tableResult.getClientID());
         RememberUtil.putString(ORGID,OrgID);
+        RememberUtil.putString(CLIENTID,tableResult.getClientID());
         List<TableInfo> ListTableInfo=tableResult.getTableList();
         List<TableTypeInfo> ListTableTypeInfo=tableResult.getTableTypeList();
         insertTableData(ListTableInfo, ListTableTypeInfo);

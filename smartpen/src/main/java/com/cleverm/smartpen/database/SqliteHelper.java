@@ -31,9 +31,12 @@ public class SqliteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        for (int i = 0; i < mCreateDBSqls.size(); i++) {
+        /**
+         * 暂时将这里代码注释掉
+         */
+        /* for (int i = 0; i < mCreateDBSqls.size(); i++) {
             db.execSQL("DROP TABLE IF EXISTS " + mTableNames.elementAt(i));
         }
-        onCreate(db);
+        onCreate(db);*/
     }
 }
