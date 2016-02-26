@@ -29,28 +29,29 @@ import okhttp3.Call;
  */
 public class VideoAlgorithmUtil {
 
-    private static VideoAlgorithmUtil INSTANCE =new VideoAlgorithmUtil();
+    private static VideoAlgorithmUtil INSTANCE = new VideoAlgorithmUtil();
 
     public static VideoAlgorithmUtil getInstance() {
         return INSTANCE;
     }
 
-    private VideoAlgorithmUtil(){
+    private VideoAlgorithmUtil() {
 
     }
 
-    public interface videoInterface{
+    public interface videoInterface {
         void onSucess(String json);
+
         void onFail(String error);
     }
 
 
-
     /**
      * 第一次从服务端直接读取并存储到本地
+     *
      * @param vvAdvertisement
      */
-    public  void getVideoFirst(final FullScreenVideoView vvAdvertisement) {
+    public void getVideoFirst(final FullScreenVideoView vvAdvertisement) {
 
         videoAPI(new videoInterface() {
             @Override
@@ -60,7 +61,7 @@ public class VideoAlgorithmUtil {
 
                     //第一个视频为在线直接播放，其他所有视频为下载后再播放
                     for (int i = 0; i < info.size(); i++) {
-                        downloadVideoFirst(info.get(i).getVideoPath(), info.get(i).getVideoId() + "");
+                        downloadVideoFirst(QuickUtils.spliceUrl(info.get(i).getVideoPath()), info.get(i).getVideoId() + "");
                     }
 
                     VideoUtil videoUtil = new VideoUtil(vvAdvertisement);
@@ -82,10 +83,11 @@ public class VideoAlgorithmUtil {
 
     /**
      * 第一次下载所有视频的方法
+     *
      * @param path
      * @param num
      */
-    private  void downloadVideoFirst(String path, String num) {
+    private void downloadVideoFirst(String path, String num) {
 
         //存储的地址为storage/emulated/0/muye/木爷我们的视频.mp4
         OkHttpUtils//
@@ -96,7 +98,7 @@ public class VideoAlgorithmUtil {
                 {
                     @Override
                     public void inProgress(float progress) {
-                        Log.i("FILE", "onResponse :" + progress);
+                        //Log.i("FILE", "onResponse :" + progress);
                     }
 
                     @Override
@@ -113,7 +115,7 @@ public class VideoAlgorithmUtil {
     }
 
 
-    private void videoAPI(final videoInterface videoInterface){
+    private void videoAPI(final videoInterface videoInterface) {
         String url = "http://120.25.159.173:8280/api/api/v10/video/list";
         OkHttpUtils
                 .get()
@@ -135,14 +137,14 @@ public class VideoAlgorithmUtil {
     }
 
 
-    private HashMap<String,String> serviceFielsMap = new HashMap<String, String>();
-
+    private HashMap<String, String> serviceFielsMap = new HashMap<String, String>();
 
 
     /**
+     * @deprecated Because of BUG ~~
      * 轮询检查VideoId是否存在
      */
-    public void loopFileName(final FullScreenVideoView videoView){
+    public void loopFileName(final FullScreenVideoView videoView) {
 
         videoAPI(new videoInterface() {
             @Override
@@ -154,21 +156,14 @@ public class VideoAlgorithmUtil {
                     File[] files = QuickUtils.getVideoFolderFiles();
 
 
-                    QuickUtils.log("Video--------"+files[0].getName());
+                    QuickUtils.log("Video--------" + files[0].getName());
 
 
-                    for(int i = 0 ; i < info.size() ; i++){
-                        serviceFielsMap.put(info.get(i).getVideoId()+"",info.get(i).getVideoPath());
+                    for (int i = 0; i < info.size(); i++) {
+                        serviceFielsMap.put(info.get(i).getVideoId() + "", info.get(i).getVideoPath());
                     }
 
                     QuickUtils.log("Video--------serviceFielsMap=" + serviceFielsMap.size());
-
-
-
-
-
-
-
 
 
                     for (int i = 0; i < files.length; i++) {
@@ -178,16 +173,16 @@ public class VideoAlgorithmUtil {
                         //过滤单词101.mp4  为101
                         String num_fileName = fileName.substring(0, fileName.length() - 4);
 
-                        QuickUtils.log("Video----num_fileName----"+num_fileName);
+                        QuickUtils.log("Video----num_fileName----" + num_fileName);
 
 
                         //1.如果服务端有这个key,表示这个视频本地有,我们不做任何处理
-                        if(serviceFielsMap.containsKey(num_fileName)){
+                        if (serviceFielsMap.containsKey(num_fileName)) {
 
                         }
 
                         //2.如果服务端没有这个key.但是本地是有这个key的,表示本地的这个视频就是要被删除的
-                        if(!serviceFielsMap.containsKey(num_fileName)){
+                        if (!serviceFielsMap.containsKey(num_fileName)) {
                             QuickUtils.log("Video----deleteFile----");
                             QuickUtils.deleteFile(AlgorithmUtil.VIDEO_FILE + num_fileName + ".mp4");
                         }
@@ -198,24 +193,23 @@ public class VideoAlgorithmUtil {
                             System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
 
                             //如果fileName中没有该key,就直接下载
-                            if(!entry.getKey().equals(num_fileName)&&(!serviceFielsMap.containsKey(num_fileName))){
+                            if (!entry.getKey().equals(num_fileName) && (!serviceFielsMap.containsKey(num_fileName))) {
 
 
-                            //如果map中没有这个key才会走下面
-                            //if(!serviceFielsMap.containsKey(num_fileName)){
+                                //如果map中没有这个key才会走下面
+                                //if(!serviceFielsMap.containsKey(num_fileName)){
 
 
+                                //Video----downloadVideoFirst----entry.getKey()=100/num_fileName101
+                                QuickUtils.log("Video----downloadVideoFirst----entry.getKey()=" + entry.getKey() + "/num_fileName" + num_fileName);
 
-                                    //Video----downloadVideoFirst----entry.getKey()=100/num_fileName101
-                                    QuickUtils.log("Video----downloadVideoFirst----entry.getKey()="+entry.getKey()+"/num_fileName"+num_fileName);
+                                QuickUtils.log("Video----downloadVideoFirst----serviceUrl=" + entry.getValue());
 
-                                    QuickUtils.log("Video----downloadVideoFirst----serviceUrl="+entry.getValue());
-
-                                    String serviceUrl = entry.getValue();
-                                    downloadVideoFirst(serviceUrl,entry.getKey());
+                                String serviceUrl = entry.getValue();
+                                downloadVideoFirst(serviceUrl, entry.getKey());
 
 
-                            //}
+                                //}
 
                             }
 
@@ -247,17 +241,14 @@ public class VideoAlgorithmUtil {
     }
 
 
-    private HashMap<String,String> serviceList = new HashMap<String, String>();
-    private HashMap<String,String> LocalList = new HashMap<String, String>();
-
-
+    private HashMap<String, String> serviceList = new HashMap<String, String>();
+    private HashMap<String, String> LocalList = new HashMap<String, String>();
 
 
     /**
-     *
      * @param videoView
      */
-    public void loopFileName2(final FullScreenVideoView videoView){
+    public void loopFileName2(final FullScreenVideoView videoView) {
 
         videoAPI(new videoInterface() {
             @Override
@@ -272,33 +263,33 @@ public class VideoAlgorithmUtil {
                     File[] files = QuickUtils.getVideoFolderFiles();
 
 
-                    for(int i =0 ; i <infos.size() ; i++){
-                        serviceList.put(infos.get(i).getVideoId()+"",infos.get(i).getVideoPath());
+                    for (int i = 0; i < infos.size(); i++) {
+                        serviceList.put(infos.get(i).getVideoId() + "", infos.get(i).getVideoPath());
                     }
 
-                    for(int i =0 ; i <files.length ; i++){
+                    for (int i = 0; i < files.length; i++) {
                         String fileNameNum = QuickUtils.subVideoEnd(files[i].getName());
                         LocalList.put(fileNameNum, AlgorithmUtil.VIDEO_FILE + fileNameNum + ".mp4");
                     }
 
-                    QuickUtils.log("Video----serviceList----" + serviceList.size()+"/LocalList"+LocalList.size());
+                    QuickUtils.log("Video----serviceList----" + serviceList.size() + "/LocalList" + LocalList.size());
 
 
                     //服务器无,本地有(服务器没有本地的那个key)
-                    for(int i =0 ; i <files.length ; i++){
-                        if(!serviceList.containsKey(QuickUtils.subVideoEnd(files[i].getName()))){
-                            QuickUtils.log("Video----LocalList----删除");
+                    for (int i = 0; i < files.length; i++) {
+                        if (!serviceList.containsKey(QuickUtils.subVideoEnd(files[i].getName()))) {
+                            QuickUtils.log("Video----LocalList----删除="+AlgorithmUtil.VIDEO_FILE + QuickUtils.subVideoEnd(files[i].getName() + ".mp4"));
                             //删除
                             QuickUtils.deleteFile(AlgorithmUtil.VIDEO_FILE + QuickUtils.subVideoEnd(files[i].getName() + ".mp4"));
                         }
                     }
 
                     //服务器有,本地无(本地没有服务器的那个key)
-                    for(int i =0 ; i <infos.size(); i++ ){
-                        if(!LocalList.containsKey(infos.get(i).getVideoId()+"")){
-                            QuickUtils.log("Video----serviceList----下载");
+                    for (int i = 0; i < infos.size(); i++) {
+                        if (!LocalList.containsKey(infos.get(i).getVideoId() + "")) {
+                            QuickUtils.log("Video----serviceList----下载路径="+infos.get(i).getVideoPath());
                             //下载
-                            downloadVideoFirst(infos.get(i).getVideoPath(),infos.get(i).getVideoId()+"");
+                            downloadVideoFirst(QuickUtils.spliceUrl(infos.get(i).getVideoPath()), infos.get(i).getVideoId() + "");
                         }
                     }
 
@@ -310,17 +301,18 @@ public class VideoAlgorithmUtil {
                     videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE, 0);
 
 
-
-
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
+                    VideoUtil videoUtil = new VideoUtil(videoView);
+                    videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE, 0);
                 }
 
             }
 
             @Override
             public void onFail(String error) {
-
+                VideoUtil videoUtil = new VideoUtil(videoView);
+                videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE, 0);
             }
         });
 

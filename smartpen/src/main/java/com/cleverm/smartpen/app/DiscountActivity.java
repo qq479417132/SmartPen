@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.DrawableRes;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -120,7 +121,7 @@ public class DiscountActivity extends BaseBackActivity implements View.OnClickLi
             images = QuickUtils.getDiscountImage(listImageSequence);
             //图片控件处理
             setBanner(listImageSequence);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -146,7 +147,30 @@ public class DiscountActivity extends BaseBackActivity implements View.OnClickLi
             //通过给ImageView外套了一个RL解决在ViewPager中图片显示不全的BUG
             View rootView = views.get(i);
             ImageView view = (ImageView) rootView.findViewById(R.id.ivDisountImage);
-            Picasso.with(this).load(images.get(i)).placeholder(R.mipmap.discount_background).into(view);
+
+            QuickUtils.log("---IMAGE---views="+views.size()+"images="+images.size());
+
+            if(views.size()==1){
+                Picasso.with(this).load(QuickUtils.spliceUrl(images.get(0))).placeholder(R.mipmap.discount_background).into(view);
+                vpImage.getViewPager().setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        return true;
+                    }
+                });
+            }else if(views.size()==2 || views.size()==3){
+                int index = (i > (images.size()-1)) ? i -images.size():i;
+                QuickUtils.log("---IMAGE---index=" + index);
+                Picasso.with(this).load(QuickUtils.spliceUrl(images.get((i > (images.size() - 1)) ? i - images.size() : i))).placeholder(R.mipmap.discount_background).into(view);
+            }else{
+                Picasso.with(this).load(QuickUtils.spliceUrl(images.get(i))).placeholder(R.mipmap.discount_background).into(view);
+            }
+
+
+            //Picasso.with(this).load(images.get((i > (images.size()-1)) ? i -images.size()  : i)).placeholder(R.mipmap.discount_background).into(view);
+
+
+
             // 点击事件
             final int finalPosition = i;
             view.setOnClickListener(new View.OnClickListener() {

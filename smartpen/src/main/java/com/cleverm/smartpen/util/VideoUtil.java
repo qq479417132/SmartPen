@@ -107,6 +107,8 @@ public class VideoUtil {
                 RememberUtil.putInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY, videoIndex);
 
                 mVideoView.start();
+
+
             }
         });
     }
@@ -146,7 +148,8 @@ public class VideoUtil {
         if (info != null) {
             if (info.size() > 0) {
                 for (int i =0 ;i<info.size();i++) {
-                    videoUrls[i] = info.get(i).getVideoPath();
+                    //注意前缀为本地拼接
+                    videoUrls[i] = QuickUtils.spliceUrl(info.get(i).getVideoPath());
                 }
             }
         }

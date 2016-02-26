@@ -318,5 +318,14 @@ public class QuickUtils {
         return fileName.substring(0, fileName.length() - 4);
     }
 
+    /**
+     * 拼接URL前缀
+     * @param url
+     * @return
+     */
+    public static String spliceUrl(String url){
+        return "http://www.myee.online/push/"+url;
+    }
+
 
 }

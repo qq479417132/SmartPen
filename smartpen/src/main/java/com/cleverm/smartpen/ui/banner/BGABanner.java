@@ -77,6 +77,9 @@ public class BGABanner extends RelativeLayout {
         this.mBAGInterface=mInterface;
     }
 
+    public BGAViewPager getViewPager() {
+        return mViewPager;
+    }
 
     private Handler mAutoPlayHandler = new Handler() {
         @Override
@@ -227,6 +230,9 @@ public class BGABanner extends RelativeLayout {
         }
         mViews = views;
         mTips = tips;
+
+
+
         mViewPager.setAdapter(new PageAdapter());
         mViewPager.setOnPageChangeListener(new ChangePointListener());
 
@@ -476,6 +482,7 @@ public class BGABanner extends RelativeLayout {
 
         @Override
         public int getCount() {
+            //无限滑动BUG
             return mAutoPlayAble ? Integer.MAX_VALUE : mViews.size();
         }
 
