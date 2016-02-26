@@ -284,6 +284,7 @@ public class penService extends Service implements WandAPI.OnScanListener {
                             Intent.FLAG_ACTIVITY_NEW_TASK |
                             Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
                             Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra(GAME_URL, Constant.URL);
                     startActivity(intent);
                     mActivityFlag = "GAME_ACTIVITY";
                 }
