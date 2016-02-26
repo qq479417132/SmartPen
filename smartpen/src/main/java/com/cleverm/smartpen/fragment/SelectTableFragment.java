@@ -43,7 +43,7 @@ public class SelectTableFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Activity activity){
         super.onAttach(activity);
         try {
             mOnTableAdapterListener = (OnTableAdapterListener) activity;

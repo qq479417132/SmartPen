@@ -20,6 +20,7 @@ import com.cleverm.smartpen.database.DatabaseHelper;
 import com.cleverm.smartpen.fragment.SelectTableFragment;
 import com.cleverm.smartpen.modle.TableType;
 import com.cleverm.smartpen.util.Constant;
+import com.cleverm.smartpen.util.RememberUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
 
     @SuppressWarnings("unused")
     private static final String TAG = BaseSelectTableActivity.class.getSimpleName();
+    public static final String SELECTEDTABLEID="SelectedTableId";
     protected TablePagerAdapter mTablePagerAdapter;
     protected long mSelectedTableId;
     private TabWidget mTableTabHost;
@@ -68,6 +70,12 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
         mTableTypes = DatabaseHelper.getsInstance(this).obtainAllTableTypes();;
         mSelectedTableId = OrderManager.getInstance(this).getTableId();
         mTablePagerAdapter = new TablePagerAdapter(getFragmentManager());
+        //select the Table
+        long defaultDeskId=RememberUtil.getLong(SELECTEDTABLEID, Constant.DESK_ID_DEF_DEFAULT);
+        if(defaultDeskId==Constant.DESK_ID_DEF_DEFAULT){
+            return;
+        }
+        OrderManager.getInstance(this).setTableId(defaultDeskId);
     }
 
     private void initView() {
@@ -92,6 +100,8 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
                 @Override
                 public void onClick(View v) {
                     mTableViewPager.setCurrentItem((Integer) v.getTag());
+                    mHandler.removeCallbacksAndMessages(null);
+                    mHandler.sendEmptyMessageDelayed(GOBack, Constant.DELAY_BACK);
                 }
             });
         }

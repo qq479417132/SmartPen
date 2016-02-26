@@ -271,6 +271,7 @@ public class VersionManager {
         try {
             verName = context.getPackageManager().getPackageInfo(
                     PACKAGE_NAME, 0).versionName;
+            Log.v(TAG,"getVerName()="+verName);
         } catch (PackageManager.NameNotFoundException e) {
             Log.e("msg", e.getMessage());
         }
