@@ -309,5 +309,14 @@ public class QuickUtils {
         return flag;
     }
 
+    /**
+     * 过滤单词101.mp4  为101
+     * @param fileName
+     * @return
+     */
+    public static String subVideoEnd(String fileName){
+        return fileName.substring(0, fileName.length() - 4);
+    }
+
 
 }
