@@ -68,7 +68,6 @@
                 <category android:name="android.intent.category.HOME" />
             </intent-filter>
         </activity>
-        <activity android:name=".app.BaseActivity" />
         <activity android:name=".app.DriverActivity"/>
         <activity android:name=".app.EvaluateActivity" />
         <activity android:name=".app.DemoActivity" />
@@ -76,10 +75,9 @@
         <activity android:name=".app.SelectTableActivity"/>
         <activity android:name=".app.DiscountActivity"/>
         <activity android:name=".app.DiscountDetailActivity"/>
+        <activity android:name=".app.GameActivity"/>
 
-        <service android:name=".service.penService" >
-            <!--<intent-filter android:priority="100"/>-->
-        </service>
+        <service android:name=".service.penService" />
         <service android:name=".service.ScreenLockListenService"/>
         <service android:name=".service.CommunicationService"/>
         <receiver android:name=".broadcast.BootRestartReceiver">            
