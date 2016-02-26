@@ -96,7 +96,7 @@ public class VideoAlgorithmUtil {
                 {
                     @Override
                     public void inProgress(float progress) {
-                        //Log.i("FILE", "onResponse :" + progress);
+                        Log.i("FILE", "onResponse :" + progress);
                     }
 
                     @Override
@@ -138,6 +138,7 @@ public class VideoAlgorithmUtil {
     private HashMap<String,String> serviceFielsMap = new HashMap<String, String>();
 
 
+
     /**
      * 轮询检查VideoId是否存在
      */
@@ -159,6 +160,16 @@ public class VideoAlgorithmUtil {
                     for(int i = 0 ; i < info.size() ; i++){
                         serviceFielsMap.put(info.get(i).getVideoId()+"",info.get(i).getVideoPath());
                     }
+
+                    QuickUtils.log("Video--------serviceFielsMap=" + serviceFielsMap.size());
+
+
+
+
+
+
+
+
 
                     for (int i = 0; i < files.length; i++) {
                         //拿本地的FileName
@@ -183,26 +194,30 @@ public class VideoAlgorithmUtil {
 
                         //3.如果服务端有这个key,同时本地没有服务端有的key，我们就要去下载
                         for (Map.Entry<String, String> entry : serviceFielsMap.entrySet()) {
+
                             System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
 
-                            //如果map中没有这个key才会走下面
-                            if(!serviceFielsMap.containsKey(num_fileName)){
+                            //如果fileName中没有该key,就直接下载
+                            if(!entry.getKey().equals(num_fileName)&&(!serviceFielsMap.containsKey(num_fileName))){
 
-                                //如果fileName中没有该key,就直接下载
-                                if(!entry.getKey().equals(num_fileName)){
+
+                            //如果map中没有这个key才会走下面
+                            //if(!serviceFielsMap.containsKey(num_fileName)){
+
+
 
                                     //Video----downloadVideoFirst----entry.getKey()=100/num_fileName101
                                     QuickUtils.log("Video----downloadVideoFirst----entry.getKey()="+entry.getKey()+"/num_fileName"+num_fileName);
 
-                                    QuickUtils.log("Video----downloadVideoFirst----");
+                                    QuickUtils.log("Video----downloadVideoFirst----serviceUrl="+entry.getValue());
 
                                     String serviceUrl = entry.getValue();
                                     downloadVideoFirst(serviceUrl,entry.getKey());
-                                }
+
+
+                            //}
 
                             }
-
-
 
                         }
 
@@ -214,12 +229,92 @@ public class VideoAlgorithmUtil {
                     videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE, 0);
 
 
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
-                    //VideoUtil videoUtil = new VideoUtil(videoView);
-                    //videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE, 0);
+                    VideoUtil videoUtil = new VideoUtil(videoView);
+                    videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE, 0);
                 }
 
+
+            }
+
+            @Override
+            public void onFail(String error) {
+                VideoUtil videoUtil = new VideoUtil(videoView);
+                videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE, 0);
+            }
+        });
+    }
+
+
+    private HashMap<String,String> serviceList = new HashMap<String, String>();
+    private HashMap<String,String> LocalList = new HashMap<String, String>();
+
+
+
+
+    /**
+     *
+     * @param videoView
+     */
+    public void loopFileName2(final FullScreenVideoView videoView){
+
+        videoAPI(new videoInterface() {
+            @Override
+            public void onSucess(String json) {
+
+                try {
+
+                    //服务器上的videoId
+                    List<VideoInfo> infos = JsonUtil.parser(json, VideoInfo.class);
+
+                    //本地的videoId
+                    File[] files = QuickUtils.getVideoFolderFiles();
+
+
+                    for(int i =0 ; i <infos.size() ; i++){
+                        serviceList.put(infos.get(i).getVideoId()+"",infos.get(i).getVideoPath());
+                    }
+
+                    for(int i =0 ; i <files.length ; i++){
+                        String fileNameNum = QuickUtils.subVideoEnd(files[i].getName());
+                        LocalList.put(fileNameNum, AlgorithmUtil.VIDEO_FILE + fileNameNum + ".mp4");
+                    }
+
+                    QuickUtils.log("Video----serviceList----" + serviceList.size()+"/LocalList"+LocalList.size());
+
+
+                    //服务器无,本地有(服务器没有本地的那个key)
+                    for(int i =0 ; i <files.length ; i++){
+                        if(!serviceList.containsKey(QuickUtils.subVideoEnd(files[i].getName()))){
+                            QuickUtils.log("Video----LocalList----删除");
+                            //删除
+                            QuickUtils.deleteFile(AlgorithmUtil.VIDEO_FILE + QuickUtils.subVideoEnd(files[i].getName() + ".mp4"));
+                        }
+                    }
+
+                    //服务器有,本地无(本地没有服务器的那个key)
+                    for(int i =0 ; i <infos.size(); i++ ){
+                        if(!LocalList.containsKey(infos.get(i).getVideoId()+"")){
+                            QuickUtils.log("Video----serviceList----下载");
+                            //下载
+                            downloadVideoFirst(infos.get(i).getVideoPath(),infos.get(i).getVideoId()+"");
+                        }
+                    }
+
+                    //服务端有,本地也有,不操作
+
+
+                    //因为无法判断多个视频在下载时多久结束,所以我只读这个目录中的,而且是循环的读
+                    VideoUtil videoUtil = new VideoUtil(videoView);
+                    videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE, 0);
+
+
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
             }
 
@@ -228,6 +323,8 @@ public class VideoAlgorithmUtil {
 
             }
         });
+
+
     }
 
 

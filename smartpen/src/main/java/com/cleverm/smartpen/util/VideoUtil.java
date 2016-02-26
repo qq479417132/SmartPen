@@ -63,6 +63,7 @@ public class VideoUtil {
             return;
         }
 
+
         mVideoView.setVideoPath(videoUrls[videoIndex]);
 
 
@@ -95,7 +96,7 @@ public class VideoUtil {
             public void onCompletion(MediaPlayer mediaPlayer) {
 
                 //重置一次VideoView.因为VideoView会每次都运行,所以无需重置
-                //String[] videoUrls=getVideoURIs(mPath);
+                String[] videoUrls=getVideoURIs(mPath);
 
                 videoIndex++;
                 if (videoIndex >= videoUrls.length) {
