@@ -124,7 +124,7 @@ public class DiscountDetailActivity extends BaseBackActivity {
         } else {
             //读取rollDetailList的第一个数据
             if (rollDetailList.size() > 0) {
-                Picasso.with(this).load(info.getRollDetailList().get(0).getPictruePath()).into(ivDisountImage);
+                Picasso.with(this).load(QuickUtils.spliceUrl(info.getRollDetailList().get(0).getPictruePath())).into(ivDisountImage);
             } else {
                 ivDisountImage.setImageResource(R.mipmap.discount_background);
             }
@@ -135,19 +135,19 @@ public class DiscountDetailActivity extends BaseBackActivity {
     private void handlerAd() {
         if (advertisementList.size() == 1) {
             ivDiscountDetailImage1.setVisibility(View.VISIBLE);
-            Picasso.with(this).load(advertisementList.get(0).getPictruePath()).into(ivDiscountDetailImage1);
+            Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(0).getPictruePath())).into(ivDiscountDetailImage1);
         } else if (advertisementList.size() == 2) {
             ivDiscountDetailImage1.setVisibility(View.VISIBLE);
-            Picasso.with(this).load(advertisementList.get(0).getPictruePath()).into(ivDiscountDetailImage1);
+            Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(0).getPictruePath())).into(ivDiscountDetailImage1);
             ivDiscountDetailImage2.setVisibility(View.VISIBLE);
-            Picasso.with(this).load(advertisementList.get(1).getPictruePath()).into(ivDiscountDetailImage2);
+            Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(1).getPictruePath())).into(ivDiscountDetailImage2);
         } else if (advertisementList.size() == 3) {
             ivDiscountDetailImage1.setVisibility(View.VISIBLE);
-            Picasso.with(this).load(advertisementList.get(0).getPictruePath()).into(ivDiscountDetailImage1);
+            Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(0).getPictruePath())).into(ivDiscountDetailImage1);
             ivDiscountDetailImage2.setVisibility(View.VISIBLE);
-            Picasso.with(this).load(advertisementList.get(1).getPictruePath()).into(ivDiscountDetailImage2);
+            Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(1).getPictruePath())).into(ivDiscountDetailImage2);
             ivDiscountDetailImage3.setVisibility(View.VISIBLE);
-            Picasso.with(this).load(advertisementList.get(2).getPictruePath()).into(ivDiscountDetailImage3);
+            Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(2).getPictruePath())).into(ivDiscountDetailImage3);
         }
     }
 
@@ -162,7 +162,7 @@ public class DiscountDetailActivity extends BaseBackActivity {
             //通过给ImageView外套了一个RL解决在ViewPager中图片显示不全的BUG
             View rootView = views.get(i);
             ImageView view = (ImageView) rootView.findViewById(R.id.ivDisountImage);
-            Picasso.with(this).load(rollDetailList.get(i).getPictruePath()).placeholder(R.mipmap.discount_background).into(view);
+            Picasso.with(this).load(QuickUtils.spliceUrl(rollDetailList.get(i).getPictruePath())).placeholder(R.mipmap.discount_background).into(view);
 
         }
     }
