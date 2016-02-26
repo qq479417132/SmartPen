@@ -28,7 +28,6 @@ import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.DownloadUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
-import com.cleverm.smartpen.util.VideoUtil;
 
 
 /**
@@ -301,12 +300,10 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         }
         InfoSendSMSVo infoSendSMSVo = new InfoSendSMSVo();
         infoSendSMSVo.setTemplateID(templateID);
-        infoSendSMSVo.setTableID(2137);
+        infoSendSMSVo.setTableID(deskId);
         Log.v(TAG, "id=" + id + " deskId=" + deskId + "isSend=" + isSend);
         sendMessageToService(infoSendSMSVo, id, isSend);
     }
-
-
 
 
     /**
