@@ -68,14 +68,14 @@
                 <category android:name="android.intent.category.HOME" />
             </intent-filter>
         </activity>
-        <activity android:name=".app.DriverActivity"/>
-        <activity android:name=".app.EvaluateActivity" />
-        <activity android:name=".app.DemoActivity" />
-        <activity android:name=".app.FutureActivity" />
-        <activity android:name=".app.SelectTableActivity"/>
-        <activity android:name=".app.DiscountActivity"/>
-        <activity android:name=".app.DiscountDetailActivity"/>
-        <activity android:name=".app.GameActivity"/>
+        <activity android:name=".app.DriverActivity" android:screenOrientation="landscape"/>
+        <activity android:name=".app.EvaluateActivity" android:screenOrientation="landscape"/>
+        <activity android:name=".app.DemoActivity" android:screenOrientation="landscape"/>
+        <activity android:name=".app.FutureActivity" android:screenOrientation="landscape"/>
+        <activity android:name=".app.SelectTableActivity" android:screenOrientation="landscape"/>
+        <activity android:name=".app.DiscountActivity" android:screenOrientation="landscape"/>
+        <activity android:name=".app.DiscountDetailActivity" android:screenOrientation="landscape"/>
+        <activity android:name=".app.GameActivity" android:screenOrientation="landscape"/>
 
         <service android:name=".service.penService" />
         <service android:name=".service.ScreenLockListenService"/>
