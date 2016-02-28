@@ -70,9 +70,7 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
                 case GOBack: {
                     Log.v(TAG, "come hand====");
                     mHandler.removeCallbacksAndMessages(null);
-                    InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(meatInput.getWindowToken(), 0);
-                    imm.hideSoftInputFromWindow(mequipmentInput.getWindowToken(), 0);
+                    HideInputFromWindow();
                     startActivity(new Intent(EvaluateActivity.this, VideoActivity.class));
                     EvaluateActivity.this.finish();
                     ((CleverM) getApplication()).getpenService().setActivityFlag("VideoActivity");
@@ -344,5 +342,14 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
                 break;
             }
         }
+    }
+
+    /**
+     * 隐藏输入键盘
+     */
+    private void HideInputFromWindow(){
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(meatInput.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(mequipmentInput.getWindowToken(), 0);
     }
 }

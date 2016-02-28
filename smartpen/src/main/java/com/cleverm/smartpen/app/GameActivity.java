@@ -2,11 +2,13 @@ package com.cleverm.smartpen.app;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.webkit.DownloadListener;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -31,6 +33,7 @@ public class GameActivity extends BaseActivity implements MyWebView.WebViewTouch
     public static final String GAME_URL="game_url";
     public static final int ENTER=0;
     public static final int EXIT=1;
+    private static final String INJECTION_TOKEN = "**injection**";
     private Handler mHandler =new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -79,8 +82,7 @@ public class GameActivity extends BaseActivity implements MyWebView.WebViewTouch
             }
         });
         mWebView.setWebViewTouchEventListener(this);
-        Log.v(TAG,"mURL="+mURL);
-        mWebView.loadUrl(mURL);
+        Log.v(TAG, "mURL=" + mURL);
         mHandler.sendEmptyMessageDelayed(EXIT, Constant.DELAY_BACK);
         WebSettings sets=mWebView.getSettings();
         sets.setJavaScriptEnabled(true);
@@ -88,8 +90,14 @@ public class GameActivity extends BaseActivity implements MyWebView.WebViewTouch
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Log.v(TAG, "shouldOverrideUrlLoading");
-                view.loadUrl(url);
+                Log.v(TAG, "url= " + url);
+//                view.loadUrl(url);
+//                return true;
+                if( url.startsWith("http:") || url.startsWith("https:") ) {
+                    return false;
+                }
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intent);
                 return true;
             }
 
@@ -101,6 +109,8 @@ public class GameActivity extends BaseActivity implements MyWebView.WebViewTouch
 
 
         });
+        mWebView.setDownloadListener(new MyWebViewDownLoadListener());  //在前面加入下载监听器
+        mWebView.loadUrl(mURL);
 
     }
 
@@ -118,4 +128,19 @@ public class GameActivity extends BaseActivity implements MyWebView.WebViewTouch
             mHandler.sendEmptyMessageDelayed(EXIT, Constant.DELAY_BACK);
         }
     }
+
+    private boolean falg=true;
+    class MyWebViewDownLoadListener implements DownloadListener {
+        @Override
+        public void onDownloadStart(String url, String userAgent, String contentDisposition,
+                                    String mimetype,long contentLength) {
+            Log.v(TAG,"onDownloadStart url="+url);
+            Uri uri = Uri.parse(url);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        }
+
+    }
+
+
 }
