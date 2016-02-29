@@ -68,8 +68,15 @@ public class VideoUtil {
 
 
         if(RememberUtil.getInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY,0)!=0){
-            mVideoView.setVideoPath(videoUrls[RememberUtil.getInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY, 0)]);
-            videoIndex=RememberUtil.getInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY,0);
+            try {
+                mVideoView.setVideoPath(videoUrls[RememberUtil.getInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY, 0)]);
+                videoIndex=RememberUtil.getInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY,0);
+            } catch (Exception e) {
+                e.printStackTrace();
+                mVideoView.setVideoPath(videoUrls[0]);
+                RememberUtil.putInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY,0);
+                videoIndex=0;
+            }
         }
 
 

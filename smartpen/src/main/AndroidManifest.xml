@@ -79,6 +79,8 @@
         <service android:name=".service.penService" />
         <service android:name=".service.ScreenLockListenService"/>
         <service android:name=".service.CommunicationService"/>
+        <service android:name=".service.DownloaderService"/>
+        <service android:name=".service.DownloaderDifferenceService"/>
         <receiver android:name=".broadcast.BootRestartReceiver">            
             <intent-filter>                
                 <action android:name="android.intent.action.BOOT_COMPLETED" />            

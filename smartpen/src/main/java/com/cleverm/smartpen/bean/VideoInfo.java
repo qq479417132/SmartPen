@@ -1,9 +1,11 @@
 package com.cleverm.smartpen.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by x on 2016/2/15.
  */
-public class VideoInfo {
+public class VideoInfo implements Serializable{
 
     private String videoPath;
     private String type;

@@ -5,9 +5,7 @@ import android.util.Log;
 import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.bean.VideoInfo;
 import com.cleverm.smartpen.ui.FullScreenVideoView;
-import com.lidroid.xutils.DbUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 import com.zhy.http.okhttp.callback.FileCallBack;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -17,7 +15,6 @@ import java.io.File;
 import java.util.List;
 
 import okhttp3.Call;
-import okhttp3.Response;
 
 
 /**
@@ -86,11 +83,10 @@ public class DownloadUtil {
                         try {
                             List<VideoInfo> info = JsonUtil.parser(response, VideoInfo.class);
 
-
                             //第一个视频为在线直接播放，其他所有视频为下载后再播放
 
                             for (int i = 0; i < info.size(); i++) {
-                                DownloadUtil.downloadFile(info.get(i).getVideoPath(), (i + 1) + "");
+                                DownloadUtil.downloadFile(QuickUtils.spliceUrl(info.get(i).getVideoPath()), (i + 1) + "");
                             }
 
                             VideoUtil videoUtil = new VideoUtil(vvAdvertisement);
@@ -149,7 +145,7 @@ public class DownloadUtil {
                     @Override
                     public void onResponse(String response) {
                         //存储起来,准备本店推荐界面使用
-                        FileCacheUtil.get(CleverM.getApplication()).put(DISOUNT_HEADOFFICE_JSON,response);
+                        FileCacheUtil.get(CleverM.getApplication()).put(DISOUNT_HEADOFFICE_JSON, response);
                     }
                 });
 
@@ -173,7 +169,7 @@ public class DownloadUtil {
                 {
                     @Override
                     public void inProgress(float progress) {
-//                        Log.i("FILE", "onResponse :" + progress);
+                        //Log.i("FILE", "onResponse :" + progress);
                     }
 
                     @Override
@@ -188,6 +184,8 @@ public class DownloadUtil {
                     }
                 });
     }
+
+
 
 
 }

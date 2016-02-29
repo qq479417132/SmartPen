@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.cleverm.smartpen.Version.VersionManager;
 import com.cleverm.smartpen.log.CrashHandler;
 import com.cleverm.smartpen.net.InfoSendSMSVo;
 import com.cleverm.smartpen.net.RequestNet;
@@ -20,8 +21,7 @@ import com.cleverm.smartpen.service.ScreenLockListenService;
 import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.RememberUtil;
-
-import com.cleverm.smartpen.Version.VersionManager;
+import com.thin.downloadmanager.ThinDownloadManager;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -30,6 +30,7 @@ import com.umeng.analytics.MobclickAgent;
 public class CleverM extends Application {
 
     private static Application application;
+    private static ThinDownloadManager thinDownloadManager;
     
     public static final String TAG=CleverM.class.getSimpleName();
     public static final String PATH= Environment.getExternalStorageDirectory().getPath()+"/logFile/log";
@@ -72,14 +73,24 @@ public class CleverM extends Application {
         super.onCreate();
         application=this;
 
+
         CrashHandler.getInstance().init(this, PATH);
 
         MobclickAgent.setCatchUncaughtExceptions(true);
         RememberUtil.init(getApplicationContext(), PREFS_NAME);
 
-
+        initDownloader();
         initNet();
         mPowerReceiver.register();
+    }
+
+    private void initDownloader() {
+        this.thinDownloadManager = new ThinDownloadManager(4);
+    }
+
+
+    public static ThinDownloadManager getThinDownloadManager() {
+        return thinDownloadManager;
     }
 
     public static Application getApplication() {

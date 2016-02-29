@@ -122,6 +122,9 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        QuickUtils.log("ActivityClay---onCreate()=" + videoValue);
+
+
         setContentView(R.layout.activity_video);
         QuickUtils.hideHighApiBottomStatusBar();
         initView();
@@ -179,7 +182,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         //2.如果不需要更新,直接检查我们的视频目录是否存在视频
         //3.根据排序规则进行视频的依次播放
         //AlgorithmUtil.getInstance().getSimpleVideo(vvAdvertisement);
-        AlgorithmUtil.getInstance().startVideoPlayAlgorithm(vvAdvertisement);
+        AlgorithmUtil.getInstance().startVideoPlayAlgorithm(vvAdvertisement,this);
     }
 
     /**
@@ -200,7 +203,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     protected void onPause() {
         super.onPause();
         RememberUtil.putInt(Constant.MEMORY_PLAY_KEY, vvAdvertisement.getCurrentPosition());
-        QuickUtils.log("onPause()=" + videoValue);
+        QuickUtils.log("ActivityClay---onPause()=");
     }
 
     int videoValue = 0;
@@ -209,18 +212,27 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     @Override
     protected void onResume() {
         super.onResume();
-        //videoValue = RememberUtil.getInt(Constant.MEMORY_PLAY_KEY, 0);
+        videoValue = RememberUtil.getInt(Constant.MEMORY_PLAY_KEY, 0);
         /**
          * 因为VideoActivity会被不断的重启,算法太耗时导致必须延迟
          */
-        QuickUtils.log("onResume()" + videoValue);
+        QuickUtils.log("ActivityClay---onResume()");
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                vvAdvertisement.seekTo(videoValue);
+                vvAdvertisement.start();
+            }
+        },250);
+
     }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        QuickUtils.log("onDestroy()");
+        QuickUtils.log("ActivityClay---onDestroy()");
     }
 
 

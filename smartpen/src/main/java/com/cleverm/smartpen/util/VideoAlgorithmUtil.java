@@ -1,10 +1,20 @@
 package com.cleverm.smartpen.util;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.bean.VideoInfo;
+import com.cleverm.smartpen.service.DownloaderDifferenceService;
+import com.cleverm.smartpen.service.DownloaderService;
 import com.cleverm.smartpen.ui.FullScreenVideoView;
+import com.thin.downloadmanager.DefaultRetryPolicy;
+import com.thin.downloadmanager.DownloadRequest;
+import com.thin.downloadmanager.DownloadStatusListener;
+import com.thin.downloadmanager.DownloadStatusListenerV1;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -12,8 +22,10 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import org.json.JSONException;
 
 import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +63,7 @@ public class VideoAlgorithmUtil {
      *
      * @param vvAdvertisement
      */
-    public void getVideoFirst(final FullScreenVideoView vvAdvertisement) {
+    public void getVideoFirst(final FullScreenVideoView vvAdvertisement,final Activity activity) {
 
         videoAPI(new videoInterface() {
             @Override
@@ -60,14 +72,12 @@ public class VideoAlgorithmUtil {
                     List<VideoInfo> info = JsonUtil.parser(json, VideoInfo.class);
 
                     //第一个视频为在线直接播放，其他所有视频为下载后再播放
-                    for (int i = 0; i < info.size(); i++) {
-                        downloadVideoFirst(QuickUtils.spliceUrl(info.get(i).getVideoPath()), info.get(i).getVideoId() + "");
-                    }
+                    downloadVideoByService(activity,info);
 
                     VideoUtil videoUtil = new VideoUtil(vvAdvertisement);
                     videoUtil.prepareOnlineVideo(info);
 
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -81,24 +91,54 @@ public class VideoAlgorithmUtil {
     }
 
 
+    public void downloadVideoByService(Activity activity , List<VideoInfo> info){
+        /*//第一个视频为在线直接播放，其他所有视频为下载后再播放
+        for (int i = 0; i < info.size(); i++) {
+             //downloadVideoFirstByVolley(QuickUtils.spliceUrl(info.get(i).getVideoPath()), info.get(i).getVideoId() + "");
+             downloadVideoFirst(QuickUtils.spliceUrl(info.get(i).getVideoPath()), info.get(i).getVideoId() + "");
+        }*/
+
+        Intent intent = new Intent(activity, DownloaderService.class);
+        intent.putExtra(DownloaderService.SERVICE_OBJECT, (Serializable) info);
+        activity.startService(intent);
+    }
+
+    public void downloadDifferVideoByService(Activity activity , List<VideoInfo> info,HashMap<String,String> map){
+        Intent intent = new Intent(activity, DownloaderDifferenceService.class);
+        intent.putExtra(DownloaderDifferenceService.SERVICE_DIFFERENCE_LIST, (Serializable) info);
+
+        //传递map是通过外层嵌套一个List
+        Bundle bundle=new Bundle();
+        ArrayList bundlelist = new ArrayList();
+        bundlelist.add(map);
+        bundle.putParcelableArrayList(DownloaderDifferenceService.SERVICE_CONTAINSKEY_MAP, bundlelist);
+        intent.putExtras(bundle);
+
+        activity.startService(intent);
+    }
+
+
     /**
      * 第一次下载所有视频的方法
      *
      * @param path
      * @param num
      */
-    private void downloadVideoFirst(String path, String num) {
+    public void downloadVideoFirst(String path, String num) {
 
         //存储的地址为storage/emulated/0/muye/木爷我们的视频.mp4
         OkHttpUtils//
                 .get()//
                 .url(path)//
                 .build()//
+                .connTimeOut(60000)
+                .readTimeOut(60000)
+                .writeTimeOut(60000)
                 .execute(new FileCallBack(AlgorithmUtil.VIDEO_FILE, num + ".mp4")//
                 {
                     @Override
                     public void inProgress(float progress) {
-                        //Log.i("FILE", "onResponse :" + progress);
+                        Log.i("FILE", "onResponse :" + progress);
                     }
 
                     @Override
@@ -248,7 +288,7 @@ public class VideoAlgorithmUtil {
     /**
      * @param videoView
      */
-    public void loopFileName2(final FullScreenVideoView videoView) {
+    public void loopFileName2(final FullScreenVideoView videoView,final Activity activity) {
 
         videoAPI(new videoInterface() {
             @Override
@@ -285,13 +325,14 @@ public class VideoAlgorithmUtil {
                     }
 
                     //服务器有,本地无(本地没有服务器的那个key)
-                    for (int i = 0; i < infos.size(); i++) {
+                    downloadDifferVideoByService(activity,infos,LocalList);
+                    /*for (int i = 0; i < infos.size(); i++) {
                         if (!LocalList.containsKey(infos.get(i).getVideoId() + "")) {
-                            QuickUtils.log("Video----serviceList----下载路径="+infos.get(i).getVideoPath());
+                            QuickUtils.log("Video----serviceList----下载路径=" + infos.get(i).getVideoPath());
                             //下载
                             downloadVideoFirst(QuickUtils.spliceUrl(infos.get(i).getVideoPath()), infos.get(i).getVideoId() + "");
                         }
-                    }
+                    }*/
 
                     //服务端有,本地也有,不操作
 
@@ -315,6 +356,39 @@ public class VideoAlgorithmUtil {
                 videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE, 0);
             }
         });
+
+
+    }
+
+
+
+
+    private void downloadVideoFirstByVolley(String path, String num) {
+
+        Uri downloadUri = Uri.parse(path);
+        Uri destinationUri = Uri.parse(AlgorithmUtil.VIDEO_FILE + File.separator + num + ".mp4");
+
+        final DownloadRequest downloadRequest = new DownloadRequest(downloadUri)
+                .setDestinationURI(destinationUri).setPriority(DownloadRequest.Priority.HIGH)
+                .setRetryPolicy(new DefaultRetryPolicy(50000,3,1f))
+                .setStatusListener(new DownloadStatusListenerV1() {
+                    @Override
+                    public void onDownloadComplete(DownloadRequest downloadRequest) {
+                        QuickUtils.log("######## onDownloadComplete");
+                    }
+
+                    @Override
+                    public void onDownloadFailed(DownloadRequest request, int errorCode, String errorMessage) {
+                        QuickUtils.log("######## onDownloadFailed");
+                    }
+
+                    @Override
+                    public void onProgress(DownloadRequest request, long totalBytes, long downloadedBytes, int progress) {
+                        QuickUtils.log("######## onProgress ###### " + request.getDownloadId() + " : " + totalBytes + " : " + downloadedBytes + " : " + progress);
+                    }
+                });
+
+        CleverM.getThinDownloadManager().add(downloadRequest);
 
 
     }

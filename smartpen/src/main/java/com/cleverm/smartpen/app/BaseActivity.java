@@ -13,6 +13,7 @@ import android.view.WindowManager;
 public class BaseActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        overridePendingTransition(0,0);
         super.onCreate(savedInstanceState);
         hideKeyBord();
         requestWindowFeature(Window.FEATURE_NO_TITLE);

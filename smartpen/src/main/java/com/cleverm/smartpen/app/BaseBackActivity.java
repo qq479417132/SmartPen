@@ -43,6 +43,7 @@ public abstract class BaseBackActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        overridePendingTransition(0, 0);
         super.onCreate(savedInstanceState);
         hideKeyBord();
         onCreate();
@@ -89,7 +90,11 @@ public abstract class BaseBackActivity extends Activity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode==KeyEvent.KEYCODE_BACK){
             return false;
+        }else if(keyCode==KeyEvent.KEYCODE_MENU){
+            return false;
         }
         return super.onKeyDown(keyCode, event);
     }
+
+
 }

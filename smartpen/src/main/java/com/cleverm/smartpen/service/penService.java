@@ -174,6 +174,7 @@ public class penService extends Service implements WandAPI.OnScanListener {
                             Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
                             Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
+
                     mActivityFlag = "DiscountActivity";
                 }
                 break;
