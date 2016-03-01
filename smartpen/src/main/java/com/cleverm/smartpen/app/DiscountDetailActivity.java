@@ -3,20 +3,25 @@ package com.cleverm.smartpen.app;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cleverm.smartpen.R;
+import com.cleverm.smartpen.adapter.DiscountDetailAdapter;
+import com.cleverm.smartpen.adapter.DiscountDetailPagerAdapter;
 import com.cleverm.smartpen.bean.DiscountAdInfo;
 import com.cleverm.smartpen.bean.DiscountInfo;
 import com.cleverm.smartpen.bean.DiscountRollInfo;
+import com.cleverm.smartpen.ui.ListViewForScrollView;
 import com.cleverm.smartpen.ui.banner.BGABanner;
 import com.cleverm.smartpen.ui.banner.NoTouchBGABanner;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,6 +40,8 @@ public class DiscountDetailActivity extends BaseBackActivity {
 
     private boolean isMoreInfo = true;
 
+    private boolean isDeprecated=true;
+
     DiscountInfo info;
     NoTouchBGABanner vpImage;
     TextView tvDiscountDetailTime;
@@ -49,6 +56,12 @@ public class DiscountDetailActivity extends BaseBackActivity {
     ImageView ivDiscountDetailImage3;
 
     ImageView ivDisountImage;
+
+
+    ListViewForScrollView lvAdList;
+    ViewPager vpView;
+
+
 
 
     @Override
@@ -95,6 +108,11 @@ public class DiscountDetailActivity extends BaseBackActivity {
             ivDiscountDetailImage1 = (ImageView) findViewById(R.id.ivDiscountDetailImage1);
             ivDiscountDetailImage2 = (ImageView) findViewById(R.id.ivDiscountDetailImage2);
             ivDiscountDetailImage3 = (ImageView) findViewById(R.id.ivDiscountDetailImage3);
+
+            vpView= (ViewPager) findViewById(R.id.vpView);
+            lvAdList= (ListViewForScrollView) findViewById(R.id.lvAdList);
+
+
         } else {
             ivDisountImage = (ImageView) findViewById(R.id.ivDisountImage);
         }
@@ -115,12 +133,18 @@ public class DiscountDetailActivity extends BaseBackActivity {
             tvDiscountDetailDesc.setText(info.getDescriptionText() + "");
             //处理时间区间
             if (QuickUtils.isSameDay(info.getStartTime(), info.getEndTime())) {
-                tvDiscountDetailTime.setText("活动时间：" + QuickUtils.timeStamp2Date(info.getEndTime().toString(), "yyyy-MM-dd"));
+                tvDiscountDetailTime.setText("活动时间：" + QuickUtils.timeStamp2DateNoSec(info.getEndTime().toString(), "yyyy-MM-dd"));
             } else {
-                tvDiscountDetailTime.setText("活动时间：" + QuickUtils.timeStamp2Date(info.getStartTime().toString(), "yyyy-MM-dd") + "至" + QuickUtils.timeStamp2Date(info.getEndTime().toString(), "yyyy-MM-dd"));
+                tvDiscountDetailTime.setText("活动时间：" + QuickUtils.timeStamp2DateNoSec(info.getStartTime().toString(), "yyyy-MM-dd") + "至" + QuickUtils.timeStamp2DateNoSec(info.getEndTime().toString(), "yyyy-MM-dd"));
             }
-            handlerAd();
-            handlerBanner();
+            if(isDeprecated){
+                handlerNewAd();
+                handlerNewBanner();
+            }else{
+                handlerAd();
+                handlerBanner();
+            }
+
         } else {
             //读取rollDetailList的第一个数据
             if (rollDetailList.size() > 0) {
@@ -132,6 +156,24 @@ public class DiscountDetailActivity extends BaseBackActivity {
     }
 
 
+    private void handlerNewAd() {
+        DiscountDetailAdapter detailAdapter = new DiscountDetailAdapter(this, advertisementList);
+        lvAdList.setAdapter(detailAdapter);
+    }
+
+    private void handlerNewBanner() {
+        List<View> view_s = QuickUtils.getViews(mContext, rollDetailList.size());
+        vpView.setAdapter(new DiscountDetailPagerAdapter(view_s));
+
+        for(int i =0 ;i < view_s.size();i++){
+            View rootView = view_s.get(i);
+            ImageView view = (ImageView) rootView.findViewById(R.id.ivDisountImage);
+            Picasso.with(this).load(QuickUtils.spliceUrl(rollDetailList.get(i).getPictruePath())).placeholder(R.mipmap.discount_background).into(view);
+        }
+    }
+
+
+    @Deprecated
     private void handlerAd() {
         if (advertisementList.size() == 1) {
             ivDiscountDetailImage1.setVisibility(View.VISIBLE);
@@ -149,8 +191,13 @@ public class DiscountDetailActivity extends BaseBackActivity {
             ivDiscountDetailImage3.setVisibility(View.VISIBLE);
             Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(2).getPictruePath())).into(ivDiscountDetailImage3);
         }
+
+
+
+
     }
 
+    @Deprecated
     private void handlerBanner() {
         vpImage.setTransitionEffect(BGABanner.TransitionEffect.Default);
         vpImage.setPageChangeDuration(3000);
@@ -165,6 +212,7 @@ public class DiscountDetailActivity extends BaseBackActivity {
             Picasso.with(this).load(QuickUtils.spliceUrl(rollDetailList.get(i).getPictruePath())).placeholder(R.mipmap.discount_background).into(view);
 
         }
+
     }
 
     @Override

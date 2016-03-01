@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Version:1.0
  * Open source
  */
-public class DiscountAdInfo implements Serializable {
+public class DiscountAdInfo extends BaseInfoBean {
 
 
     private String title;

@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Version:1.0
  * Open source
  */
-public class DiscountRollInfo implements Serializable {
+public class DiscountRollInfo extends BaseInfoBean {
 
     private String pictruePath;
 

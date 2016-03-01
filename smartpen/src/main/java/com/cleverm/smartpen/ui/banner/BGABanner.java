@@ -223,6 +223,7 @@ public class BGABanner extends RelativeLayout {
      */
     public void setViewsAndTips(List<View> views, List<String> tips) {
         if (mAutoPlayAble && views.size() < 1) {
+            //轮播时一个图片都没有
             throw new IllegalArgumentException("开启指定轮播时至少有一个页面");
         }
         if (tips != null && tips.size() < views.size()) {

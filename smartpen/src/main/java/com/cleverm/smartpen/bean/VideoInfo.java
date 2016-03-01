@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by x on 2016/2/15.
  */
-public class VideoInfo implements Serializable{
+public class VideoInfo extends BaseInfoBean{
 
     private String videoPath;
     private String type;

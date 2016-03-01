@@ -16,6 +16,7 @@ import com.cleverm.smartpen.app.DriverActivity;
 import com.cleverm.smartpen.app.EvaluateActivity;
 import com.cleverm.smartpen.app.FutureActivity;
 import com.cleverm.smartpen.app.GameActivity;
+import com.cleverm.smartpen.app.LocalDiscountActivity;
 import com.cleverm.smartpen.app.SelectTableActivity;
 import com.cleverm.smartpen.app.VideoActivity;
 import com.cleverm.smartpen.bean.TemplateIDState;
@@ -168,7 +169,6 @@ public class penService extends Service implements WandAPI.OnScanListener {
             case Constant.YOU_HUI5:{
                 if (!"DiscountActivity".equals(mActivityFlag)) {
                     Intent intent = new Intent(this, DiscountActivity.class);
-                    intent.putExtra(DiscountActivity.DISOUNT_INTENT,true);
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
                             Intent.FLAG_ACTIVITY_NEW_TASK |
                             Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
@@ -185,15 +185,14 @@ public class penService extends Service implements WandAPI.OnScanListener {
             case Constant.RECOMMEND3:
             case Constant.RECOMMEND4:
             case Constant.RECOMMEND5: {
-                if (!"DiscountActivity".equals(mActivityFlag)) {
-                    Intent intent = new Intent(this, DiscountActivity.class);
-                    intent.putExtra(DiscountActivity.DISOUNT_INTENT,false);
+                if (!"LocalDiscountActivity".equals(mActivityFlag)) {
+                    Intent intent = new Intent(this, LocalDiscountActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
                             Intent.FLAG_ACTIVITY_NEW_TASK |
                             Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
                             Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-                    mActivityFlag = "DiscountActivity";
+                    mActivityFlag = "LocalDiscountActivity";
                 }
                 break;
             }

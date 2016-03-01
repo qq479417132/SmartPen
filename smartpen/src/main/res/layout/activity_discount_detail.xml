@@ -41,7 +41,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <!---->
 
@@ -49,16 +49,26 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="20dp"
                     android:layout_weight="0.3"
                     android:orientation="vertical">
 
+
+
+                    <android.support.v4.view.ViewPager
+                    android:id="@+id/vpView"
+                    android:layout_width="match_parent"
+                    android:layout_height="410dp"
+                    android:layout_gravity="center" />
+
+
                     <com.cleverm.smartpen.ui.banner.NoTouchBGABanner
                         android:id="@+id/BGADetailImage"
                         style="@style/BannerDefaultStyle"
                         app:banner_pointTopBottomMargin="20dp"
+                        android:visibility="gone"
                         android:layout_height="410dp"
                         android:clickable="false"
                         android:layout_width="match_parent"
@@ -100,11 +110,23 @@
 
             <!---->
 
+            <com.cleverm.smartpen.ui.ListViewForScrollView
+                android:id="@+id/lvAdList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="30dp"
+                android:scrollbars="none"
+                android:layout_marginTop="20dp"
+                android:layout_weight="0.7"
+                />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="30dp"
+                android:visibility="gone"
                 android:layout_marginTop="20dp"
                 android:layout_weight="0.7"
                 android:orientation="vertical">

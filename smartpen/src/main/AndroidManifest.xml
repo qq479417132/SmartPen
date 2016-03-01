@@ -73,6 +73,7 @@
         <activity android:name=".app.FutureActivity" android:screenOrientation="landscape"/>
         <activity android:name=".app.SelectTableActivity" android:screenOrientation="landscape"/>
         <activity android:name=".app.DiscountActivity" android:screenOrientation="landscape"/>
+        <activity android:name=".app.LocalDiscountActivity" android:screenOrientation="landscape"/>
         <activity android:name=".app.DiscountDetailActivity" android:screenOrientation="landscape"/>
         <activity android:name=".app.GameActivity" android:screenOrientation="landscape"/>
 

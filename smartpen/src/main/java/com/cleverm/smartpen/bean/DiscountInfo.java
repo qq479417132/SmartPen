@@ -13,7 +13,7 @@ import java.util.List;
  * Version:1.0
  * Open source
  */
-public class DiscountInfo implements Serializable{
+public class DiscountInfo extends BaseInfoBean{
 
     private int type;
     private int orgId;

@@ -139,7 +139,7 @@ public class QuickUtils {
     /**
      * 根据startTime和endTime来确定是否同一天
      */
-    public static boolean isSameDay(Long startTime,Long endTime){
+    public static boolean isSameDay(Long startTime, Long endTime) {
         String startDay = getDayFromData(timeStamp2Date(startTime.toString(), null));
         String startMonth = getMonthFromData(timeStamp2Date(startTime.toString(), null));
 
@@ -147,9 +147,9 @@ public class QuickUtils {
         String endMonth = getMonthFromData(timeStamp2Date(endTime.toString(), null));
 
         //只有日期和月份都相同的我们才定义为一整天
-        if( startDay == endDay && startMonth == endMonth){
+        if (startDay == endDay && startMonth == endMonth) {
             return true;
-        }else{
+        } else {
             return false;
         }
 
@@ -157,101 +157,114 @@ public class QuickUtils {
 
     /**
      * 时间戳转具体年月日
+     *
      * @param seconds
      * @param format
      * @return
      */
-    public static String timeStamp2Date(String seconds,String format) {
-        if(seconds == null || seconds.isEmpty() || seconds.equals("null")){
+    public static String timeStamp2Date(String seconds, String format) {
+        if (seconds == null || seconds.isEmpty() || seconds.equals("null")) {
             return "";
         }
-        if(format == null || format.isEmpty()) format = "yyyy-MM-dd HH:mm:ss";
+        if (format == null || format.isEmpty()) format = "yyyy-MM-dd HH:mm:ss";
         SimpleDateFormat sdf = new SimpleDateFormat(format);
-        return sdf.format(new Date(Long.valueOf(seconds+"000")));
+        return sdf.format(new Date(Long.valueOf(seconds + "000")));
     }
 
-    public static String getDayFromData(String date){
+    public static String timeStamp2DateNoSec(String days, String format) {
+        if (days == null || days.isEmpty() || days.equals("null")) {
+            return "";
+        }
+        if (format == null || format.isEmpty()) format = "yyyy-MM-dd";
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        return sdf.format(new Date(Long.valueOf(days)));
+    }
+
+    public static String getDayFromData(String date) {
         String what_day = date.substring(8, 10);
         return what_day;
     }
 
-    public static String getMonthFromData(String date){
+    public static String getMonthFromData(String date) {
         String what_month = date.substring(5, 7);
         return what_month;
     }
 
     /**
      * 从SP中去拿餐厅号
+     *
      * @return
      */
-    public static String getOrgIdFromSp(){
+    public static String getOrgIdFromSp() {
         return RememberUtil.getString(UpdateTableHandler.ORGID, "100");
     }
 
     /**
      * 判断目录路径,比如storage/emulated/0/muye是否存在
+     *
      * @return
      */
-    public static boolean isHasVideoFolder(){
+    public static boolean isHasVideoFolder() {
         File file = new File(AlgorithmUtil.VIDEO_FILE);
         //如果目录不存在public
-        if(!file.exists()&&!file.isDirectory()){
+        if (!file.exists() && !file.isDirectory()) {
             //先创建目录，然后返回false
             file.mkdir();
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
     /**
      * 判断目录下是否有文件
+     *
      * @return
      */
-    public static boolean isVideoFolderHaveFile(){
+    public static boolean isVideoFolderHaveFile() {
         File file = new File(AlgorithmUtil.VIDEO_FILE);
         File[] files = file.listFiles();
 
-        if(files!=null){
-            QuickUtils.log("files.length="+files.length);
+        if (files != null) {
+            QuickUtils.log("files.length=" + files.length);
         }
 
-        if((files ==null) || (files.length==0)){
+        if ((files == null) || (files.length == 0)) {
             return false;
-        }else{
-            for(int i =0 ; i<files.length ;i++){
-                QuickUtils.log("files.name="+files[i]);
-                if(files[i].isDirectory()){
+        } else {
+            for (int i = 0; i < files.length; i++) {
+                QuickUtils.log("files.name=" + files[i]);
+                if (files[i].isDirectory()) {
                     //递归删除目录
                     deleteDir(files[i]);
                 }
             }
             //在经过一轮删除目录中的目录后，如果该目录中还有length,那么就代表一定有文件
-            if(files.length>0){
+            if (files.length > 0) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
     }
 
-    public static boolean isVideoFolderHaveFiel2(){
+    public static boolean isVideoFolderHaveFiel2() {
         File file = new File(AlgorithmUtil.VIDEO_FILE);
         File[] files = file.listFiles();
 
-        if(files!=null){
-            QuickUtils.log("files="+files.toString());
+        if (files != null) {
+            QuickUtils.log("files=" + files.toString());
         }
 
 
-        if((files ==null) || (files.length==0)){
+        if ((files == null) || (files.length == 0)) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
-    public static File[] getVideoFolderFiles(){
+    public static File[] getVideoFolderFiles() {
         File file = new File(AlgorithmUtil.VIDEO_FILE);
         File[] files = file.listFiles();
         return files;
@@ -260,6 +273,7 @@ public class QuickUtils {
 
     /**
      * 递归删除目录
+     *
      * @param dir
      * @return
      */
@@ -267,7 +281,7 @@ public class QuickUtils {
         if (dir.isDirectory()) {
             String[] children = dir.list();
             //递归删除目录中的子目录下
-            for (int i=0; i<children.length; i++) {
+            for (int i = 0; i < children.length; i++) {
                 boolean success = deleteDir(new File(dir, children[i]));
                 if (!success) {
                     return false;
@@ -280,7 +294,8 @@ public class QuickUtils {
 
     /**
      * 删除单个文件
-     * @param   sPath    被删除文件的文件名
+     *
+     * @param sPath 被删除文件的文件名
      * @return 单个文件删除成功返回true，否则返回false
      */
     public static boolean deleteFile(String sPath) {
@@ -296,10 +311,11 @@ public class QuickUtils {
 
     /**
      * 文件是否存在
+     *
      * @param path
      * @return
      */
-    public static boolean isFileExists(String path){
+    public static boolean isFileExists(String path) {
         boolean flag = false;
         File file = new File(path);
         // 路径为文件且不为空则进行删除
@@ -311,20 +327,22 @@ public class QuickUtils {
 
     /**
      * 过滤单词101.mp4  为101
+     *
      * @param fileName
      * @return
      */
-    public static String subVideoEnd(String fileName){
+    public static String subVideoEnd(String fileName) {
         return fileName.substring(0, fileName.length() - 4);
     }
 
     /**
      * 拼接URL前缀
+     *
      * @param url
      * @return
      */
-    public static String spliceUrl(String url){
-        return "http://www.myee.online/push/"+url;
+    public static String spliceUrl(String url) {
+        return "http://www.myee.online/push/" + url;
     }
 
 
