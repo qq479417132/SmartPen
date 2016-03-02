@@ -21,13 +21,14 @@ import com.cleverm.smartpen.app.SelectTableActivity;
 import com.cleverm.smartpen.app.VideoActivity;
 import com.cleverm.smartpen.bean.TemplateIDState;
 import com.cleverm.smartpen.util.Constant;
+import com.cleverm.smartpen.util.QuickUtils;
 
 import java.util.HashMap;
 
 /**
  * Created by 95 on 2015/12/21.
  */
-public class penService extends Service implements WandAPI.OnScanListener {
+public class penService extends Service implements WandAPI.OnScanListener, WandAPI.onConnectListener {
 
     public static final String DEMO="DEMO";
 
@@ -318,6 +319,7 @@ public class penService extends Service implements WandAPI.OnScanListener {
         super.onCreate();
         mWandAPI = new WandAPI(this, this);
         mWandAPI.onCreate();
+        mWandAPI.setOnConnectListener(this);
     }
 
     @Override
@@ -332,12 +334,20 @@ public class penService extends Service implements WandAPI.OnScanListener {
         super.onDestroy();
     }
 
-    public class penServiceBind extends Binder {
+    @Override
+    public void onConnect() {
 
+    }
+
+    @Override
+    public void onDisconnect() {
+        QuickUtils.sendSMSToService(Constant.PEN_PULL_OUT);
+    }
+
+    public class penServiceBind extends Binder {
         public penService getService() {
             return penService.this;
         }
-
     }
 
 

@@ -17,6 +17,10 @@ import android.widget.Toast;
 
 
 import com.cleverm.smartpen.R;
+import com.cleverm.smartpen.util.QuickUtils;
+import com.cleverm.smartpen.util.evnet.BroadcastEvent;
+import com.cleverm.smartpen.util.evnet.util.BroadcastCx;
+import com.cleverm.smartpen.util.evnet.util.BroadcastUtil;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -49,6 +53,8 @@ public class WandAPI {
     private UsbInterface mUsbInterface;
     private UsbDeviceConnection mUsbDeviceConn;
     private OnScanListener mOnScanListener;
+
+
     private Runnable mScanRunnable = new Runnable() {
         private byte[] buffer = new byte[8];
 
@@ -98,6 +104,7 @@ public class WandAPI {
             .USB_SERVICE);
         HashMap<String, UsbDevice> deviceList = mUsbManager.getDeviceList();
         if (deviceList.isEmpty()) {
+            //提示未找到匹配的扫描笔
             Toast.makeText(mContext, R.string.no_matched_wand, Toast
                 .LENGTH_LONG).show();
             return;
@@ -119,12 +126,15 @@ public class WandAPI {
                             .getBroadcast(mContext,
                                 0, new Intent(ACTION_USB_PERMISSION), 0));
                     }
+                    //添加代码：连接回调
+                    mOnConnectListener.onConnect();
                 }
             }
         }
     }
 
     private void disconnect() {
+        Log.d(TAG, "disconnect");
         if (mUsbDeviceConn != null) {
             if (mUsbInterface != null) {
                 mUsbDeviceConn.releaseInterface(mUsbInterface);
@@ -132,6 +142,9 @@ public class WandAPI {
             }
             mUsbDeviceConn.close();
             mUsbDeviceConn = null;
+            //添加代码：断连回掉
+            mOnConnectListener.onDisconnect();
+            BroadcastUtil.post(BroadcastCx.DEF_EVENT_ID.Cx_0x0001,null);
         }
     }
 
@@ -175,6 +188,15 @@ public class WandAPI {
 
     public interface OnScanListener {
         void onScan(final int id);
+    }
+
+    public interface onConnectListener{
+        void onConnect();
+        void onDisconnect();
+    }
+    private onConnectListener mOnConnectListener;
+    public void setOnConnectListener(onConnectListener mOnConnectListener) {
+        this.mOnConnectListener = mOnConnectListener;
     }
 
     class WandBroadcastReceiver extends BroadcastReceiver {

@@ -10,8 +10,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.cleverm.smartpen.R;
+import com.cleverm.smartpen.app.VideoActivity;
 import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.bean.DiscountInfo;
+import com.cleverm.smartpen.net.InfoSendSMSVo;
+import com.cleverm.smartpen.net.RequestNet;
 import com.cleverm.smartpen.pushtable.UpdateTableHandler;
 
 import java.io.File;
@@ -346,4 +349,24 @@ public class QuickUtils {
     }
 
 
+    /**
+     * 发送短信
+     */
+    public static void sendSMSToService(int eventId){
+        long deskId = RememberUtil.getLong(VideoActivity.SELECTEDTABLEID, Constant.DESK_ID_DEF_DEFAULT);
+        if (deskId == Constant.DESK_ID_DEF_DEFAULT) {
+            return;
+        }
+        final InfoSendSMSVo infoSendSMSVo = new InfoSendSMSVo();
+        infoSendSMSVo.setTemplateID(eventId);
+        infoSendSMSVo.setTableID(deskId);
+
+        new Thread() {
+            @Override
+            public void run() {
+                RequestNet.getData(infoSendSMSVo);
+            }
+        }.start();
+
+    }
 }

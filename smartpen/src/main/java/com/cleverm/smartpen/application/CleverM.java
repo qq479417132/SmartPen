@@ -21,6 +21,7 @@ import com.cleverm.smartpen.service.ScreenLockListenService;
 import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.RememberUtil;
+import com.cleverm.smartpen.util.evnet.BroadcastEvent;
 import com.thin.downloadmanager.ThinDownloadManager;
 import com.umeng.analytics.MobclickAgent;
 
@@ -81,7 +82,12 @@ public class CleverM extends Application {
 
         initDownloader();
         initNet();
+        initEvnet();
         mPowerReceiver.register();
+    }
+
+    private void initEvnet() {
+        BroadcastEvent.init(this);
     }
 
     private void initDownloader() {

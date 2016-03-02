@@ -154,12 +154,17 @@ public class Constant {
     public static final String PATH_KEY = "PATH";
     public static final String ISENTERAMUSEMENT_KEY = "isenteramusement_key";
     public static final String DIAN_CAI_PACKAGE_NAME = "com.cleverm.smartpen";
-    public static final String MO_JI_PACKAGE_NAME = "com.moji.mjweather";
-    public static final String TOU_TIAO_PACKAGE_NAME = "com.ss.android.article.news";
+
+
+    /**
+     * 内嵌APP
+     */
+    public static final String MO_JI_PACKAGE_NAME = "sina.mobile.tianqitonghd";
+    public static final String TOU_TIAO_PACKAGE_NAME = "com.myzaker.ZAKER_HD";
     public static final String BAI_DU_PACKAGE_NAME = "com.baidu.BaiduMap";
-    public static final String ONE_SHOP_PACKAGE_NAME = "com.thestore.main";
+    public static final String ONE_SHOP_PACKAGE_NAME = "com.taobao.apad";
     public static final String DA_ZONG_PACKAGE_NAME = "com.dianping.v1";
-    public static final String ZHIZ_ZHU_PACKAGE_NAME = "com.spider.reader";
+    public static final String ZHIZ_ZHU_PACKAGE_NAME = "com.dooland.padfordooland.reader";
     public static final String VIDEO_ENTERTAINMENT = "com.qiyi.video.pad";
     public static final String WAN_DOU_JIA = "http://www.wandoujia.com/apps";
 
@@ -192,7 +197,10 @@ public class Constant {
     public static final int TISSUE_ADD = 3;
     public static final int PAY_MONRY = 4;
     public static final int OTHER_SERVICE = 5;
+    public static final int PEN_PULL_OUT=15;
     public static final int TEMPLATEID_DELAY = 30000;
+
+
 
 
     public static final String WEATHER="http://www.weather.com.cn/weather/101020100.shtml";
@@ -369,7 +377,7 @@ public class Constant {
     public static final String DEFALUT_ORGID="100";
     public static final String MEMORY_PLAY_KEY="MEMORY_PLAY_KEY";
     public static final String MEMORY_PLAY_VIDEO_URI_KEY="MEMORY_PLAY_VIDEO_URI_KEY";
-
+    public static final String BROADCAST_RESATRT_EVENT="BROADCAST_RESATRT_EVENT";
 
 }
 

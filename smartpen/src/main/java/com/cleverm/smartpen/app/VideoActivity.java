@@ -15,6 +15,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
@@ -28,6 +29,10 @@ import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.DownloadUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
+import com.cleverm.smartpen.util.VideoUtil;
+import com.cleverm.smartpen.util.evnet.BroadcastEx;
+import com.cleverm.smartpen.util.evnet.util.BroadcastCx;
+import com.cleverm.smartpen.util.evnet.util.BroadcastUtil;
 
 
 /**
@@ -55,15 +60,15 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     public static final int DELAY_TIME = 3000;
     public static final int FOOD_ADD = Constant.FOOD_ADD;
     public static final int WATER_ADD = Constant.WATER_ADD;
-    public static final int TISSUE_ADD =Constant.TISSUE_ADD;
+    public static final int TISSUE_ADD = Constant.TISSUE_ADD;
     public static final int PAY_MONRY = Constant.PAY_MONRY;
     public static final int OTHER_SERVICE = Constant.OTHER_SERVICE;
-    public static final String SELECTEDTABLEID="SelectedTableId";
+    public static final String SELECTEDTABLEID = "SelectedTableId";
 
-    public static final String VIDEO_ACTIVITY_KEY="video_activity_key";
-    public static final String VIDEO_ACTIVITY_ISSEND="video_activity_isSend";
+    public static final String VIDEO_ACTIVITY_KEY = "video_activity_key";
+    public static final String VIDEO_ACTIVITY_ISSEND = "video_activity_isSend";
 
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -92,7 +97,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                 case Constant.PAY5:
                 case Constant.TISSUE5:
                 case Constant.OTHER5: {
-                    Log.v(TAG,"AnimationStart(msg.what)="+msg.what);
+                    Log.v(TAG, "AnimationStart(msg.what)=" + msg.what);
                     AnimationStart(msg.what);
                     break;
                 }
@@ -100,15 +105,15 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                     mrlNotice.setVisibility(View.GONE);
                     break;
                 }
-                case HANDLER_DATA:{
+                case HANDLER_DATA: {
                     handlerCode(msg.arg1, (Boolean) msg.obj);
                     break;
                 }
-                case GET_PENSERVICE:{
+                case GET_PENSERVICE: {
                     initPenServiceListener();
                     break;
                 }
-                case GET_STUB:{
+                case GET_STUB: {
                     initStubListener();
                     break;
                 }
@@ -128,42 +133,61 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         setContentView(R.layout.activity_video);
         QuickUtils.hideHighApiBottomStatusBar();
         initView();
-        initData();
-        initCacheJson();
+
+        //只有重启后的第一次才去取数据
+        if(RememberUtil.getBoolean(Constant.BROADCAST_RESATRT_EVENT,true)){
+            QuickUtils.toast("取服务端数据");
+            initData();
+            initCacheJson();
+        }else{
+            if(QuickUtils.isHasVideoFolder()&&QuickUtils.isVideoFolderHaveFiel2()){
+                QuickUtils.toast("直接播放本地的视频");
+                VideoUtil videoUtil = new VideoUtil(vvAdvertisement);
+                videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE, 0);
+            }else{
+                initData();
+            }
+        }
+
+        RememberUtil.putBoolean(Constant.BROADCAST_RESATRT_EVENT,false);
+
         initIntent();
         mHandler.sendEmptyMessage(GET_PENSERVICE);
         initVersion();
     }
 
+
+
+
     private void initVersion() {
-        ((CleverM)CleverM.getApplication()).UpdataApp(this);
+        ((CleverM) CleverM.getApplication()).UpdataApp(this);
     }
 
     private void initIntent() {
-        Intent in=getIntent();
-        if(in==null){
-           return;
+        Intent in = getIntent();
+        if (in == null) {
+            return;
         }
-        int id=in.getIntExtra(VIDEO_ACTIVITY_KEY,0);
-        boolean isSend=in.getBooleanExtra(VIDEO_ACTIVITY_ISSEND, false);
+        int id = in.getIntExtra(VIDEO_ACTIVITY_KEY, 0);
+        boolean isSend = in.getBooleanExtra(VIDEO_ACTIVITY_ISSEND, false);
         handlerCode(id, isSend);
     }
 
-    private void initPenServiceListener(){
-        penService penService=((CleverM) getApplication()).getpenService();
-        if(penService==null){
-            mHandler.sendEmptyMessageDelayed(GET_PENSERVICE,500);
-        }else {
+    private void initPenServiceListener() {
+        penService penService = ((CleverM) getApplication()).getpenService();
+        if (penService == null) {
+            mHandler.sendEmptyMessageDelayed(GET_PENSERVICE, 500);
+        } else {
             penService.setMessageListener(this);
         }
 
     }
 
-    private void initStubListener(){
-        ScreenLockListenService.ScreenLockListenServiceStub stub=((CleverM) getApplication()).getStub();
-        if(stub==null){
-            mHandler.sendEmptyMessageDelayed(GET_STUB,500);
-        }else {
+    private void initStubListener() {
+        ScreenLockListenService.ScreenLockListenServiceStub stub = ((CleverM) getApplication()).getStub();
+        if (stub == null) {
+            mHandler.sendEmptyMessageDelayed(GET_STUB, 500);
+        } else {
             stub.setTaskId(getTaskId());
             stub.setWindow(getWindow());
         }
@@ -171,9 +195,9 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
 
     private void initView() {
         vvAdvertisement = (FullScreenVideoView) findViewById(R.id.vvAdvertisement);
-        mrlNotice= (RelativeLayout) findViewById(R.id.rlNotice);
-        mivNoticeImage= (ImageView) findViewById(R.id.ivNoticeImage);
-        mrlNoticeText=(TextView) findViewById(R.id.rlNoticeText);
+        mrlNotice = (RelativeLayout) findViewById(R.id.rlNotice);
+        mivNoticeImage = (ImageView) findViewById(R.id.ivNoticeImage);
+        mrlNoticeText = (TextView) findViewById(R.id.rlNoticeText);
     }
 
 
@@ -182,7 +206,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         //2.如果不需要更新,直接检查我们的视频目录是否存在视频
         //3.根据排序规则进行视频的依次播放
         //AlgorithmUtil.getInstance().getSimpleVideo(vvAdvertisement);
-        AlgorithmUtil.getInstance().startVideoPlayAlgorithm(vvAdvertisement,this);
+        AlgorithmUtil.getInstance().startVideoPlayAlgorithm(vvAdvertisement, this);
     }
 
     /**
@@ -224,7 +248,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                 vvAdvertisement.seekTo(videoValue);
                 vvAdvertisement.start();
             }
-        },250);
+        }, 250);
 
     }
 
@@ -242,62 +266,62 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
      * @param id
      */
     @Override
-    public void receiveData(int id,boolean isSend) {
+    public void receiveData(int id, boolean isSend) {
         Log.v(TAG, "receiveData id=" + id);
-        Message mes= mHandler.obtainMessage();
-        mes.arg1=id;
-        mes.what=HANDLER_DATA;
-        mes.obj=isSend;
+        Message mes = mHandler.obtainMessage();
+        mes.arg1 = id;
+        mes.what = HANDLER_DATA;
+        mes.obj = isSend;
         mes.sendToTarget();
     }
 
-    private void handlerCode(int id,boolean isSend) {
+    private void handlerCode(int id, boolean isSend) {
         QuickUtils.log("code=" + id);
-        int templateID=0;
-        switch (id){
+        int templateID = 0;
+        switch (id) {
             case Constant.ORDER_DISHES1:
             case Constant.ORDER_DISHES2:
             case Constant.ORDER_DISHES3:
             case Constant.ORDER_DISHES4:
-            case Constant.ORDER_DISHES5:{
-                templateID=FOOD_ADD;
+            case Constant.ORDER_DISHES5: {
+                templateID = FOOD_ADD;
                 break;
             }
             case Constant.ADD_WATER1:
             case Constant.ADD_WATER2:
             case Constant.ADD_WATER3:
             case Constant.ADD_WATER4:
-            case Constant.ADD_WATER5:{
-                templateID=WATER_ADD;
+            case Constant.ADD_WATER5: {
+                templateID = WATER_ADD;
                 break;
             }
             case Constant.TISSUE1:
             case Constant.TISSUE2:
             case Constant.TISSUE3:
             case Constant.TISSUE4:
-            case Constant.TISSUE5:{
-                templateID=TISSUE_ADD;
+            case Constant.TISSUE5: {
+                templateID = TISSUE_ADD;
                 break;
             }
             case Constant.PAY1:
             case Constant.PAY2:
             case Constant.PAY3:
             case Constant.PAY4:
-            case Constant.PAY5:{
-                templateID=PAY_MONRY;
+            case Constant.PAY5: {
+                templateID = PAY_MONRY;
                 break;
             }
             case Constant.OTHER1:
             case Constant.OTHER2:
             case Constant.OTHER3:
             case Constant.OTHER4:
-            case Constant.OTHER5:{
-                templateID=OTHER_SERVICE;
+            case Constant.OTHER5: {
+                templateID = OTHER_SERVICE;
                 break;
             }
         }
-        long deskId =RememberUtil.getLong(SELECTEDTABLEID,Constant.DESK_ID_DEF_DEFAULT);
-        if(deskId==Constant.DESK_ID_DEF_DEFAULT){
+        long deskId = RememberUtil.getLong(SELECTEDTABLEID, Constant.DESK_ID_DEF_DEFAULT);
+        if (deskId == Constant.DESK_ID_DEF_DEFAULT) {
             return;
         }
         InfoSendSMSVo infoSendSMSVo = new InfoSendSMSVo();
@@ -310,23 +334,24 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
 
     /**
      * SEND ems
+     *
      * @param infoSendSMSVo
      * @param code
      */
-    private void sendMessageToService(final InfoSendSMSVo infoSendSMSVo, final int code,final boolean isSend) {
+    private void sendMessageToService(final InfoSendSMSVo infoSendSMSVo, final int code, final boolean isSend) {
         new Thread() {
             @Override
             public void run() {
-                if(isSend==false){
+                if (isSend == false) {
                     InfoSendSMSVo getSMSVo = RequestNet.getData(infoSendSMSVo);
                     Log.v(TAG, "sendMessageToService()===");
                     if (getSMSVo != null && getSMSVo.getSuccess()) {
                         Log.v(TAG, "sendMessageToService()===isSuccess");
                         mHandler.sendEmptyMessage(code);
                     } else {
-                        Log.v(TAG,"sendMessageToService()===isfalse");
+                        Log.v(TAG, "sendMessageToService()===isfalse");
                     }
-                }else {
+                } else {
                     mHandler.sendEmptyMessage(code);
                 }
             }
@@ -335,9 +360,11 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
 
     /**
      * Animation
+     *
      * @param id
      */
-    int i=0;
+    int i = 0;
+
     private void AnimationStart(final int id) {
         mrlNotice.clearAnimation();
         mHandler.removeMessages(STOP_ANIMATION);
@@ -436,9 +463,8 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
             }
         });
         mrlNotice.startAnimation(set);
-        Log.v(TAG, "AnimationStart mrlNotice.startAnimation(set)"+i);
+        Log.v(TAG, "AnimationStart mrlNotice.startAnimation(set)" + i);
     }
-
 
 
 }

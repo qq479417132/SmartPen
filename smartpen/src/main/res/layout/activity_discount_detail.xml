@@ -63,6 +63,12 @@
                     android:layout_height="410dp"
                     android:layout_gravity="center" />
 
+                    <ImageView
+                        android:layout_marginTop="20dp"
+                        android:background="#010101"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp" />
+
 
                     <com.cleverm.smartpen.ui.banner.NoTouchBGABanner
                         android:id="@+id/BGADetailImage"
@@ -110,16 +116,40 @@
 
             <!---->
 
-            <com.cleverm.smartpen.ui.ListViewForScrollView
-                android:id="@+id/lvAdList"
+
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="30dp"
-                android:scrollbars="none"
                 android:layout_marginTop="20dp"
                 android:layout_weight="0.7"
+                >
+
+                <ImageView
+                    android:background="@mipmap/icon_02"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            <com.cleverm.smartpen.ui.ListViewForScrollView
+                android:id="@+id/lvAdList"
+                android:layout_margin="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none"
+
                 />
+
+                <ImageView
+                    android:background="@mipmap/icon_01"
+                    android:layout_gravity="bottom|right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </FrameLayout>
+
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
