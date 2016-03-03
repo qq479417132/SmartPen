@@ -127,7 +127,9 @@ public class WandAPI {
                                 0, new Intent(ACTION_USB_PERMISSION), 0));
                     }
                     //添加代码：连接回调
-                    mOnConnectListener.onConnect();
+                    if(mOnConnectListener!=null){
+                       mOnConnectListener.onConnect();
+                    }
                 }
             }
         }
@@ -143,8 +145,10 @@ public class WandAPI {
             mUsbDeviceConn.close();
             mUsbDeviceConn = null;
             //添加代码：断连回掉
-            mOnConnectListener.onDisconnect();
-            BroadcastUtil.post(BroadcastCx.DEF_EVENT_ID.Cx_0x0001,null);
+            if(mOnConnectListener !=null){
+                mOnConnectListener.onDisconnect();
+                BroadcastUtil.post(BroadcastCx.DEF_EVENT_ID.Cx_0x0001,null);
+            }
         }
     }
 

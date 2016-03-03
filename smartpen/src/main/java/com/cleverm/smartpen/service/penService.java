@@ -481,15 +481,16 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
         }catch (Exception e){
             Log.v(TAG, "no this APK packageName=" + packageName);
             e.printStackTrace();
-            Toast.makeText(this,getString(R.string.no_find_app),Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(this, GameActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
-                    Intent.FLAG_ACTIVITY_NEW_TASK |
-                    Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
-                    Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.putExtra(GAME_URL,Constant.WAN_DOU_JIA);
-            startActivity(intent);
-            mActivityFlag = "GAME_ACTIVITY";
+//          Toast.makeText(this,getString(R.string.no_find_app),Toast.LENGTH_LONG).show();
+            if (!"FutureActivity".equals(mActivityFlag)) {
+                Intent intent = new Intent(this, FutureActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
+                        Intent.FLAG_ACTIVITY_NEW_TASK |
+                        Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                mActivityFlag = "FutureActivity";
+            }
         }
     }
 }

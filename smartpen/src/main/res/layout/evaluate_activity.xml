@@ -7,7 +7,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <!-- 服务评价-->
         <TextView
@@ -25,7 +27,9 @@
             android:layout_height="0dp"
             android:layout_marginTop="37dp"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:focusable="true"
+            android:focusableInTouchMode="true" >
 
             <!-- 打星星-->
             <LinearLayout
