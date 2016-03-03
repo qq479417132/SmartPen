@@ -258,7 +258,7 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
 
 
     private int getRatingBarValue(int NumStars) {
-        int value = 20;
+        int value = 0;
         switch (NumStars) {
             case EVALUATE_1: {
                 value = 20;
@@ -281,7 +281,7 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
                 break;
             }
             default: {
-                value = 20;
+                value = 0;
                 break;
             }
         }
@@ -318,7 +318,7 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
         Log.v(TAG, "code=" + code);
         switch (code) {
             case 0: {
-                textView.setText(getString(R.string.good1));
+                textView.setText("");
                 break;
             }
             case 1: {
