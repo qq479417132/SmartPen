@@ -58,6 +58,7 @@
             android:layout_marginBottom="100dp"
             android:background="@mipmap/icon_num"
             android:gravity="center"
+            android:textColor="@android:color/white"
             android:textSize="24sp" />
 
     </RelativeLayout>

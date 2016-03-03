@@ -137,16 +137,13 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
 
         //只有重启后的第一次才去取数据
         if(RememberUtil.getBoolean(Constant.BROADCAST_RESATRT_EVENT,true)){
-            QuickUtils.toast("取服务端数据(只在重启时出现,请重启来测试)");
             initData();
             initCacheJson();
         }else{
             if(QuickUtils.isHasVideoFolder()&&QuickUtils.isVideoFolderHaveFiel2()){
-                QuickUtils.toast("不取服务端数据,直接播放本地的视频");
                 VideoUtil videoUtil = new VideoUtil(vvAdvertisement);
                 videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE, 0);
             }else{
-                QuickUtils.toast("不取服务端数据,当本地没视频，又要去取服务端视频");
                 initData();
             }
         }

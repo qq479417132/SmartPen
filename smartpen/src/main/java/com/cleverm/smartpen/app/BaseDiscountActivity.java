@@ -100,10 +100,14 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
      */
     private void handlerJosn(String json) {
         try {
+            //Fix Bug 因为onDestory()方法执行的异常慢,所以在这里先清空
+            AlgorithmUtil.getInstance().clearImageSequence();
             //解析Json
             List<DiscountInfo> discountInfos = ServiceUtil.getInstance().parserDiscountData(json);
+            QuickUtils.log("discountInfos="+discountInfos.size());
             //图片顺序算法
             List<DiscountInfo> listImageSequence = AlgorithmUtil.getInstance().getSimpleImageSequence(discountInfos);
+            QuickUtils.log("listImageSequence="+listImageSequence.size());
             //图片数据
             images = QuickUtils.getDiscountImage(listImageSequence);
             //图片控件处理
@@ -211,8 +215,10 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        QuickUtils.log("listImageSequence-onDestroy");
         AlgorithmUtil.getInstance().clearImageSequence();
+        super.onDestroy();
+
     }
 
     @Override
