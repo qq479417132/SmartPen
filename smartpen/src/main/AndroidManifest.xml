@@ -87,6 +87,12 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />            
             </intent-filter>
         </receiver>
+        <receiver android:name=".broadcast.ShutDownReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
+
+            </intent-filter>
+        </receiver>
         <meta-data android:value="56aa058767e58e9f95000206" android:name="UMENG_APPKEY"></meta-data>
         <meta-data android:value="itcast" android:name="UMENG_CHANNEL"/>
     </application>

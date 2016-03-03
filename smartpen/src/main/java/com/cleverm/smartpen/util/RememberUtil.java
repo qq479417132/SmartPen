@@ -188,6 +188,21 @@ public class RememberUtil {
     }
 
     /**
+     * synchronous saveDisk
+     * @param key
+     * @param value
+     * @param <T>
+     * @return
+     */
+    private <T> RememberUtil saveSync(final String key, final T value) {
+        // Put it in memory
+        mData.put(key, value);
+        // Save it to disk
+        saveToDisk(key, value);
+        return this;
+    }
+
+    /**
      * Clears all data from this store.
      */
     public static void clear() {
@@ -291,6 +306,11 @@ public class RememberUtil {
     public static RememberUtil putBoolean(String key, boolean value) {
         return getInstance().saveAsync(key, value, null);
     }
+
+    public static RememberUtil putBooleanSync(String key, boolean value){
+        return getInstance().saveSync(key,value);
+    }
+
 
     /**
      * Put a float. This saves to memory immediately and saves to disk asynchronously.

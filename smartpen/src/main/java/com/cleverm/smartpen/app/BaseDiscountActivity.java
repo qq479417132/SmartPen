@@ -210,6 +210,12 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AlgorithmUtil.getInstance().clearImageSequence();
+    }
+
+    @Override
     protected void onBack() {
         //清空List集合
         AlgorithmUtil.getInstance().clearImageSequence();

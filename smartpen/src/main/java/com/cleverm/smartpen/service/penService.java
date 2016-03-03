@@ -21,6 +21,7 @@ import com.cleverm.smartpen.app.SelectTableActivity;
 import com.cleverm.smartpen.app.VideoActivity;
 import com.cleverm.smartpen.bean.TemplateIDState;
 import com.cleverm.smartpen.util.Constant;
+import com.cleverm.smartpen.util.NetWorkUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 
 import java.util.HashMap;
@@ -100,7 +101,11 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
                     startActivity(intent);
                     mActivityFlag = "VideoActivity";
                 }else {
-                    messageListener.receiveData(templateIDState.getId(),templateIDState.isSend());
+                    if(NetWorkUtil.hasNetwork()){
+                        messageListener.receiveData(templateIDState.getId(),templateIDState.isSend());
+                    }else{
+                        QuickUtils.toast("网络异常，请直接找服务员～");
+                    }
                 }
                 break;
             }

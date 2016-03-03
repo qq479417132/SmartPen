@@ -36,7 +36,7 @@ public class FutureActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.future_activity);
-        findViewById(R.id.future_pic).setAnimation(AnimationUtils.loadAnimation(this, R.anim.future));
+        //findViewById(R.id.future_pic).setAnimation(AnimationUtils.loadAnimation(this, R.anim.future));
         findViewById(R.id.future_close).setOnClickListener(
                 new View.OnClickListener() {
                     @Override

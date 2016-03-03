@@ -20,13 +20,13 @@ public class BootRestartReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent){
         if (intent.getAction().equals(ACTION)) ;{
+
+            //一天只取一次数据,所以通过开机的一个boolean状态来控制
+            //RememberUtil.putBooleanSync(Constant.BROADCAST_RESATRT_EVENT,true);
             Intent intent2 = new Intent(context, VideoActivity.class);
             intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent2);
             Log.d("DEBUG", "开机自动服务自动启动...");
-
-            //一天只取一次数据,所以通过开机的一个boolean状态来控制
-            RememberUtil.putBoolean(Constant.BROADCAST_RESATRT_EVENT,true);
 
         }
     }
