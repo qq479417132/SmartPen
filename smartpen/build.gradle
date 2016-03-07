@@ -41,4 +41,6 @@ dependencies {
     compile 'com.google.zxing:android-core:3.2.1'
     compile 'com.github.yoojia:zxing:0.7@aar'
     compile 'com.mani:ThinDownloadManager:1.2.2'
+    compile 'de.greenrobot:greendao:2.1.0'
+    compile files('libs/jxl.jar')
 }
