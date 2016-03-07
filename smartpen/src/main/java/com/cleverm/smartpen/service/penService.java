@@ -17,6 +17,7 @@ import com.cleverm.smartpen.app.EvaluateActivity;
 import com.cleverm.smartpen.app.FutureActivity;
 import com.cleverm.smartpen.app.GameActivity;
 import com.cleverm.smartpen.app.LocalDiscountActivity;
+import com.cleverm.smartpen.app.PayActivity;
 import com.cleverm.smartpen.app.SelectTableActivity;
 import com.cleverm.smartpen.app.VideoActivity;
 import com.cleverm.smartpen.application.CleverM;
@@ -71,27 +72,22 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
             //5个服务
             case Constant.ORDER_DISHES1:
             case Constant.ADD_WATER1:
-            case Constant.PAY1:
             case Constant.TISSUE1:
             case Constant.OTHER1:
             case Constant.ORDER_DISHES2:
             case Constant.ADD_WATER2:
-            case Constant.PAY2:
             case Constant.TISSUE2:
             case Constant.OTHER2:
             case Constant.ORDER_DISHES3:
             case Constant.ADD_WATER3:
-            case Constant.PAY3:
             case Constant.TISSUE3:
             case Constant.OTHER3:
             case Constant.ORDER_DISHES4:
             case Constant.ADD_WATER4:
-            case Constant.PAY4:
             case Constant.TISSUE4:
             case Constant.OTHER4:
             case Constant.ORDER_DISHES5:
             case Constant.ADD_WATER5:
-            case Constant.PAY5:
             case Constant.TISSUE5:
             case Constant.OTHER5: {
                 TemplateIDState templateIDState=ChoiceTemplateIDState(id);
@@ -108,6 +104,23 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
                     }else{
                         QuickUtils.toast("网络异常，请直接找服务员～");
                     }
+                }
+                break;
+            }
+            //呼叫服务员
+            case Constant.PAY1:
+            case Constant.PAY2:
+            case Constant.PAY3:
+            case Constant.PAY4:
+            case Constant.PAY5: {
+                if (!"PayActivity".equals(mActivityFlag)) {
+                    Intent intent = new Intent(this, PayActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
+                            Intent.FLAG_ACTIVITY_NEW_TASK |
+                            Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    mActivityFlag = "PayActivity";
                 }
                 break;
             }

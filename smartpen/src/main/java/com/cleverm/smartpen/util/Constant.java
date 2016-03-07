@@ -169,6 +169,10 @@ public class Constant {
     public static final String WAN_DOU_JIA = "http://www.wandoujia.com/apps";
 
     public static final String OTHER_STATE = "other_state";
+
+
+
+
     public static final String WEB_URL = "web_url";
     public static final int DELAY_BACK = 60000;
 
@@ -198,6 +202,8 @@ public class Constant {
     public static final int PAY_MONRY = 4;
     public static final int OTHER_SERVICE = 5;
     public static final int PEN_PULL_OUT=15;
+    public static final int CASH_PAY=16;
+    public static final int UNION_CARD_PAY=17;
     public static final int TEMPLATEID_DELAY = 30000;
 
 
