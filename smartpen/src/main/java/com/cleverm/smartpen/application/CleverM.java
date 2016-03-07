@@ -201,7 +201,7 @@ public class CleverM extends Application {
 
     public void UpdataApp(Context context){
            if(isUpdata){
-               new VersionManager(context).uddateVersion();
+//               new VersionManager(context).uddateVersion();
                isUpdata=false;
            }
     }
