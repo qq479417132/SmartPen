@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.util.RememberUtil;
+import com.cleverm.smartpen.util.StatisticsUtil;
 import com.github.yoojia.zxing.qrcode.Encoder;
 import com.umeng.analytics.MobclickAgent;
 
@@ -22,6 +24,7 @@ import com.umeng.analytics.MobclickAgent;
  * Created by 95 on 2016/2/3.
  */
 public class DriverActivity extends BaseActivity {
+
     public static final String TAG = DriverActivity.class.getSimpleName();
     private ImageView mClose;
     public static final int GOBack = 200;
@@ -40,7 +43,7 @@ public class DriverActivity extends BaseActivity {
             switch (msg.what) {
                 case GOBack: {
                     Log.v(TAG, "come hand====");
-                    startActivity(new Intent(DriverActivity.this, VideoActivity.class));
+                    startActivity(new Intent(DriverActivity.this, DiscountActivity.class));
                     DriverActivity.this.finish();
                     ((CleverM) getApplication()).getpenService().setActivityFlag("VideoActivity");
                     break;
@@ -51,6 +54,7 @@ public class DriverActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.driver_activity);
         init();
@@ -102,5 +106,6 @@ public class DriverActivity extends BaseActivity {
         Drawable drawable =new BitmapDrawable(Bitmap);
         mdriveCode.setBackground(drawable);
     }
+
 
 }

@@ -7,16 +7,25 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.cleverm.smartpen.util.StatisticsUtil;
+
 /**
  * Created by 95 on 2016/2/3.
  */
 public class BaseActivity extends Activity {
+
+    private Long rawID;
+    private long start;
+    private long end;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         overridePendingTransition(0,0);
         super.onCreate(savedInstanceState);
         hideKeyBord();
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        rawID = StatisticsUtil.getInstance().insert(StatisticsUtil.SERVICE_DAIJIA, "我点击了代驾哈,为什么点击,别问我");
+        start = System.currentTimeMillis();
     }
 
     private void hideKeyBord(){
@@ -32,5 +41,12 @@ public class BaseActivity extends Activity {
             return false;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        end=System.currentTimeMillis();
+        StatisticsUtil.getInstance().update_timestay(rawID, end - start);
     }
 }

@@ -63,7 +63,6 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     public static final int TISSUE_ADD = Constant.TISSUE_ADD;
     public static final int PAY_MONRY = Constant.PAY_MONRY;
     public static final int OTHER_SERVICE = Constant.OTHER_SERVICE;
-    public static final String SELECTEDTABLEID = "SelectedTableId";
 
     public static final String VIDEO_ACTIVITY_KEY = "video_activity_key";
     public static final String VIDEO_ACTIVITY_ISSEND = "video_activity_isSend";
@@ -319,7 +318,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                 break;
             }
         }
-        long deskId = RememberUtil.getLong(SELECTEDTABLEID, Constant.DESK_ID_DEF_DEFAULT);
+        long deskId = RememberUtil.getLong(SelectTableActivity.SELECTEDTABLEID, Constant.DESK_ID_DEF_DEFAULT);
         if (deskId == Constant.DESK_ID_DEF_DEFAULT) {
             return;
         }

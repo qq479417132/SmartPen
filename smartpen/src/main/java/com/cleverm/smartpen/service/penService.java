@@ -19,10 +19,12 @@ import com.cleverm.smartpen.app.GameActivity;
 import com.cleverm.smartpen.app.LocalDiscountActivity;
 import com.cleverm.smartpen.app.SelectTableActivity;
 import com.cleverm.smartpen.app.VideoActivity;
+import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.bean.TemplateIDState;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.NetWorkUtil;
 import com.cleverm.smartpen.util.QuickUtils;
+import com.cleverm.smartpen.util.StatisticsUtil;
 
 import java.util.HashMap;
 
@@ -114,6 +116,7 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
             case Constant.DEMO3:
             case Constant.DEMO4:
             case Constant.DEMO5: {
+
                 if (!"DemoActivity".equals(mActivityFlag)) {
                     Intent intent = new Intent(this, DemoActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
