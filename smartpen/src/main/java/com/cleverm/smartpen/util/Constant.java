@@ -169,6 +169,10 @@ public class Constant {
     public static final String WAN_DOU_JIA = "http://www.wandoujia.com/apps";
 
     public static final String OTHER_STATE = "other_state";
+
+
+
+
     public static final String WEB_URL = "web_url";
     public static final int DELAY_BACK = 60000;
 
