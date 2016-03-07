@@ -198,6 +198,8 @@ public class Constant {
     public static final int PAY_MONRY = 4;
     public static final int OTHER_SERVICE = 5;
     public static final int PEN_PULL_OUT=15;
+    public static final int CASH_PAY=16;
+    public static final int UNION_CARD_PAY=17;
     public static final int TEMPLATEID_DELAY = 30000;
 
 

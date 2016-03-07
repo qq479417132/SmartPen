@@ -31,7 +31,6 @@
     <string name="choice_pay">请选择支付方式</string>
     <string name="confirm">提交</string>
     <string name="cancel">取消</string>
-    <string name="ali_pay">支付宝</string>
     <string name="weixin_pay">微信支付</string>
     <string name="baidu_pay">百度钱包</string>
     <string name="price_cannot_Empty">金额不能为空</string>
@@ -118,5 +117,15 @@
     <!-- 滴滴代驾-->
     <string name="e_driver_text1">滴滴代驾</string>
     <string name="e_driver_text2">使用微信扫描二维码</string>
-    <string name="no_find_app">平板上没有找到相应APP,请去下载！</string>
+    <string name="no_find_app">平板上没有安装相应APP</string>
+    <string name="title_activity_pay">PayActivity</string>
+
+    <!-- payActivity-->
+    <string name="pay_way">请选择支付方式</string>
+    <string name="cash_pay">现金支付</string>
+    <string name="union_pay_card_pay">银行卡支付</string>
+    <string name="wei_pay">微信支付</string>
+    <string name="ali_pay">支付宝支付</string>
+    <string name="choice_online_pay">&#160;或使用在线支付&#160;</string>
+    <string name="notificate_waiter">已通知服务员，请稍等。</string>
 </resources>
