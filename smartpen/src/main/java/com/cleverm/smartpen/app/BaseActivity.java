@@ -23,7 +23,11 @@ public class BaseActivity extends Activity {
         hideKeyBord();
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         timeValue = StatisticsUtil.getInstance().onCreate(StatisticsUtil.SERVICE_DAIJIA, "我点击了代驾哈,为什么点击,别问我");
+        //timeValue = StatisticsUtil.getInstance().onCreate(onGetEventId(),onGetDesc());
     }
+
+
+
 
     private void hideKeyBord(){
         Window window = getWindow();
