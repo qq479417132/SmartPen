@@ -1,6 +1,7 @@
 package com.cleverm.smartpen.util;
 
 import android.app.Application;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 
@@ -14,6 +15,7 @@ import com.cleverm.smartpen.statistic.dao.StatsDao;
 import com.cleverm.smartpen.statistic.model.Stats;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -131,6 +133,73 @@ public class StatisticsUtil {
         return new DaoReturnValue(db,statsDao);
     }
 
+    public class TimeValue{
+
+        private Long rawID;
+        private long start;
+        private long end;
+
+        public TimeValue(){
+
+        }
+
+        public TimeValue(Long rawID,long start,long end){
+            this.rawID=rawID;
+            this.start=start;
+            this.end=end;
+        }
+
+        public Long getRawID() {
+            return rawID;
+        }
+
+        public void setRawID(Long rawID) {
+            this.rawID = rawID;
+        }
+
+        public long getStart() {
+            return start;
+        }
+
+        public void setStart(long start) {
+            this.start = start;
+        }
+
+        public long getEnd() {
+            return end;
+        }
+
+        public void setEnd(long end) {
+            this.end = end;
+        }
+    }
+
+    /**
+     * 请在OnCreate中调用
+     * @param EventId
+     * @param desc
+     * @return
+     */
+    public TimeValue onCreate(int EventId,String desc){
+        TimeValue timeValue = new TimeValue();
+        Long rawID = StatisticsUtil.getInstance().insert(EventId, desc);
+        long start = System.currentTimeMillis();
+        timeValue.setRawID(rawID);
+        timeValue.setStart(start);
+        return timeValue;
+    }
+
+    /**
+     * 请在OnDestry中调用
+     * @param timeValue
+     */
+    public void onDestory(TimeValue timeValue){
+        long end = System.currentTimeMillis();
+        timeValue.setEnd(end);
+        StatisticsUtil.getInstance().update_timestay(timeValue.getRawID(), timeValue.getEnd() - timeValue.getStart());
+    }
+
+
     /**
      * 获取bean对象
      * @param actionId
@@ -232,6 +301,16 @@ public class StatisticsUtil {
         return System.currentTimeMillis();
     }
 
+    private String getClickTime(String clickTime){
+        return QuickUtils.timeStamp2DateNoSec2(clickTime + "", null);
+    }
+
+    private String getStayTime(String stayTime){
+        long l = Long.parseLong(stayTime);
+        long second = l / 1000;
+        return second+"";
+    }
+
 
     public String getEventHappenTime(){
         long l = System.currentTimeMillis();
@@ -278,9 +357,49 @@ public class StatisticsUtil {
         return deskId;
     }
 
+    private Cursor exeSql(String sql) {
+        return CleverM.getDb().rawQuery(sql, null);
+    }
+
+    public ArrayList<ArrayList<String>> getDBForExcel(){
+        ArrayList<ArrayList<String>> out_lists = new ArrayList<ArrayList<String>>();
+        String SQL="select * from t_stats";
+        Cursor cursor = exeSql(SQL);
+        while (cursor.moveToNext()){
+
+            ArrayList<String> inner_list = new ArrayList<String>();
+            int columnIndex_1 = cursor.getColumnIndex(StatsDao.Properties.ActionId.columnName);
+            int columnIndex_2 = cursor.getColumnIndex(StatsDao.Properties.TimePoit.columnName);
+            int columnIndex_3 = cursor.getColumnIndex(StatsDao.Properties.TimeStay.columnName);
+            int columnIndex_4 = cursor.getColumnIndex(StatsDao.Properties.ClientId.columnName);
+            int columnIndex_5 = cursor.getColumnIndex(StatsDao.Properties.OrgId.columnName);
+            int columnIndex_6 = cursor.getColumnIndex(StatsDao.Properties.TableId.columnName);
+            int columnIndex_7 = cursor.getColumnIndex(StatsDao.Properties.Desc.columnName);
+            int columnIndex_8 = cursor.getColumnIndex(StatsDao.Properties.Secondid.columnName);
+            int columnIndex_9 = cursor.getColumnIndex(StatsDao.Properties.Querydata.columnName);
+
+            String string = cursor.getString(columnIndex_2);
+            QuickUtils.log("cursor==" + string);
+
+            //统计9列数据
+            inner_list.add(cursor.getString(columnIndex_1));
+            inner_list.add(getClickTime(cursor.getString(columnIndex_2)));
+            inner_list.add(getStayTime(cursor.getString(columnIndex_3)));
+            inner_list.add(cursor.getString(columnIndex_4));
+            inner_list.add(cursor.getString(columnIndex_5));
+            inner_list.add(cursor.getString(columnIndex_6));
+            inner_list.add(cursor.getString(columnIndex_7));
+            inner_list.add(cursor.getString(columnIndex_8));
+            inner_list.add(cursor.getString(columnIndex_9));
+            out_lists.add(inner_list);
+        }
 
 
+        cursor.close();
+        return out_lists;
+    }
 
+    
 
 
 }

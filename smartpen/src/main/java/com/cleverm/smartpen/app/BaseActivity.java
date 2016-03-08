@@ -14,19 +14,20 @@ import com.cleverm.smartpen.util.StatisticsUtil;
  */
 public class BaseActivity extends Activity {
 
-    private Long rawID;
-    private long start;
-    private long end;
+    protected StatisticsUtil.TimeValue timeValue;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        overridePendingTransition(0,0);
+        overridePendingTransition(0, 0);
         super.onCreate(savedInstanceState);
         hideKeyBord();
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        rawID = StatisticsUtil.getInstance().insert(StatisticsUtil.SERVICE_DAIJIA, "我点击了代驾哈,为什么点击,别问我");
-        start = System.currentTimeMillis();
+        timeValue = StatisticsUtil.getInstance().onCreate(StatisticsUtil.SERVICE_DAIJIA, "我点击了代驾哈,为什么点击,别问我");
+        //timeValue = StatisticsUtil.getInstance().onCreate(onGetEventId(),onGetDesc());
     }
+
+
+
 
     private void hideKeyBord(){
         Window window = getWindow();
@@ -46,7 +47,6 @@ public class BaseActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        end=System.currentTimeMillis();
-        StatisticsUtil.getInstance().update_timestay(rawID, end - start);
+        StatisticsUtil.getInstance().onDestory(timeValue);
     }
 }
