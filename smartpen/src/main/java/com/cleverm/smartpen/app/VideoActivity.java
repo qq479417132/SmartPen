@@ -29,10 +29,13 @@ import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.DownloadUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
+import com.cleverm.smartpen.util.SimplePoolThread;
+import com.cleverm.smartpen.util.StatisticsUtil;
 import com.cleverm.smartpen.util.VideoUtil;
 import com.cleverm.smartpen.util.evnet.BroadcastEx;
 import com.cleverm.smartpen.util.evnet.util.BroadcastCx;
 import com.cleverm.smartpen.util.evnet.util.BroadcastUtil;
+import com.cleverm.smartpen.util.excle.CreateExcel;
 
 
 /**
@@ -130,7 +133,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
 
 
         setContentView(R.layout.activity_video);
-        QuickUtils.hideHighApiBottomStatusBar();
+        QuickUtils.showHighApiBottomStatusBar();
         initView();
 
 
@@ -152,9 +155,24 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         initIntent();
         mHandler.sendEmptyMessage(GET_PENSERVICE);
         initVersion();
+        
+        initStats();
+        
     }
 
-
+    private void initStats() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final long start = System.currentTimeMillis();
+                CreateExcel createExcel = new CreateExcel();
+                String execlName = createExcel.init();
+                createExcel.writeExcel(StatisticsUtil.getInstance().getDBForExcel(), execlName);
+                final long end = System.currentTimeMillis();
+                QuickUtils.log("由DB导出为excle的时间为" + (end - start));
+            }
+        }).start();
+    }
 
 
     private void initVersion() {

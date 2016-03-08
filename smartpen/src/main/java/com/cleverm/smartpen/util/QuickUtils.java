@@ -184,6 +184,15 @@ public class QuickUtils {
         return sdf.format(new Date(Long.valueOf(days)));
     }
 
+    public static String timeStamp2DateNoSec2(String days, String format) {
+        if (days == null || days.isEmpty() || days.equals("null")) {
+            return "";
+        }
+        if (format == null || format.isEmpty()) format = "yyyy-MM-dd HH:mm:ss";
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        return sdf.format(new Date(Long.valueOf(days)));
+    }
+
     public static String getDayFromData(String date) {
         String what_day = date.substring(8, 10);
         return what_day;
