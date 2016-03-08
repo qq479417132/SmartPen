@@ -1,27 +1,39 @@
 package com.cleverm.smartpen.app;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.alibaba.fastjson.JSON;
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.net.InfoSendSMSVo;
 import com.cleverm.smartpen.net.RequestNet;
+import com.cleverm.smartpen.pushtable.MessageType;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.NetWorkUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
-import com.umeng.analytics.MobclickAgent;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 
 public class PayActivity extends BaseActivity {
@@ -64,6 +76,7 @@ public class PayActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pay_activity);
         initView();
+
     }
 
     private void initView() {
@@ -84,6 +97,7 @@ public class PayActivity extends BaseActivity {
                 mHandler.removeCallbacksAndMessages(null);
                 mHandler.sendEmptyMessageDelayed(GOBack, TIME);
                 NotificateWaiter(Constant.UNION_CARD_PAY);
+                getClientId();
             }
         });
         mClose= (ImageView) findViewById(R.id.pay_close);
@@ -145,4 +159,70 @@ public class PayActivity extends BaseActivity {
     }
 
 
+    /**
+     * 主动去请求店铺数据
+     */
+    public void testSendSMS() {
+        InfoSendSMSVo infoSendSMSVo = new InfoSendSMSVo();
+        infoSendSMSVo.setTemplateID(5);
+        infoSendSMSVo.setClientID(102L);
+        infoSendSMSVo.setOrgID(102L);
+        infoSendSMSVo.setTableID(145);
+
+
+        com.cleverm.smartpen.pushtable.Message message = com.cleverm.smartpen.pushtable.Message.create().messageType(MessageType
+                .NOTIFICATION).header("Notice-Type", "SEND_SMSINTO").json(infoSendSMSVo).build();
+        HttpURLConnection conn = null;
+        try {
+            URL url = new URL("http://120.25.159.173:8080/cleverm/sockjs/execCommand");
+            Log.v(TAG,"http://120.25.159.173:8080/cleverm/sockjs/execCommand==");
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.connect();
+            String input = JSON.toJSONString(message);
+            OutputStream os = conn.getOutputStream();
+            os.write(input.getBytes("utf-8"));
+            os.flush();
+            os.close();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf8"));
+            String line = reader.readLine();
+            reader.close();
+            Log.v(TAG, "testSendSMS()= " + line);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+
+        }
+    }
+
+
+    private long getClientId(){
+        long ClientId=Constant.DESK_ID_DEF_DEFAULT;
+        String path= Environment.getExternalStorageDirectory().getPath()+"/SystemPen/smartpen.txt";
+        File file=new File(path);
+        if(!file.exists()){
+            return ClientId;
+        }
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
+            String data=br.readLine();
+            Log.v(TAG, "data=" + data);
+            JSONObject object=new JSONObject(data);
+            ClientId=Long.parseLong(object.getString("clientID"));
+            Log.v(TAG, "ClientId=" + ClientId);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return ClientId;
+    }
 }

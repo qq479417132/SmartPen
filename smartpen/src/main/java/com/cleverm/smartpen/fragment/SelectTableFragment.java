@@ -67,6 +67,7 @@ public class SelectTableFragment extends Fragment {
         /**
          * data of the Tables
          */
+        //读取数据库中的桌子信息
         mTables = DatabaseHelper.getsInstance(getActivity())
                 .obtainTablesByType(tableTypeId);
         mTableAdapter = new TableAdapter(getActivity(), mTables);

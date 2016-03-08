@@ -2,13 +2,11 @@ package com.cleverm.smartpen.util.excle;
 
 import android.os.Environment;
 
-import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.StatisticsUtil;
 
 import java.io.File;
 import java.io.IOException;
 
-import jxl.LabelCell;
 import jxl.Workbook;
 import jxl.format.Alignment;
 import jxl.format.Border;
@@ -57,7 +55,6 @@ public class CreateExcel {
 
     //制定表单的格式:字体大小，字体颜色等配置
     public static void format(){
-
         text14Font = new WritableFont(WritableFont.ARIAL,14,WritableFont.BOLD);
         text12Font = new WritableFont(WritableFont.ARIAL, 12);
         text10Font = new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD);
@@ -81,7 +78,6 @@ public class CreateExcel {
             text10Format.setAlignment(Alignment.CENTRE);
             text10Format.setBorder(Border.ALL, BorderLineStyle.THIN);
             text10Format.setBackground(Colour.LIGHT_BLUE);
-
 
         } catch (WriteException e) {
             e.printStackTrace();
@@ -135,9 +131,4 @@ public class CreateExcel {
             }
         }
     }
-
-
-
-
-
 }

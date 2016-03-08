@@ -21,9 +21,6 @@ import java.util.Random;
  * Open source
  */
 public class BroadcastEx {
-
-
-
     public static final String EXTRA_EVENT_ID = BroadcastCx.EVENT_ID + getRandomNum();
     public static final String EXTRA_RECEIVER_ID = BroadcastCx.RECEIVER_ID + getRandomNum();
     public static final String BASE_MIME_TYPE = BroadcastCx.MIME_TYPE + getRandomNum();

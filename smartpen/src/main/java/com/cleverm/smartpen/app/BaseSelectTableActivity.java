@@ -67,7 +67,7 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
         /**
          * data of the TableTypes
          */
-        mTableTypes = DatabaseHelper.getsInstance(this).obtainAllTableTypes();;
+        mTableTypes = DatabaseHelper.getsInstance(this).obtainAllTableTypes();//得到数据库中的桌子类型
         mSelectedTableId = OrderManager.getInstance(this).getTableId();
         mTablePagerAdapter = new TablePagerAdapter(getFragmentManager());
         //select the Table
@@ -75,6 +75,7 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
         if(defaultDeskId==Constant.DESK_ID_DEF_DEFAULT){
             return;
         }
+        //设置上次选中的桌号
         OrderManager.getInstance(this).setTableId(defaultDeskId);
     }
 

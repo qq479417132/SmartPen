@@ -15,7 +15,6 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
@@ -30,9 +29,6 @@ import com.cleverm.smartpen.util.DownloadUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.cleverm.smartpen.util.VideoUtil;
-import com.cleverm.smartpen.util.evnet.BroadcastEx;
-import com.cleverm.smartpen.util.evnet.util.BroadcastCx;
-import com.cleverm.smartpen.util.evnet.util.BroadcastUtil;
 
 
 /**
