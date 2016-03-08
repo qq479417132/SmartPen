@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.BatteryManager;
 import android.os.Environment;
 import android.os.IBinder;
@@ -19,8 +20,12 @@ import com.cleverm.smartpen.net.RequestNet;
 import com.cleverm.smartpen.service.CommunicationService;
 import com.cleverm.smartpen.service.ScreenLockListenService;
 import com.cleverm.smartpen.service.penService;
+import com.cleverm.smartpen.statistic.dao.DaoMaster;
+import com.cleverm.smartpen.statistic.dao.DaoSession;
+import com.cleverm.smartpen.statistic.dao.StatsDao;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.RememberUtil;
+import com.cleverm.smartpen.util.StatisticsUtil;
 import com.cleverm.smartpen.util.evnet.BroadcastEvent;
 import com.thin.downloadmanager.ThinDownloadManager;
 import com.umeng.analytics.MobclickAgent;
@@ -32,6 +37,8 @@ public class CleverM extends Application {
 
     private static Application application;
     private static ThinDownloadManager thinDownloadManager;
+    private static SQLiteDatabase db;
+    private static StatsDao statsDao;
     
     public static final String TAG=CleverM.class.getSimpleName();
     public static final String PATH= Environment.getExternalStorageDirectory().getPath()+"/logFile/log";
@@ -83,8 +90,17 @@ public class CleverM extends Application {
         initDownloader();
         initNet();
         initEvnet();
+        initDataBase();
         mPowerReceiver.register();
     }
+
+    private void initDataBase() {
+        StatisticsUtil.DaoReturnValue daoReturnValue = StatisticsUtil.getInstance().onInit(this);
+        db=daoReturnValue.getDb();
+        statsDao = daoReturnValue.getStatsDao();
+    }
+
+
 
     private void initEvnet() {
         BroadcastEvent.init(this);
@@ -94,6 +110,13 @@ public class CleverM extends Application {
         this.thinDownloadManager = new ThinDownloadManager(4);
     }
 
+    public static StatsDao getStatsDao() {
+        return statsDao;
+    }
+
+    public static SQLiteDatabase getDb() {
+        return db;
+    }
 
     public static ThinDownloadManager getThinDownloadManager() {
         return thinDownloadManager;
