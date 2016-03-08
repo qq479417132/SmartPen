@@ -12,13 +12,11 @@ import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
-
 import com.cleverm.smartpen.R;
-import com.cleverm.smartpen.util.QuickUtils;
-import com.cleverm.smartpen.util.evnet.BroadcastEvent;
 import com.cleverm.smartpen.util.evnet.util.BroadcastCx;
 import com.cleverm.smartpen.util.evnet.util.BroadcastUtil;
 
@@ -27,7 +25,7 @@ import java.util.Iterator;
 
 /**
  * Created by Jimmy on 2015/9/11.
- * <p>
+ * <p/>
  * Api of wharton alerting network database.
  */
 public class WandAPI {
@@ -36,9 +34,9 @@ public class WandAPI {
     private static final String TAG = WandAPI.class.getSimpleName();
 
     private static final String ACTION_USB_PERMISSION = "com.cleverm.order" +
-        ".WAND_PERMISSION";
+            ".WAND_PERMISSION";
     private static final String[] DEVICES = {"1a86:7523", "1a86:5523",
-        "04f2:0111"};
+            "04f2:0111"};
     private static final int CONTROL_TRANSFER_REQUEST_TYPE = 192;
     private static final int CONTROL_TRANSFER_REQUEST = 149;
     private static final int CONTROL_TRANSFER_VALUE = 9496;
@@ -54,7 +52,24 @@ public class WandAPI {
     private UsbDeviceConnection mUsbDeviceConn;
     private OnScanListener mOnScanListener;
 
-
+    final int find = 1;
+    final int stopfind = 2;
+    Handler hand = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case find: {
+                    connect();
+                    hand.sendEmptyMessageDelayed(find, 8000);
+                    break;
+                }
+                case stopfind: {
+                    hand.removeMessages(find);
+                    break;
+                }
+            }
+        }
+    };
     private Runnable mScanRunnable = new Runnable() {
         private byte[] buffer = new byte[8];
 
@@ -63,10 +78,10 @@ public class WandAPI {
             mHandler.removeCallbacks(mScanRunnable);
             if (mUsbDeviceConn != null) {
                 final int ret = mUsbDeviceConn.controlTransfer
-                    (CONTROL_TRANSFER_REQUEST_TYPE,
-                        CONTROL_TRANSFER_REQUEST, CONTROL_TRANSFER_VALUE,
-                        CONTROL_TRANSFER_INDEX, buffer,
-                        CONTROL_TRANSFER_LENGTH, CONTROL_TRANSFER_DEFAULT_TIMEOUT);
+                        (CONTROL_TRANSFER_REQUEST_TYPE,
+                                CONTROL_TRANSFER_REQUEST, CONTROL_TRANSFER_VALUE,
+                                CONTROL_TRANSFER_INDEX, buffer,
+                                CONTROL_TRANSFER_LENGTH, CONTROL_TRANSFER_DEFAULT_TIMEOUT);
                 if (ret >= 0) {
                     if (mOnScanListener != null) {
                         mOnScanListener.onScan(bytesToInt(buffer));
@@ -101,34 +116,40 @@ public class WandAPI {
     private void connect() {
         Log.d(TAG, "connect.");
         mUsbManager = (UsbManager) mContext.getSystemService(Context
-            .USB_SERVICE);
+                .USB_SERVICE);
         HashMap<String, UsbDevice> deviceList = mUsbManager.getDeviceList();
         if (deviceList.isEmpty()) {
+            Log.v(TAG, "deviceList.isEmpty()");
             //提示未找到匹配的扫描笔
             Toast.makeText(mContext, R.string.no_matched_wand, Toast
-                .LENGTH_LONG).show();
+                    .LENGTH_SHORT).show();
+            hand.sendEmptyMessageDelayed(find, 10000);
             return;
         }
 
         Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
         while (deviceIterator.hasNext()) {
+            Log.v(TAG, "deviceList.is Not Empty()");
+            hand.sendEmptyMessage(stopfind);
+//            Toast.makeText(mContext, "find pen", Toast
+//                    .LENGTH_LONG).show();
             final UsbDevice device = deviceIterator.next();
             Log.d(TAG, "device vendorId = " + device.getVendorId() + ", " +
-                "product id = " + device.getProductId());
+                    "product id = " + device.getProductId());
             for (String dev : DEVICES) {
                 if (String.format("%04x:%04x", device.getVendorId(), device
-                    .getProductId())
-                    .equalsIgnoreCase(dev)) {
+                        .getProductId())
+                        .equalsIgnoreCase(dev)) {
                     if (mUsbManager.hasPermission(device)) {
                         setDevices(device);
                     } else {
                         mUsbManager.requestPermission(device, PendingIntent
-                            .getBroadcast(mContext,
-                                0, new Intent(ACTION_USB_PERMISSION), 0));
+                                .getBroadcast(mContext,
+                                        0, new Intent(ACTION_USB_PERMISSION), 0));
                     }
                     //添加代码：连接回调
-                    if(mOnConnectListener!=null){
-                       mOnConnectListener.onConnect();
+                    if (mOnConnectListener != null) {
+                        mOnConnectListener.onConnect();
                     }
                 }
             }
@@ -145,9 +166,9 @@ public class WandAPI {
             mUsbDeviceConn.close();
             mUsbDeviceConn = null;
             //添加代码：断连回掉
-            if(mOnConnectListener !=null){
+            if (mOnConnectListener != null) {
                 mOnConnectListener.onDisconnect();
-                BroadcastUtil.post(BroadcastCx.DEF_EVENT_ID.Cx_0x0001,null);
+                BroadcastUtil.post(BroadcastCx.DEF_EVENT_ID.Cx_0x0001, null);
             }
         }
     }
@@ -163,7 +184,7 @@ public class WandAPI {
 
         mUsbDeviceConn = mUsbManager.openDevice(device);
         if (mUsbDeviceConn == null || !mUsbDeviceConn.claimInterface
-            (mUsbInterface, true)) {
+                (mUsbInterface, true)) {
             return;
         }
         mHandler.postDelayed(mScanRunnable, 1000l);
@@ -174,8 +195,8 @@ public class WandAPI {
         for (int i = 0; i < device.getInterfaceCount(); ++i) {
             final UsbInterface intf = device.getInterface(i);
             if (intf.getInterfaceClass() == UsbConstants.USB_CLASS_VENDOR_SPEC
-                && intf.getInterfaceSubclass() == 1
-                && intf.getInterfaceProtocol() == 2) {
+                    && intf.getInterfaceSubclass() == 1
+                    && intf.getInterfaceProtocol() == 2) {
                 return intf;
             }
         }
@@ -194,11 +215,14 @@ public class WandAPI {
         void onScan(final int id);
     }
 
-    public interface onConnectListener{
+    public interface onConnectListener {
         void onConnect();
+
         void onDisconnect();
     }
+
     private onConnectListener mOnConnectListener;
+
     public void setOnConnectListener(onConnectListener mOnConnectListener) {
         this.mOnConnectListener = mOnConnectListener;
     }
@@ -210,12 +234,11 @@ public class WandAPI {
             final String action = intent.getAction();
             Log.d(TAG, "WandBroadcastReceiver::action = " + action);
             if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) {
+//                Toast.makeText(mContext, "attached pen", Toast.LENGTH_SHORT).show();
                 connect();
-            }
-            else if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
+            } else if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
                 disconnect();
-            }
-            else if (ACTION_USB_PERMISSION.equals(action)) {
+            } else if (ACTION_USB_PERMISSION.equals(action)) {
                 UsbDevice device = intent.getParcelableExtra("device");
                 if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                     setDevices(device);
