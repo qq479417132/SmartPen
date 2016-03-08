@@ -122,8 +122,8 @@ public class WandAPI {
             Log.v(TAG, "deviceList.isEmpty()");
             //提示未找到匹配的扫描笔
             Toast.makeText(mContext, R.string.no_matched_wand, Toast
-                    .LENGTH_LONG).show();
-            hand.sendEmptyMessageDelayed(find, 8000);
+                    .LENGTH_SHORT).show();
+            hand.sendEmptyMessageDelayed(find, 10000);
             return;
         }
 
@@ -131,8 +131,8 @@ public class WandAPI {
         while (deviceIterator.hasNext()) {
             Log.v(TAG, "deviceList.is Not Empty()");
             hand.sendEmptyMessage(stopfind);
-            Toast.makeText(mContext, "find pen", Toast
-                    .LENGTH_LONG).show();
+//            Toast.makeText(mContext, "find pen", Toast
+//                    .LENGTH_LONG).show();
             final UsbDevice device = deviceIterator.next();
             Log.d(TAG, "device vendorId = " + device.getVendorId() + ", " +
                     "product id = " + device.getProductId());
@@ -234,7 +234,7 @@ public class WandAPI {
             final String action = intent.getAction();
             Log.d(TAG, "WandBroadcastReceiver::action = " + action);
             if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) {
-                Toast.makeText(mContext, "attached pen", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "attached pen", Toast.LENGTH_SHORT).show();
                 connect();
             } else if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
                 disconnect();
