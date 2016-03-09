@@ -123,7 +123,7 @@ public class WandAPI {
             //提示未找到匹配的扫描笔
             Toast.makeText(mContext, R.string.no_matched_wand, Toast
                     .LENGTH_SHORT).show();
-            hand.sendEmptyMessageDelayed(find, 10000);
+            hand.sendEmptyMessageDelayed(find, 60000);
             return;
         }
 
