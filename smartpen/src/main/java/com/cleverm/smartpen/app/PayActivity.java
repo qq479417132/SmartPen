@@ -2,7 +2,6 @@ package com.cleverm.smartpen.app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -22,14 +21,7 @@ import com.cleverm.smartpen.util.NetWorkUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -200,28 +192,4 @@ public class PayActivity extends BaseActivity {
         }
     }
 
-
-    private long getClientId(){
-        long ClientId=Constant.DESK_ID_DEF_DEFAULT;
-        String path= Environment.getExternalStorageDirectory().getPath()+"/SystemPen/smartpen.txt";
-        File file=new File(path);
-        if(!file.exists()){
-            return ClientId;
-        }
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
-            String data=br.readLine();
-            Log.v(TAG, "data=" + data);
-            JSONObject object=new JSONObject(data);
-            ClientId=Long.parseLong(object.getString("clientID"));
-            Log.v(TAG, "ClientId=" + ClientId);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return ClientId;
-    }
 }
