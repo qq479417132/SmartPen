@@ -97,7 +97,6 @@ public class PayActivity extends BaseActivity {
                 mHandler.removeCallbacksAndMessages(null);
                 mHandler.sendEmptyMessageDelayed(GOBack, TIME);
                 NotificateWaiter(Constant.UNION_CARD_PAY);
-                getClientId();
             }
         });
         mClose= (ImageView) findViewById(R.id.pay_close);
