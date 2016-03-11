@@ -36,6 +36,7 @@ public class PayActivity extends BaseActivity {
     public static final int TIME = 60000;
     public static final int NotificateWaiterSHOW= 201;
     public static final int NotificateWaiterGone = 202;
+    public static final int NOTIFICATEWAITERGONE_IMMEDIATELY = 203;
     public static final int NotificateWaiterTIME = 3000;
     private Button mCashPay;
     private Button mUnionCardPay;
@@ -58,6 +59,11 @@ public class PayActivity extends BaseActivity {
                 }
                 case NotificateWaiterGone:{
                     mNotificateWaiter.setVisibility(View.GONE);
+                    break;
+                }
+                case NOTIFICATEWAITERGONE_IMMEDIATELY:{
+                    mNotificateWaiter.setVisibility(View.GONE);
+                    this.sendEmptyMessage(GOBack);
                     break;
                 }
             }
@@ -127,7 +133,7 @@ public class PayActivity extends BaseActivity {
         InfoSendSMSVo getSMSVo = RequestNet.getData(infoSendSMSVo);
         if (getSMSVo != null && getSMSVo.getSuccess()) {
             mHandler.sendEmptyMessage(NotificateWaiterSHOW);
-            mHandler.sendEmptyMessageDelayed(NotificateWaiterGone,NotificateWaiterTIME);
+            mHandler.sendEmptyMessageDelayed(NOTIFICATEWAITERGONE_IMMEDIATELY,NotificateWaiterTIME);
             Log.v(TAG, "sendMes===isSuccess");
         } else {
             mHandler.sendEmptyMessage(NotificateWaiterGone);
@@ -136,7 +142,7 @@ public class PayActivity extends BaseActivity {
     }
 
     @Override
-    protected void onResume() {
+    protected void onResume(){
         super.onResume();
         mHandler.removeCallbacksAndMessages(null);
         mHandler.sendEmptyMessageDelayed(GOBack, TIME);
