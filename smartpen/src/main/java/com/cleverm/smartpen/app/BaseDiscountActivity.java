@@ -16,6 +16,7 @@ import com.cleverm.smartpen.util.DownloadUtil;
 import com.cleverm.smartpen.util.FileCacheUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.ServiceUtil;
+import com.cleverm.smartpen.util.StatisticsUtil;
 import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 
@@ -51,6 +52,8 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
         initDate();
         initClick();
     }
+
+
 
     @Override
     protected ImageView getBackResId() {
@@ -166,6 +169,12 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
                 @Override
                 public void onClick(View view) {
                     DiscountInfo discountInfo = listImageSequence.get(finalPosition);
+                    //统计代码
+                    if(isDisountArea){
+                        StatisticsUtil.getInstance().insertWithSecondEvent(StatisticsUtil.SECOND_DISCOUNT_ACTIVITY,StatisticsUtil.SECOND_DISCOUNT_ACTIVITY_DESC,StatisticsUtil.getInstance().str2Long(discountInfo.getRollMainId()));
+                    }else{
+                        StatisticsUtil.getInstance().insertWithSecondEvent(StatisticsUtil.SECOND_LOACL_DISCOUNT_ACTIVITY,StatisticsUtil.SECOND_LOACL_DISCOUNT_ACTIVITY_DESC,StatisticsUtil.getInstance().str2Long(discountInfo.getRollMainId()));
+                    }
                     Intent intent = new Intent(mContext, DiscountDetailActivity.class);
                     intent.putExtra(DiscountDetailActivity.INTENT_NAME, discountInfo);
                     startActivity(intent);

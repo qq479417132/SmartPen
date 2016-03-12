@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.util.Constant;
+import com.cleverm.smartpen.util.StatisticsUtil;
 
 
 import java.util.ArrayList;
@@ -61,6 +62,15 @@ public class DemoActivity extends BaseActivity {
         System.out.println("AAA=="+getDeviceInfo(this));
     }
 
+    @Override
+    protected int onGetEventId() {
+        return StatisticsUtil.SERVICE_DEMO;
+    }
+
+    @Override
+    protected String onGetDesc() {
+        return StatisticsUtil.SERVICE_DEMO_DESC;
+    }
 
 
     @Override

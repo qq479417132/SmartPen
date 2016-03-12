@@ -20,6 +20,8 @@ import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.NetWorkUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
+import com.cleverm.smartpen.util.StatisticsUtil;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -29,6 +31,7 @@ import java.net.URL;
 
 
 public class PayActivity extends BaseActivity {
+
     public static final String TAG = PayActivity.class.getSimpleName();
     public static final String SELECTEDTABLEID="SelectedTableId";
     private Object object=new Object();
@@ -77,12 +80,24 @@ public class PayActivity extends BaseActivity {
 
     }
 
+    @Override
+    protected int onGetEventId() {
+        return StatisticsUtil.CALL_PAY;
+    }
+
+    @Override
+    protected String onGetDesc() {
+        return StatisticsUtil.CALL_PAY_DESC;
+    }
+
     private void initView() {
         mNotificateWaiter= (LinearLayout) findViewById(R.id.notificate_waiter);
         mCashPay= (Button) findViewById(R.id.cash_pay);
         mCashPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //统计代码
+                StatisticsUtil.getInstance().insertWithSecondEvent(StatisticsUtil.CALL_PAY,StatisticsUtil.CALL_PAY_DESC+"--"+StatisticsUtil.CALL_PAY_CASH_DESC,StatisticsUtil.CALL_PAY_CASH);
                 mHandler.removeCallbacksAndMessages(null);
                 mHandler.sendEmptyMessageDelayed(GOBack, TIME);
                 NotificateWaiter(Constant.CASH_PAY);
@@ -92,6 +107,8 @@ public class PayActivity extends BaseActivity {
         mUnionCardPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //统计代码
+                StatisticsUtil.getInstance().insertWithSecondEvent(StatisticsUtil.CALL_PAY,StatisticsUtil.CALL_PAY_DESC+"--"+StatisticsUtil.CALL_PAY_CARD_DESC,StatisticsUtil.CALL_PAY_CARD);
                 mHandler.removeCallbacksAndMessages(null);
                 mHandler.sendEmptyMessageDelayed(GOBack, TIME);
                 NotificateWaiter(Constant.UNION_CARD_PAY);
