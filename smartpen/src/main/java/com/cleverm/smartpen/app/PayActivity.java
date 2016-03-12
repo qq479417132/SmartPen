@@ -1,28 +1,33 @@
 package com.cleverm.smartpen.app;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.alibaba.fastjson.JSON;
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.net.InfoSendSMSVo;
 import com.cleverm.smartpen.net.RequestNet;
+import com.cleverm.smartpen.pushtable.MessageType;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.NetWorkUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
 import com.umeng.analytics.MobclickAgent;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 
 public class PayActivity extends BaseActivity {
@@ -34,6 +39,7 @@ public class PayActivity extends BaseActivity {
     public static final int TIME = 60000;
     public static final int NotificateWaiterSHOW= 201;
     public static final int NotificateWaiterGone = 202;
+    public static final int NOTIFICATEWAITERGONE_IMMEDIATELY = 203;
     public static final int NotificateWaiterTIME = 3000;
     private Button mCashPay;
     private Button mUnionCardPay;
@@ -58,6 +64,11 @@ public class PayActivity extends BaseActivity {
                     mNotificateWaiter.setVisibility(View.GONE);
                     break;
                 }
+                case NOTIFICATEWAITERGONE_IMMEDIATELY:{
+                    mNotificateWaiter.setVisibility(View.GONE);
+                    this.sendEmptyMessage(GOBack);
+                    break;
+                }
             }
         }
     };
@@ -66,6 +77,7 @@ public class PayActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pay_activity);
         initView();
+
     }
 
     @Override
@@ -138,7 +150,7 @@ public class PayActivity extends BaseActivity {
         InfoSendSMSVo getSMSVo = RequestNet.getData(infoSendSMSVo);
         if (getSMSVo != null && getSMSVo.getSuccess()) {
             mHandler.sendEmptyMessage(NotificateWaiterSHOW);
-            mHandler.sendEmptyMessageDelayed(NotificateWaiterGone,NotificateWaiterTIME);
+            mHandler.sendEmptyMessageDelayed(NOTIFICATEWAITERGONE_IMMEDIATELY,NotificateWaiterTIME);
             Log.v(TAG, "sendMes===isSuccess");
         } else {
             mHandler.sendEmptyMessage(NotificateWaiterGone);
@@ -147,7 +159,7 @@ public class PayActivity extends BaseActivity {
     }
 
     @Override
-    protected void onResume() {
+    protected void onResume(){
         super.onResume();
         mHandler.removeCallbacksAndMessages(null);
         mHandler.sendEmptyMessageDelayed(GOBack, TIME);
@@ -160,5 +172,47 @@ public class PayActivity extends BaseActivity {
         mHandler.removeCallbacksAndMessages(null);
     }
 
+
+    /**
+     * 主动去请求店铺数据
+     */
+    public void testSendSMS() {
+        InfoSendSMSVo infoSendSMSVo = new InfoSendSMSVo();
+        infoSendSMSVo.setTemplateID(5);
+        infoSendSMSVo.setClientID(102L);
+        infoSendSMSVo.setOrgID(102L);
+        infoSendSMSVo.setTableID(145);
+
+
+        com.cleverm.smartpen.pushtable.Message message = com.cleverm.smartpen.pushtable.Message.create().messageType(MessageType
+                .NOTIFICATION).header("Notice-Type", "SEND_SMSINTO").json(infoSendSMSVo).build();
+        HttpURLConnection conn = null;
+        try {
+            URL url = new URL("http://120.25.159.173:8080/cleverm/sockjs/execCommand");
+            Log.v(TAG,"http://120.25.159.173:8080/cleverm/sockjs/execCommand==");
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.connect();
+            String input = JSON.toJSONString(message);
+            OutputStream os = conn.getOutputStream();
+            os.write(input.getBytes("utf-8"));
+            os.flush();
+            os.close();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf8"));
+            String line = reader.readLine();
+            reader.close();
+            Log.v(TAG, "testSendSMS()= " + line);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+
+        }
+    }
 
 }
