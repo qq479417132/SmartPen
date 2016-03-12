@@ -19,6 +19,7 @@ import com.cleverm.smartpen.ui.ListViewForScrollView;
 import com.cleverm.smartpen.ui.banner.BGABanner;
 import com.cleverm.smartpen.ui.banner.NoTouchBGABanner;
 import com.cleverm.smartpen.util.QuickUtils;
+import com.cleverm.smartpen.util.StatisticsUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -62,7 +63,19 @@ public class DiscountDetailActivity extends BaseBackActivity {
     ViewPager vpView;
 
 
+    /**
+     * 该类不做主事件统计中去,做二级广告id的统计
+     * @return
+     */
+    @Override
+    protected int onGetEventId() {
+        return StatisticsUtil.ERROR_AND_NOE_STAISTICS;
+    }
 
+    @Override
+    protected String onGetDesc() {
+        return "";
+    }
 
     @Override
     protected void onCreate() {

@@ -13,10 +13,18 @@ import com.cleverm.smartpen.statistic.dao.DaoMaster;
 import com.cleverm.smartpen.statistic.dao.DaoSession;
 import com.cleverm.smartpen.statistic.dao.StatsDao;
 import com.cleverm.smartpen.statistic.model.Stats;
+import com.cleverm.smartpen.util.excle.CreateExcel;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.Callback;
+import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by xiong,An android project Engineer,on 2016/3/3.
@@ -29,51 +37,98 @@ import java.util.Date;
  */
 public class StatisticsUtil {
 
-
-    //存储File文件的路径
-    private static final String STATISTICS_FILE= Environment.getExternalStorageDirectory().getAbsolutePath() + "/muyestatistics";
+    public static final String UPLOAD_FILE_URL="http://120.25.159.173:8080/cleverm/sockjs/uploadResource";
 
     //统计Event对应表
     public static final int   CALL_ADD_FOOD =1;//点餐加菜
+    public static final String CALL_ADD_FOOD_DESC="点餐加菜";
     public static final int   CALL_ADD_WATER =2;//添加茶水
+    public static final String CALL_ADD_WATER_DESC="添加茶水";
     public static final int   CALL_ADD_TISSUE =3;//湿巾纸巾
+    public static final String CALL_ADD_TISSUE_DESC="湿巾纸巾";
     public static final int   CALL_PAY =4;//呼叫结账
+    public static final String   CALL_PAY_DESC="呼叫结账";
     public static final int   CALL_OTHER_SERVIC =5;//其他服务
-    //1现金结账/2银行家结账/3支付宝结账/4微信结账
-    public static final int   CALL_PAY_CASH=1;
-    public static final int   CALL_PAY_CARD=2;
-    public static final int   CALL_PAY_ALIPAY=3;
-    public static final int   CALL_PAY_WEIXIN=4;
+    public static final String CALL_OTHER_SERVIC_DESC="其他服务";
+
+    //1现金结账/2银行卡结账/3支付宝结账/4微信结账
+    public static final long   CALL_PAY_CASH=1L;
+    public static final String CALL_PAY_CASH_DESC="现金结账";
+    public static final long   CALL_PAY_CARD=2L;
+    public static final String   CALL_PAY_CARD_DESC="银行卡结账";
+    public static final long   CALL_PAY_ALIPAY=3L;
+    public static final String   CALL_PAY_ALIPAY_DESC="支付宝结账";
+    public static final long   CALL_PAY_WEIXIN=4L;
+    public static final String CALL_PAY_WEIXIN_DESC="微信结账";
 
 
     public static final int   SERVICE_DEMO =6;//DEMO引导
+    public static final String SERVICE_DEMO_DESC="DEMO引导";
     public static final int   SERVICE_EVALUATE=7;//服务评价
+    public static final String SERVICE_EVALUATE_DESC="服务评价";
     public static final int   SERVICE_BUY_MYSELF =8;//自助买单
+    public static final String SERVICE_BUY_MYSELF_DESC="自助买单";
     public static final int   SERVICE_DISCOUNT =9;//优惠专区
+    public static final String SERVICE_DISCOUNT_DESC="优惠专区";
     public static final int   SERVICE_DAIJIA =10;//代驾服务
+    public static final String SERVICE_DAIJIA_DESC="代驾服务";
     public static final int   SERVICE_LOCAL_DISCOUNT =11;//本店推介
+    public static final String SERVICE_LOCAL_DISCOUNT_DESC="本店推介";
 
     public static final int   APP_WEATHER =12;//今日天气
+    public static final String APP_WEATHER_DESC="今日天气";
     public static final int   APP_NEWS =13;//今日头条
+    public static final String APP_NEWS_DESC="今日头条";
     public static final int   APP_AROUNDPLAY =14;//周边玩乐
+    public static final String APP_AROUNDPLAY_DESC="周边玩乐";
     public static final int   APP_ONLINEBUY =15;//在线商场
+    public static final String APP_ONLINEBUY_DESC="在线商场";
     public static final int   APP_AROUNDDISCOUNT =16;//周边优惠
+    public static final String APP_AROUNDDISCOUNT_DESC="周边优惠";
     public static final int   APP_VIDEO =17;//视频娱乐
+    public static final String APP_VIDEO_DESC="视频娱乐";
     public static final int   APP_MAGAZINE =18;//电子杂志
+    public static final String APP_MAGAZINE_DESC="电子杂志";
     public static final int   H5_GAME =19;//手游试玩
+    public static final String H5_GAME_DESC="手游试玩";
     public static final int   SETTING =20;//设置
+    public static final String SETTING_DESC="设置";
 
-    public static final int second_discount_activity=21;//优惠专区活动轮播
+    public static final int SECOND_DISCOUNT_ACTIVITY=21;//优惠专区活动轮播
+    public static final String SECOND_DISCOUNT_ACTIVITY_DESC="优惠专区活动轮播";
     public static final int SECOND_LOACL_DISCOUNT_ACTIVITY =22;//本店推介活动轮播
+    public static final String SECOND_LOACL_DISCOUNT_ACTIVITY_DESC="本店推介活动轮播";
 
     public static final int OTHER_OPEN_TIME=23;//开机时间
+    public static final String OTHER_OPEN_TIME_DESC="开机时间";
     public static final int OTHER_CLOSE_TIME=24;//关机时间
+    public static final String OTHER_CLOSE_TIME_DESC="关机时间";
     public static final int OTHER_COMMENT_SUBMIT=25;//评价提交
+    public static final String OTHER_COMMENT_SUBMIT_DESC="评价提交";
     public static final int OTHER_GIVE_MONEY=26;//打赏
+    public static final String OTHER_GIVE_MONEY_DESC="打赏";
+
+    public static final int BACK_VIDEO=27;
+    public static final String BACK_VIDEO_DESC="视频界面";
+
+
 
     //点点笔数据库名
     private static final String DB_NAME="ddb_db";
 
+    //用于FutureActivity-Intent参数
+    public static final String FUTURE_INTNET_EVENTID="FUTURE_INTNET_EVENTID";
+    public static final String FUTRUE_INTENT_EVENTDESC="FUTRUE_INTENT_EVENTDESC";
+    public static final String FUTURE_INTENT_EVENTDESC_DEFAULT="自助买单";
+    public static final String ERROR_EVENTID="错误事件,请不要用于统计分析";
+    public static final int ERROR_AND_NOE_STAISTICS=-8989;
+    public static final long ERROR_AND_NOE_STAISTICS_LONG=-8989L;
+
+
+    //参数回调
+    public interface  SqlInterface{
+        String onComplete();
+    }
 
 
     private static StatisticsUtil INSTANCE = new StatisticsUtil();
@@ -196,7 +251,9 @@ public class StatisticsUtil {
     public void onDestory(TimeValue timeValue){
         long end = System.currentTimeMillis();
         timeValue.setEnd(end);
-        StatisticsUtil.getInstance().update_timestay(timeValue.getRawID(), timeValue.getEnd() - timeValue.getStart());
+        if(timeValue.getRawID()!=ERROR_AND_NOE_STAISTICS_LONG){
+            StatisticsUtil.getInstance().update_timestay(timeValue.getRawID(), timeValue.getEnd() - timeValue.getStart());
+        }
     }
 
 
@@ -226,16 +283,22 @@ public class StatisticsUtil {
      */
     public Long insert(int eventId,String desc){
 
-        //插入数据库
-        return CleverM.getStatsDao().insert(StatisticsUtil.getInstance().getStasObject(
-                eventId,
-                getCurrentTimeMillis(),
-                0L,
-                getClientId(),
-                getOrgId(),
-                getDeskId(),
-                desc,null,getEventHappenTime()
-                ));
+        if(checkValid(eventId)){
+            //插入数据库
+            return CleverM.getStatsDao().insert(StatisticsUtil.getInstance().getStasObject(
+                    eventId,
+                    getCurrentTimeMillis(),
+                    0L,
+                    getClientId(),
+                    getOrgId(),
+                    getDeskId(),
+                    desc,null,getEventHappenTime()
+            ));
+        }else{
+            return ERROR_AND_NOE_STAISTICS_LONG;
+        }
+
+
 
     }
 
@@ -291,6 +354,13 @@ public class StatisticsUtil {
 
     }
 
+    public boolean checkValid(int eventId){
+        if(eventId==ERROR_AND_NOE_STAISTICS){
+            return false;
+        }
+        return true;
+    }
+
 
 
     /**
@@ -309,6 +379,11 @@ public class StatisticsUtil {
         long l = Long.parseLong(stayTime);
         long second = l / 1000;
         return second+"";
+    }
+    
+    public Long str2Long(String str){
+        long l = Long.parseLong(str);
+        return l;
     }
 
 
@@ -330,10 +405,11 @@ public class StatisticsUtil {
      */
     private Long getClientId(){
         String clientId = RememberUtil.getString(UpdateTableHandler.CLIENTID, DEFALUT_CLIENTID);
+        QuickUtils.log("clientId=" + clientId);
         if(clientId.equals(DEFALUT_CLIENTID)){
             return 8888L;
         }
-        return Long.getLong(clientId);
+        return Long.parseLong(clientId);
     }
 
     /**
@@ -342,10 +418,11 @@ public class StatisticsUtil {
      */
     private Long getOrgId(){
         String orgId=RememberUtil.getString(UpdateTableHandler.ORGID, DEFALUT_ORGID);
+        QuickUtils.log("orgId="+orgId);
         if(orgId.equals(DEFALUT_ORGID)){
             return 8888L;
         }
-        return Long.getLong(orgId);
+        return Long.parseLong(orgId);
     }
 
     /**
@@ -354,8 +431,16 @@ public class StatisticsUtil {
      */
     private Long getDeskId(){
         long deskId = RememberUtil.getLong(SelectTableActivity.SELECTEDTABLEID, Constant.DESK_ID_DEF_DEFAULT);
+        QuickUtils.log("deskId="+deskId);
         return deskId;
     }
+
+    private String getOrgStrId(){
+        String orgId=RememberUtil.getString(UpdateTableHandler.ORGID, DEFALUT_ORGID);
+        return orgId;
+    }
+
+
 
     private Cursor exeSql(String sql) {
         return CleverM.getDb().rawQuery(sql, null);
@@ -363,7 +448,10 @@ public class StatisticsUtil {
 
     public ArrayList<ArrayList<String>> getDBForExcel(){
         ArrayList<ArrayList<String>> out_lists = new ArrayList<ArrayList<String>>();
-        String SQL="select * from t_stats";
+        String SQL="select * from t_stats";  //where "+StatsDao.Properties.Querydata.columnName+"= "+getEventHappenTime();
+
+        QuickUtils.log("SQL="+SQL);
+
         Cursor cursor = exeSql(SQL);
         while (cursor.moveToNext()){
 
@@ -393,13 +481,44 @@ public class StatisticsUtil {
             inner_list.add(cursor.getString(columnIndex_9));
             out_lists.add(inner_list);
         }
-
-
         cursor.close();
         return out_lists;
     }
 
-    
+    /**
+     *
+     */
+    public void  updateExcleToService(String url,File file){
+
+        QuickUtils.log("upload-file=" + file.getName());
+
+        OkHttpUtils.post()//
+                .addParams("orgID","100")
+                .addParams("path", "statistic")
+                .addFile("resFile", file.getName(), file)//
+                .url(url)
+                .build()//
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        QuickUtils.log("upload-file-onError="+e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(String s) {
+                        QuickUtils.log("upload-file-onResponse="+s.toString());
+                    }
+                });
+
+    }
+
+    public File getStatsFile(){
+        File file = new File(CreateExcel.EXPORT_PATH,getEventHappenTime()+".xls");
+        if(file == null){
+            return null;
+        }
+        return file;
+    }
 
 
 }

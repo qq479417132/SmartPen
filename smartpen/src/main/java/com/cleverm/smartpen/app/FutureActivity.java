@@ -11,11 +11,14 @@ import android.view.animation.AnimationUtils;
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.util.Constant;
+import com.cleverm.smartpen.util.StatisticsUtil;
 
 /**
  * Created by 95 on 2016/2/3.
+ * 敬请期待
  */
 public class FutureActivity extends BaseActivity {
+
     public static final String TAG = FutureActivity.class.getSimpleName();
     public static final int GOBack = 200;
     private Handler mHandler = new Handler() {
@@ -32,11 +35,31 @@ public class FutureActivity extends BaseActivity {
             }
         }
     };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.future_activity);
-        //findViewById(R.id.future_pic).setAnimation(AnimationUtils.loadAnimation(this, R.anim.future));
+        initGoBack();
+    }
+
+
+
+
+    @Override
+    protected int onGetEventId() {
+        return eventId;
+    }
+
+    @Override
+    protected String onGetDesc() {
+        if(desc==null){
+            return StatisticsUtil.ERROR_EVENTID;
+        }
+        return desc;
+    }
+
+    private void initGoBack() {
         findViewById(R.id.future_close).setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -46,6 +69,14 @@ public class FutureActivity extends BaseActivity {
                 }
         );
         mHandler.sendEmptyMessageDelayed(GOBack, Constant.DELAY_BACK);
+    }
+
+    private int eventId;
+    private String desc;
+    protected void initSonIntent() {
+        Intent intent = getIntent();
+        eventId = intent.getIntExtra(StatisticsUtil.FUTURE_INTNET_EVENTID, StatisticsUtil.SERVICE_BUY_MYSELF);
+        desc = intent.getStringExtra(StatisticsUtil.FUTRUE_INTENT_EVENTDESC);
     }
 
 

@@ -60,7 +60,6 @@ public class WandAPI {
             switch (msg.what) {
                 case find: {
                     connect();
-                    hand.sendEmptyMessageDelayed(find, 8000);
                     break;
                 }
                 case stopfind: {
@@ -123,7 +122,7 @@ public class WandAPI {
             //提示未找到匹配的扫描笔
             Toast.makeText(mContext, R.string.no_matched_wand, Toast
                     .LENGTH_SHORT).show();
-            hand.sendEmptyMessageDelayed(find, 10000);
+            hand.sendEmptyMessageDelayed(find, 100000);
             return;
         }
 
