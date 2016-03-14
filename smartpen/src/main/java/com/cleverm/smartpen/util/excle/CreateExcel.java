@@ -36,7 +36,7 @@ import jxl.write.WriteException;
  */
 public class CreateExcel {
 
-    private static final String EXPORT_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/muyefile";
+    public final static  String EXPORT_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/muyefile";
     public final static String UTF8_ENCODING = "UTF-8";
 
 

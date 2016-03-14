@@ -155,6 +155,16 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         
     }
 
+    @Override
+    protected int onGetEventId() {
+        return StatisticsUtil.BACK_VIDEO;
+    }
+
+    @Override
+    protected String onGetDesc() {
+        return StatisticsUtil.BACK_VIDEO_DESC;
+    }
+
     private void initStats() {
         new Thread(new Runnable() {
             @Override
@@ -165,6 +175,11 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                 createExcel.writeExcel(StatisticsUtil.getInstance().getDBForExcel(), execlName);
                 final long end = System.currentTimeMillis();
                 QuickUtils.log("由DB导出为excle的时间为" + (end - start));
+
+                //上传文件到服务器
+                StatisticsUtil.getInstance().updateExcleToService(StatisticsUtil.UPLOAD_FILE_URL,StatisticsUtil.getInstance().getStatsFile());
+
+
             }
         }).start();
     }
@@ -296,6 +311,8 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
             case Constant.ORDER_DISHES4:
             case Constant.ORDER_DISHES5: {
                 templateID = FOOD_ADD;
+                //统计代码
+                StatisticsUtil.getInstance().insert(StatisticsUtil.CALL_ADD_FOOD,StatisticsUtil.CALL_ADD_FOOD_DESC);
                 break;
             }
             case Constant.ADD_WATER1:
@@ -304,6 +321,8 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
             case Constant.ADD_WATER4:
             case Constant.ADD_WATER5: {
                 templateID = WATER_ADD;
+                //统计代码
+                StatisticsUtil.getInstance().insert(StatisticsUtil.CALL_ADD_WATER,StatisticsUtil.CALL_ADD_WATER_DESC);
                 break;
             }
             case Constant.TISSUE1:
@@ -312,6 +331,8 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
             case Constant.TISSUE4:
             case Constant.TISSUE5: {
                 templateID = TISSUE_ADD;
+                //统计代码
+                StatisticsUtil.getInstance().insert(StatisticsUtil.CALL_ADD_TISSUE,StatisticsUtil.CALL_ADD_TISSUE_DESC);
                 break;
             }
             case Constant.PAY1:
@@ -320,6 +341,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
             case Constant.PAY4:
             case Constant.PAY5: {
                 templateID = PAY_MONRY;
+                //呼叫结账统计代码到具体界面处理
                 break;
             }
             case Constant.OTHER1:
@@ -328,6 +350,8 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
             case Constant.OTHER4:
             case Constant.OTHER5: {
                 templateID = OTHER_SERVICE;
+                //统计代码
+                StatisticsUtil.getInstance().insert(StatisticsUtil.CALL_OTHER_SERVIC,StatisticsUtil.CALL_OTHER_SERVIC_DESC);
                 break;
             }
         }

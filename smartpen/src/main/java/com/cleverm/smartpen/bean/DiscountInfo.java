@@ -20,6 +20,10 @@ public class DiscountInfo extends BaseInfoBean{
     private int orderSeq;
     private String pictruePath;
 
+    private String rollMainId;
+
+
+
 
     private String title;
     private String descriptionText;
@@ -111,5 +115,13 @@ public class DiscountInfo extends BaseInfoBean{
 
     public void setDescriptionText(String descriptionText) {
         this.descriptionText = descriptionText;
+    }
+
+    public String getRollMainId() {
+        return rollMainId;
+    }
+
+    public void setRollMainId(String rollMainId) {
+        this.rollMainId = rollMainId;
     }
 }

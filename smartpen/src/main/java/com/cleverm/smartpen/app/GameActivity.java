@@ -18,6 +18,7 @@ import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.ui.MyWebView;
 import com.cleverm.smartpen.util.Constant;
+import com.cleverm.smartpen.util.StatisticsUtil;
 
 /**
  * Created by 95 on 2016/2/24.
@@ -60,6 +61,16 @@ public class GameActivity extends BaseActivity implements MyWebView.WebViewTouch
         setContentView(R.layout.game_activity);
         initIntent();
         initView();
+    }
+
+    @Override
+    protected int onGetEventId() {
+        return StatisticsUtil.H5_GAME;
+    }
+
+    @Override
+    protected String onGetDesc() {
+        return StatisticsUtil.H5_GAME_DESC;
     }
 
     private void initIntent() {

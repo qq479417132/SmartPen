@@ -60,6 +60,16 @@ public class DriverActivity extends BaseActivity {
         init();
     }
 
+    @Override
+    protected int onGetEventId() {
+        return StatisticsUtil.SERVICE_DAIJIA;
+    }
+
+    @Override
+    protected String onGetDesc() {
+        return StatisticsUtil.SERVICE_DAIJIA_DESC;
+    }
+
 
     private void init() {
         mClose= (ImageView) findViewById(R.id.e_driver_close);

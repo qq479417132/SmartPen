@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.cleverm.smartpen.application.CleverM;
+import com.cleverm.smartpen.util.StatisticsUtil;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -23,6 +24,8 @@ import com.umeng.analytics.MobclickAgent;
  * Open source
  */
 public abstract class BaseBackActivity extends Activity {
+
+    protected StatisticsUtil.TimeValue timeValue;
 
     public static final int GOBack = 200;
     public static final int TIME = 60000;
@@ -47,6 +50,7 @@ public abstract class BaseBackActivity extends Activity {
         super.onCreate(savedInstanceState);
         hideKeyBord();
         onCreate();
+        timeValue = StatisticsUtil.getInstance().onCreate(onGetEventId(),onGetDesc());
         ImageView mClose = getBackResId();
         mClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,7 +60,12 @@ public abstract class BaseBackActivity extends Activity {
         });
         mHandler.removeCallbacksAndMessages(null);
         mHandler.sendEmptyMessageDelayed(GOBack, TIME);
+
     }
+
+    protected abstract int onGetEventId();
+
+    protected abstract String onGetDesc();
 
 
     protected abstract void onCreate();
@@ -96,5 +105,10 @@ public abstract class BaseBackActivity extends Activity {
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        StatisticsUtil.getInstance().onDestory(timeValue);
+    }
 
 }

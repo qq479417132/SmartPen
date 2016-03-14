@@ -9,6 +9,7 @@ import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.RememberUtil;
+import com.cleverm.smartpen.util.StatisticsUtil;
 
 
 /**
@@ -55,5 +56,15 @@ public class SelectTableActivity extends BaseSelectTableActivity {
         mHandler.removeCallbacksAndMessages(null);
         mHandler.sendEmptyMessageDelayed(GOBack, Constant.DELAY_BACK);
         Log.v(TAG,"onTableSelected()  tableId="+tableId);
+    }
+
+    @Override
+    protected int onGetEventId() {
+        return StatisticsUtil.SETTING;
+    }
+
+    @Override
+    protected String onGetDesc() {
+        return StatisticsUtil.SETTING_DESC;
     }
 }

@@ -20,6 +20,7 @@ import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.RememberUtil;
+import com.cleverm.smartpen.util.StatisticsUtil;
 import com.google.gson.Gson;
 import com.umeng.analytics.MobclickAgent;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -35,7 +36,9 @@ import okhttp3.Call;
  * Created by 95 on 2016/2/3.
  */
 public class EvaluateActivity extends BaseActivity implements View.OnClickListener {
+
     public static final String TAG = EvaluateActivity.class.getSimpleName();
+
     private View mRoot;
     private ImageView mClose;
     private Button mSubmit;
@@ -85,6 +88,16 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.evaluate_activity);
         init();
+    }
+
+    @Override
+    protected int onGetEventId() {
+        return StatisticsUtil.SERVICE_EVALUATE;
+    }
+
+    @Override
+    protected String onGetDesc() {
+        return StatisticsUtil.SERVICE_EVALUATE_DESC;
     }
 
 
@@ -188,6 +201,8 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
                 break;
             }
             case R.id.other_confirm: {
+                //统计
+                StatisticsUtil.getInstance().insert(StatisticsUtil.OTHER_COMMENT_SUBMIT,StatisticsUtil.OTHER_COMMENT_SUBMIT_DESC);
                 submit();
                 mHandler.sendEmptyMessage(GOBack);
                 //统计点击量

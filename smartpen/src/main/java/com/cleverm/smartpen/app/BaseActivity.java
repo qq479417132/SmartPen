@@ -12,7 +12,8 @@ import com.cleverm.smartpen.util.StatisticsUtil;
 /**
  * Created by 95 on 2016/2/3.
  */
-public class BaseActivity extends Activity {
+public abstract class BaseActivity extends Activity {
+
 
     protected StatisticsUtil.TimeValue timeValue;
 
@@ -22,12 +23,20 @@ public class BaseActivity extends Activity {
         super.onCreate(savedInstanceState);
         hideKeyBord();
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        timeValue = StatisticsUtil.getInstance().onCreate(StatisticsUtil.SERVICE_DAIJIA, "我点击了代驾哈,为什么点击,别问我");
-        //timeValue = StatisticsUtil.getInstance().onCreate(onGetEventId(),onGetDesc());
+        initSonIntent();
+        timeValue = StatisticsUtil.getInstance().onCreate(onGetEventId(),onGetDesc());
     }
 
+    /**
+     * 子类复写,用于传递Intent的情况
+     */
+    protected void initSonIntent() {
 
+    }
 
+    protected abstract int onGetEventId();
+
+    protected abstract String onGetDesc();
 
     private void hideKeyBord(){
         Window window = getWindow();

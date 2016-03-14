@@ -222,9 +222,10 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
             case Constant.MO_JI2:
             case Constant.MO_JI3:
             case Constant.MO_JI4:
+                //今日天气
             case Constant.MO_JI5:{
                 if(!WEATHER.equals(mActivityFlag)){
-                    LauncherApp(Constant.MO_JI_PACKAGE_NAME);
+                    LauncherApp(Constant.MO_JI_PACKAGE_NAME,StatisticsUtil.APP_WEATHER,StatisticsUtil.APP_WEATHER_DESC);
                     mActivityFlag =WEATHER;
                 }
                 break;
@@ -234,8 +235,9 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
             case Constant.TOU_TIAO3:
             case Constant.TOU_TIAO4:
             case Constant.TOU_TIAO5:{
+                //今日头条
                 if(!HEADLINE.equals(mActivityFlag)){
-                    LauncherApp(Constant.TOU_TIAO_PACKAGE_NAME);
+                    LauncherApp(Constant.TOU_TIAO_PACKAGE_NAME,StatisticsUtil.APP_NEWS,StatisticsUtil.APP_NEWS_DESC);
                     mActivityFlag =HEADLINE;
                 }
                 break;
@@ -245,8 +247,9 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
             case Constant.BAI_DU3:
             case Constant.BAI_DU4:
             case Constant.BAI_DU5:{
+                //周边玩乐
                 if(!HAPPY.equals(mActivityFlag)){
-                    LauncherApp(Constant.BAI_DU_PACKAGE_NAME);
+                    LauncherApp(Constant.BAI_DU_PACKAGE_NAME,StatisticsUtil.APP_AROUNDPLAY,StatisticsUtil.APP_AROUNDPLAY_DESC);
                     mActivityFlag =HAPPY;
                 }
                 break;
@@ -256,8 +259,9 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
             case Constant.ONE_SHOP3:
             case Constant.ONE_SHOP4:
             case Constant.ONE_SHOP5:{
+                //在线商场
                 if(!SHOP.equals(mActivityFlag)){
-                    LauncherApp(Constant.ONE_SHOP_PACKAGE_NAME);
+                    LauncherApp(Constant.ONE_SHOP_PACKAGE_NAME,StatisticsUtil.APP_ONLINEBUY,StatisticsUtil.APP_ONLINEBUY_DESC);
                     mActivityFlag =SHOP;
                 }
                 break;
@@ -267,8 +271,9 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
             case Constant.DA_ZONG3:
             case Constant.DA_ZONG4:
             case Constant.DA_ZONG5:{
+                //周边优惠
                 if(!DISCOUNT.equals(mActivityFlag)){
-                    LauncherApp(Constant.DA_ZONG_PACKAGE_NAME);
+                    LauncherApp(Constant.DA_ZONG_PACKAGE_NAME,StatisticsUtil.APP_AROUNDDISCOUNT,StatisticsUtil.APP_AROUNDDISCOUNT_DESC);
                     mActivityFlag =DISCOUNT;
                 }
                 break;
@@ -278,8 +283,9 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
             case Constant.ZHI_ZHU3:
             case Constant.ZHI_ZHU4:
             case Constant.ZHI_ZHU5:{
+                //电子杂志
                 if(!MAGAZINE.equals(mActivityFlag)){
-                    LauncherApp(Constant.ZHIZ_ZHU_PACKAGE_NAME);
+                    LauncherApp(Constant.ZHIZ_ZHU_PACKAGE_NAME,StatisticsUtil.APP_MAGAZINE,StatisticsUtil.APP_MAGAZINE_DESC);
                     mActivityFlag =MAGAZINE;
                 }
                 break;
@@ -289,8 +295,9 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
             case Constant.AMUSEMENTFRAGMENT3:
             case Constant.AMUSEMENTFRAGMENT4:
             case Constant.AMUSEMENTFRAGMENT5:{
+                //视频娱乐
                 if(!VIDEO_ENTERTAINMENT.equals(mActivityFlag)){
-                    LauncherApp(Constant.VIDEO_ENTERTAINMENT);
+                    LauncherApp(Constant.VIDEO_ENTERTAINMENT,StatisticsUtil.APP_VIDEO,StatisticsUtil.APP_VIDEO_DESC);
                     mActivityFlag =VIDEO_ENTERTAINMENT;
                 }
                 break;
@@ -300,6 +307,7 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
             case Constant.WEB3:
             case Constant.WEB4:
             case Constant.WEB5:{
+                //手游试玩
                 if (!"GAME_ACTIVITY".equals(mActivityFlag)) {
                     Intent intent = new Intent(this, GameActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
@@ -316,14 +324,16 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
             case Constant.TWO_DIMENSION_CODE2:
             case Constant.TWO_DIMENSION_CODE3:
             case Constant.TWO_DIMENSION_CODE4:
-            case Constant.TWO_DIMENSION_CODE5:
-             {
+            case Constant.TWO_DIMENSION_CODE5:{
+                //自主买单
                 if (!"FutureActivity".equals(mActivityFlag)) {
                     Intent intent = new Intent(this, FutureActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
                             Intent.FLAG_ACTIVITY_NEW_TASK |
                             Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
                             Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra(StatisticsUtil.FUTURE_INTNET_EVENTID, StatisticsUtil.SERVICE_BUY_MYSELF);
+                    intent.putExtra(StatisticsUtil.FUTRUE_INTENT_EVENTDESC,StatisticsUtil.SERVICE_BUY_MYSELF_DESC);
                     startActivity(intent);
                     mActivityFlag = "FutureActivity";
                 }
@@ -486,8 +496,10 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
     };
 
 
-    private void LauncherApp(String packageName){
+    private void LauncherApp(String packageName,int eventId,String eventDesc){
         try{
+            //弹跳APP的统计代码
+            StatisticsUtil.getInstance().insert(eventId,eventDesc);
             Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
                     Intent.FLAG_ACTIVITY_NEW_TASK |
@@ -497,13 +509,14 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
         }catch (Exception e){
             Log.v(TAG, "no this APK packageName=" + packageName);
             e.printStackTrace();
-//          Toast.makeText(this,getString(R.string.no_find_app),Toast.LENGTH_LONG).show();
             if (!"FutureActivity".equals(mActivityFlag)) {
                 Intent intent = new Intent(this, FutureActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
                         Intent.FLAG_ACTIVITY_NEW_TASK |
                         Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
                         Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra(StatisticsUtil.FUTURE_INTNET_EVENTID, eventId);
+                intent.putExtra(StatisticsUtil.FUTRUE_INTENT_EVENTDESC,eventDesc);
                 startActivity(intent);
                 mActivityFlag = "FutureActivity";
             }
