@@ -26,8 +26,11 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -91,6 +94,10 @@ public class VersionManager {
     }
 
     public  void post_to_server1() {
+        long ClientId=getClientId();
+        if(ClientId==Constant.DESK_ID_DEF_DEFAULT){
+            return;
+        }
         try {
             HttpClient Client=new DefaultHttpClient();
             HttpGet get=new HttpGet(SERVER_ADDRESS);
@@ -121,6 +128,7 @@ public class VersionManager {
         JSONObject object = null;
         try {
             object = new JSONObject(result);
+            Log.v(TAG,"version post_to_server1 success=="+object.toString());
             m_newVerName = object.getString("verName");
             m_newVerCode=object.getInt("verCode");
             m_description=object.getString("description");
@@ -276,5 +284,30 @@ public class VersionManager {
             Log.e("msg", e.getMessage());
         }
         return verName;
+    }
+
+
+    private long getClientId(){
+        long ClientId=Constant.DESK_ID_DEF_DEFAULT;
+        String path= Environment.getExternalStorageDirectory().getPath()+"/SystemPen/smartpen.txt";
+        File file=new File(path);
+        if(!file.exists()){
+            return ClientId;
+        }
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
+            String data=br.readLine();
+            Log.v(TAG, "data=" + data);
+            JSONObject object=new JSONObject(data);
+            ClientId=Long.parseLong(object.getString("clientID"));
+            Log.v(TAG, "ClientId=" + ClientId);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return ClientId;
     }
 }
