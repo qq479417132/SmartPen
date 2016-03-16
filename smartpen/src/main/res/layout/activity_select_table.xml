@@ -4,44 +4,6 @@
     android:layout_height="match_parent"
     android:background="@mipmap/bg_activity_common">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_centerHorizontal="true"
-        android:focusable="true"
-        android:focusableInTouchMode="true">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#ffffff"
-            android:text="@string/orgid"
-            android:textSize="@dimen/orgid_text_size"
-            />
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/et_orgid"
-            android:textSize="@dimen/orgid_text_size"
-            android:inputType="number"
-            android:maxLength="25"
-        android:layout_marginLeft="15dp"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/bt_orgid"
-            android:textSize="@dimen/orgid_text_size"
-            android:text="@string/orgid_confirm"/>
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/btn_cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/select_table_cancel_btn_margin_end"
-        android:layout_marginTop="@dimen/select_table_cancel_btn_margin_top"
-        android:background="@drawable/btn_cancel" />
 
     <ImageView
         android:id="@+id/btn_confirm"
@@ -75,5 +37,95 @@
         android:layout_marginBottom="@dimen/select_table_view_pager_margin_bottom"
         android:layout_marginEnd="@dimen/select_table_view_pager_margin_end"
         android:layout_marginStart="@dimen/select_table_view_pager_margin_start"
-        android:layout_marginTop="@dimen/select_table_view_pager_margin_top"/>
+        android:layout_marginTop="@dimen/select_table_view_pager_margin_top" />
+
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/dw_psw"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ff5533aa">
+        <!-- 输入密码-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="请输入密码"
+                android:textColor="#ffffff"
+                android:textSize="45dp" />
+
+            <EditText
+                android:id="@+id/et_psw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:hint="密码输入区域"
+                android:textColor="#ffffff"
+                android:layout_marginTop="20dp"
+                android:inputType="numberPassword"
+                android:textSize="50dp" />
+
+            <Button
+                android:id="@+id/bt_psw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/orgid_confirm"
+                android:layout_marginTop="20dp"
+                android:textSize="@dimen/orgid_text_size" />
+        </LinearLayout>
+
+        <!-- 输入OrgID-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:background="#55d737"
+            android:layout_gravity="right"
+            android:gravity="center"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/orgid"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/orgid_text_size" />
+
+            <EditText
+                android:id="@+id/et_orgid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:inputType="number"
+                android:maxLength="25"
+                android:textSize="@dimen/orgid_text_size" />
+
+            <Button
+                android:id="@+id/bt_orgid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/orgid_confirm"
+                android:textSize="@dimen/orgid_text_size" />
+        </LinearLayout>
+    </android.support.v4.widget.DrawerLayout>
+
+
+    <ImageView
+        android:id="@+id/btn_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/select_table_cancel_btn_margin_end"
+        android:layout_marginTop="@dimen/select_table_cancel_btn_margin_top"
+        android:background="@drawable/btn_cancel" />
 </RelativeLayout>

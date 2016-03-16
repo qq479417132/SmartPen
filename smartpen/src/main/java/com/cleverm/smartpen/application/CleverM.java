@@ -17,6 +17,7 @@ import com.cleverm.smartpen.Version.VersionManager;
 import com.cleverm.smartpen.log.CrashHandler;
 import com.cleverm.smartpen.net.InfoSendSMSVo;
 import com.cleverm.smartpen.net.RequestNet;
+import com.cleverm.smartpen.service.CommunicationService;
 import com.cleverm.smartpen.service.ScreenLockListenService;
 import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.statistic.dao.StatsDao;
@@ -134,9 +135,9 @@ public class CleverM extends Application {
         /**
          * 启动长连接
          */
-//        Intent intent = new Intent(this, CommunicationService.class);
-//        intent.setAction(Constant.ACTION_CONNECT_SOCKET);
-//        startService(intent);
+        Intent intent = new Intent(this, CommunicationService.class);
+        intent.setAction(Constant.ACTION_CONNECT_SOCKET);
+        startService(intent);
         Log.v(TAG, "initNet()");
 
 
@@ -148,9 +149,9 @@ public class CleverM extends Application {
         /**
          * 关闭长连接
          */
-//        Intent intent = new Intent(this, CommunicationService.class);
-//        intent.setAction(Constant.ACTION_CONNECT_SOCKET);
-//        stopService(intent);
+        Intent intent = new Intent(this, CommunicationService.class);
+        intent.setAction(Constant.ACTION_CONNECT_SOCKET);
+        stopService(intent);
         unbindService(mConn);
         unbindService(mConnection);
     }
