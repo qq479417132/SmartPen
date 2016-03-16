@@ -20,8 +20,6 @@ import com.cleverm.smartpen.net.RequestNet;
 import com.cleverm.smartpen.service.CommunicationService;
 import com.cleverm.smartpen.service.ScreenLockListenService;
 import com.cleverm.smartpen.service.penService;
-import com.cleverm.smartpen.statistic.dao.DaoMaster;
-import com.cleverm.smartpen.statistic.dao.DaoSession;
 import com.cleverm.smartpen.statistic.dao.StatsDao;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.RememberUtil;
@@ -134,6 +132,9 @@ public class CleverM extends Application {
 
 
     private void initNet() {
+        /**
+         * 启动长连接
+         */
         Intent intent = new Intent(this, CommunicationService.class);
         intent.setAction(Constant.ACTION_CONNECT_SOCKET);
         startService(intent);
@@ -145,6 +146,9 @@ public class CleverM extends Application {
     }
 
     private void closeNet() {
+        /**
+         * 关闭长连接
+         */
         Intent intent = new Intent(this, CommunicationService.class);
         intent.setAction(Constant.ACTION_CONNECT_SOCKET);
         stopService(intent);
@@ -224,7 +228,7 @@ public class CleverM extends Application {
 
     public void UpdataApp(Context context){
            if(isUpdata){
-//               new VersionManager(context).uddateVersion();
+               new VersionManager(context).uddateVersion();
                isUpdata=false;
            }
     }

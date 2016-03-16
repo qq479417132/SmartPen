@@ -133,4 +133,6 @@
     <!-- 设置orgid  BaseSelectTableActivity-->
     <string name="orgid">当前商户ID</string>
     <string name="orgid_confirm">确定</string>
+    <string name="psw_error">密码输入有误或密码为空</string>
+    <string name="connect_waiter_choice_desk">请联系服务员设置餐桌号！</string>
 </resources>

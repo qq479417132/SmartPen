@@ -80,7 +80,7 @@ public class UpdateTableHandler extends NoticeHandler<RestaurantVo, Void> {
      * @param data
      */
     private void parserGson(String data){
-        Log.v(TAG,"parserGson()");
+        Log.v(TAG,"parserGson()="+data);
         Gson gson=new Gson();
         TableResult tableResult=gson.fromJson(data,TableResult.class);
         String OrgID=tableResult.getOrgID();

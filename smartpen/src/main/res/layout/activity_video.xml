@@ -10,6 +10,32 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <RelativeLayout
+        android:background="#55003300"
+        android:layout_width="450dp"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/rl_NoticeDesk"
+        android:visibility="gone"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="35dp"
+            android:layout_marginTop="35dp"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:id="@+id/tv_setdesk"
+            android:text="@string/connect_waiter_choice_desk"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_below="@+id/tv_setdesk"
+            android:layout_marginStart="130dp"
+            android:id="@+id/bt_setdesk"
+            android:background="@drawable/submit"/>
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="700dp"

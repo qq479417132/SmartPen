@@ -40,7 +40,7 @@ public class PayActivity extends BaseActivity {
     public static final int NotificateWaiterSHOW= 201;
     public static final int NotificateWaiterGone = 202;
     public static final int NOTIFICATEWAITERGONE_IMMEDIATELY = 203;
-    public static final int NotificateWaiterTIME = 3000;
+    public static final int NotificateWaiterTIME = 2000;
     private Button mCashPay;
     private Button mUnionCardPay;
     private ImageView mClose;

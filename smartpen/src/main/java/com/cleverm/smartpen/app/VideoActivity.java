@@ -12,13 +12,15 @@ import android.view.animation.AnimationSet;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
+import com.cleverm.smartpen.database.DatabaseHelper;
+import com.cleverm.smartpen.modle.TableType;
 import com.cleverm.smartpen.net.InfoSendSMSVo;
 import com.cleverm.smartpen.net.RequestNet;
 import com.cleverm.smartpen.service.ScreenLockListenService;
@@ -29,13 +31,11 @@ import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.DownloadUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
-import com.cleverm.smartpen.util.SimplePoolThread;
 import com.cleverm.smartpen.util.StatisticsUtil;
 import com.cleverm.smartpen.util.VideoUtil;
-import com.cleverm.smartpen.util.evnet.BroadcastEx;
-import com.cleverm.smartpen.util.evnet.util.BroadcastCx;
-import com.cleverm.smartpen.util.evnet.util.BroadcastUtil;
 import com.cleverm.smartpen.util.excle.CreateExcel;
+
+import java.util.List;
 
 
 /**
@@ -55,6 +55,8 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     private RelativeLayout mrlNotice;
     private ImageView mivNoticeImage;
     private TextView mrlNoticeText;
+    private RelativeLayout mrlNoticeDesk;
+    private Button mBtNoticeDesk;
     public static final int ANIMATION_TIME = 500;
     public static final int STOP_ANIMATION = 1;
     public static final int HANDLER_DATA = 2;
@@ -229,6 +231,22 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         mrlNotice = (RelativeLayout) findViewById(R.id.rlNotice);
         mivNoticeImage = (ImageView) findViewById(R.id.ivNoticeImage);
         mrlNoticeText = (TextView) findViewById(R.id.rlNoticeText);
+        mrlNoticeDesk= (RelativeLayout) findViewById(R.id.rl_NoticeDesk);
+        //数据库为空或者没有选择桌号
+        List<TableType> mTableTypes = DatabaseHelper.getsInstance(this).obtainAllTableTypes();
+        long deskId = RememberUtil.getLong(SelectTableActivity.SELECTEDTABLEID, Constant.DESK_ID_DEF_DEFAULT);
+        if(mTableTypes==null || mTableTypes.size()==0 || deskId == Constant.DESK_ID_DEF_DEFAULT){
+            mrlNoticeDesk.setVisibility(View.VISIBLE);
+        }
+        mBtNoticeDesk= (Button) findViewById(R.id.bt_setdesk);
+        mBtNoticeDesk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(VideoActivity.this, SelectTableActivity.class));
+                VideoActivity.this.finish();
+                ((CleverM) getApplication()).getpenService().setActivityFlag("SelectTableActivity");
+            }
+        });
     }
 
 
@@ -393,6 +411,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                     }
                 } else {
                     mHandler.sendEmptyMessage(code);
+                    Log.v(TAG, "Not sendMessageToService()===isfalse");
                 }
             }
         }.start();
@@ -505,6 +524,4 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         mrlNotice.startAnimation(set);
         Log.v(TAG, "AnimationStart mrlNotice.startAnimation(set)" + i);
     }
-
-
 }
