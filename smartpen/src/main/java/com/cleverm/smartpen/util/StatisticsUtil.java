@@ -18,6 +18,9 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,7 +40,7 @@ import okhttp3.Response;
  */
 public class StatisticsUtil {
 
-    public static final String UPLOAD_FILE_URL="http://120.25.159.173:8080/cleverm/sockjs/uploadResource";
+    public static final String UPLOAD_FILE_URL="http://www.myee.online/api/api/v10/uploadAccessLog/save";
 
     //统计Event对应表
     public static final int   CALL_ADD_FOOD =1;//点餐加菜
@@ -446,16 +449,30 @@ public class StatisticsUtil {
         return CleverM.getDb().rawQuery(sql, null);
     }
 
+
     public ArrayList<ArrayList<String>> getDBForExcel(){
+        String QUERY_TIME = getEventHappenTime();
+        String SQL_DATA;
         ArrayList<ArrayList<String>> out_lists = new ArrayList<ArrayList<String>>();
-        String SQL="select * from t_stats";  //where "+StatsDao.Properties.Querydata.columnName+"= "+getEventHappenTime();
+        String SQL_COUNT="select count"+"("+StatsDao.Properties.Querydata.columnName+")"+" as QueryCount "+"from t_stats where "+StatsDao.Properties.Querydata.columnName+" = "+"'"+QUERY_TIME+"'";
 
-        QuickUtils.log("SQL="+SQL);
+        Cursor cursor1 = exeSql(SQL_COUNT);
+        cursor1.moveToFirst();
+        long count = cursor1.getLong(0);
 
-        Cursor cursor = exeSql(SQL);
+        //2003--最大65536
+        if(count>65530){
+             SQL_DATA="select * from t_stats where "+StatsDao.Properties.Querydata.columnName+" = "+"'"+QUERY_TIME+"'"+"limit 0,65530";
+        }else{
+             SQL_DATA="select * from t_stats where "+StatsDao.Properties.Querydata.columnName+" = "+"'"+QUERY_TIME+"'";
+        }
+
+        QuickUtils.log("SQL_COUNT=" + SQL_COUNT + "/SQL_DATA" + SQL_DATA+"/COUNT="+count);
+        Cursor cursor = exeSql(SQL_DATA);
         while (cursor.moveToNext()){
 
             ArrayList<String> inner_list = new ArrayList<String>();
+            int columnIndex_0 = cursor.getColumnIndex(StatsDao.Properties.Id.columnName);
             int columnIndex_1 = cursor.getColumnIndex(StatsDao.Properties.ActionId.columnName);
             int columnIndex_2 = cursor.getColumnIndex(StatsDao.Properties.TimePoit.columnName);
             int columnIndex_3 = cursor.getColumnIndex(StatsDao.Properties.TimeStay.columnName);
@@ -469,7 +486,8 @@ public class StatisticsUtil {
             String string = cursor.getString(columnIndex_2);
             QuickUtils.log("cursor==" + string);
 
-            //统计9列数据
+            //统计9列数据+一行自增长的id值=10条数据
+            inner_list.add(cursor.getString(columnIndex_0));
             inner_list.add(cursor.getString(columnIndex_1));
             inner_list.add(getClickTime(cursor.getString(columnIndex_2)));
             inner_list.add(getStayTime(cursor.getString(columnIndex_3)));
@@ -490,25 +508,38 @@ public class StatisticsUtil {
      */
     public void  updateExcleToService(String url,File file){
 
-        QuickUtils.log("upload-file=" + file.getName());
+            OkHttpUtils.post()
+                    .addParams("orgId", "100")
+                    .addParams("tableId", "100")
+                    .addParams("path", "statistic")
+                    .addFile("resFile", file.getName(), file)//
+                    .url(url)
+                    .build()//
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e) {
+                            QuickUtils.log("upload-file-onError=" + e.getMessage());
+                        }
 
-        OkHttpUtils.post()//
-                .addParams("orgID","100")
-                .addParams("path", "statistic")
-                .addFile("resFile", file.getName(), file)//
-                .url(url)
-                .build()//
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
-                        QuickUtils.log("upload-file-onError="+e.getMessage());
-                    }
+                        @Override
+                        public void onResponse(String result) {
+                            //{"desc":"","data":"","code":"1000","err":""}
+                            QuickUtils.log("upload-file-onResponse="+result.toString());
 
-                    @Override
-                    public void onResponse(String s) {
-                        QuickUtils.log("upload-file-onResponse="+s.toString());
-                    }
-                });
+                            try {
+                                JSONObject jsonObject = new JSONObject(result);
+                                String code = jsonObject.getString("code");
+                                if(code.equals("1000")){
+                                    RememberUtil.putBooleanSync(getEventHappenTime(),true);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+
+                        }
+                    });
+
 
     }
 

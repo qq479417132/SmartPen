@@ -45,7 +45,7 @@ public class CreateExcel {
     //excle工作簿
     private WritableWorkbook wwb;
     //excle第一行-->9列
-    private String[] colName = {"事件编号", "点击时间(秒)", "停留时间(秒)", "客户编号", "餐厅编号", "桌位编号", "描述备注", "二级事件编号", "统计时间"};
+    private String[] colName = {"ID值","事件编号", "点击时间(秒)", "停留时间(秒)", "客户编号", "餐厅编号", "桌位编号", "描述备注", "二级事件编号", "统计时间"};
 
 
     public CreateExcel() {
