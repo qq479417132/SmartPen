@@ -143,6 +143,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         if(RememberUtil.getBoolean(Constant.BROADCAST_RESATRT_EVENT,true)){
             initData();
             initCacheJson();
+            initStats();
         }else{
             if(QuickUtils.isHasVideoFolder()&&QuickUtils.isVideoFolderHaveFiel2()){
                 VideoUtil videoUtil = new VideoUtil(vvAdvertisement);
@@ -157,9 +158,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         initIntent();
         mHandler.sendEmptyMessage(GET_PENSERVICE);
         initVersion();
-        
-        initStats();
-        
+
     }
 
     @Override
@@ -182,10 +181,11 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                 createExcel.writeExcel(StatisticsUtil.getInstance().getDBForExcel(), execlName);
                 final long end = System.currentTimeMillis();
                 QuickUtils.log("由DB导出为excle的时间为" + (end - start));
-
-                //上传文件到服务器
-                StatisticsUtil.getInstance().updateExcleToService(StatisticsUtil.UPLOAD_FILE_URL,StatisticsUtil.getInstance().getStatsFile());
-
+                if(!RememberUtil.getBoolean(StatisticsUtil.getInstance().getEventHappenTime(),false)){
+                    //上传文件到服务器
+                    QuickUtils.log("updateExcleToService");
+                    StatisticsUtil.getInstance().updateExcleToService(StatisticsUtil.UPLOAD_FILE_URL,StatisticsUtil.getInstance().getStatsFile());
+                }
 
             }
         }).start();

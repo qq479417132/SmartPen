@@ -11,7 +11,7 @@ import java.io.File;
 import java.util.List;
 
 /**
- * Created by x on 2016/2/15.
+ * Created by xiong on 2016/2/15.
  * 业务逻辑:将所有视频的URL地址的文件下载，然后存储到本地
  * 从本地中取出文件,判断每个文件的时常大小，根据时常和排序规则来处理视频
  * git
@@ -105,10 +105,15 @@ public class VideoUtil {
                 //重置一次VideoView.因为VideoView会每次都运行,所以无需重置
                 String[] videoUrls=getVideoURIs(mPath);
 
+                QuickUtils.log("mVideoView-OnCompletion-videoUrls.length="+videoUrls.length);
+
                 videoIndex++;
                 if (videoIndex >= videoUrls.length) {
                     videoIndex = 0;
                 }
+
+                QuickUtils.log("mVideoView-OnCompletion-videoIndex="+videoIndex);
+
                 mVideoView.setVideoPath(videoUrls[videoIndex]);
 
                 RememberUtil.putInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY, videoIndex);

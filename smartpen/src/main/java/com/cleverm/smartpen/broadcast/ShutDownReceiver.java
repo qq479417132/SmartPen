@@ -13,7 +13,7 @@ import com.cleverm.smartpen.util.StatisticsUtil;
  * Created by xiong,An android project Engineer,on 2016/3/2.
  * Data:2016-03-02  18:07
  * Base on clever-m.com(JAVA Service)
- * Describe:
+ * Describe: 关闭广播
  * Version:1.0
  * Open source
  */

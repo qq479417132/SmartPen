@@ -165,9 +165,16 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
 
             // 点击事件
             final int finalPosition = i;
+
+            QuickUtils.log("listImageSequence="+listImageSequence+"/finalPosition="+finalPosition+"/view="+view+"/images.size()="+images.size()+"/views.size()="+views.size());
+
+
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    QuickUtils.log("listImageSequence.size()="+listImageSequence.size());
+
                     DiscountInfo discountInfo = listImageSequence.get(finalPosition);
                     //统计代码
                     if(isDisountArea){
@@ -225,7 +232,7 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
     @Override
     protected void onDestroy() {
         QuickUtils.log("listImageSequence-onDestroy");
-        AlgorithmUtil.getInstance().clearImageSequence();
+        //AlgorithmUtil.getInstance().clearImageSequence();
         super.onDestroy();
 
     }
