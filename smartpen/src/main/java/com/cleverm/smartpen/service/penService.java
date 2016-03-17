@@ -7,9 +7,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.app.DemoActivity;
 import com.cleverm.smartpen.app.DiscountActivity;
 import com.cleverm.smartpen.app.DriverActivity;
@@ -20,7 +18,6 @@ import com.cleverm.smartpen.app.LocalDiscountActivity;
 import com.cleverm.smartpen.app.PayActivity;
 import com.cleverm.smartpen.app.SelectTableActivity;
 import com.cleverm.smartpen.app.VideoActivity;
-import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.bean.TemplateIDState;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.NetWorkUtil;
@@ -89,7 +86,8 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
             case Constant.ORDER_DISHES5:
             case Constant.ADD_WATER5:
             case Constant.TISSUE5:
-            case Constant.OTHER5: {
+            case Constant.OTHER5:
+            case Constant.CLEAN_DESK: {
                 TemplateIDState templateIDState=ChoiceTemplateIDState(id);
                 if (!"VideoActivity".equals(mActivityFlag)) {
                     Intent intent = new Intent(this, VideoActivity.class);
@@ -435,6 +433,10 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
                 templateID=Constant.OTHER_SERVICE;
                 break;
             }
+            case Constant.CLEAN_DESK:{
+                templateID=Constant.CLEAN;
+                break;
+            }
             default:{
                 break;
             }
@@ -464,7 +466,6 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
         }else {
             return flag;
         }
-
     }
 
     private Handler mSMSHand=new Handler(){
@@ -489,6 +490,10 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
                 }
                 case Constant.OTHER_SERVICE:{
                     mHashMap.put(Constant.OTHER_SERVICE,false);
+                    break;
+                }
+                case Constant.CLEAN:{
+                    mHashMap.put(Constant.CLEAN,false);
                     break;
                 }
             }

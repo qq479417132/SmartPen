@@ -68,6 +68,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     public static final int TISSUE_ADD = Constant.TISSUE_ADD;
     public static final int PAY_MONRY = Constant.PAY_MONRY;
     public static final int OTHER_SERVICE = Constant.OTHER_SERVICE;
+    public static final int CLEAN = Constant.CLEAN;
 
     public static final String VIDEO_ACTIVITY_KEY = "video_activity_key";
     public static final String VIDEO_ACTIVITY_ISSEND = "video_activity_isSend";
@@ -100,7 +101,8 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                 case Constant.ADD_WATER5:
                 case Constant.PAY5:
                 case Constant.TISSUE5:
-                case Constant.OTHER5: {
+                case Constant.OTHER5:
+                case Constant.CLEAN_DESK:{
                     Log.v(TAG, "AnimationStart(msg.what)=" + msg.what);
                     AnimationStart(msg.what);
                     break;
@@ -377,6 +379,12 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                 StatisticsUtil.getInstance().insert(StatisticsUtil.CALL_OTHER_SERVIC,StatisticsUtil.CALL_OTHER_SERVIC_DESC);
                 break;
             }
+            case Constant.CLEAN_DESK: {
+                templateID = CLEAN;
+                //统计代码
+                StatisticsUtil.getInstance().insert(StatisticsUtil.CLEAN_DESK,StatisticsUtil.CLEAN_DESK_DESC);
+                break;
+            }
         }
         long deskId = RememberUtil.getLong(SelectTableActivity.SELECTEDTABLEID, Constant.DESK_ID_DEF_DEFAULT);
         if (deskId == Constant.DESK_ID_DEF_DEFAULT) {
@@ -513,6 +521,11 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                     case Constant.OTHER5: {
                         mivNoticeImage.setImageResource(R.mipmap.icon_service);
                         text = getString(R.string.other);
+                        break;
+                    }
+                    case Constant.CLEAN_DESK: {
+                        mivNoticeImage.setImageResource(R.mipmap.icon_clean);
+                        text = getString(R.string.clean);
                         break;
                     }
                 }

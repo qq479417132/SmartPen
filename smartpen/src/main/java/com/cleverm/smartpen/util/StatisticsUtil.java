@@ -3,10 +3,8 @@ package com.cleverm.smartpen.util;
 import android.app.Application;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Environment;
 
 import com.cleverm.smartpen.app.SelectTableActivity;
-import com.cleverm.smartpen.app.VideoActivity;
 import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.pushtable.UpdateTableHandler;
 import com.cleverm.smartpen.statistic.dao.DaoMaster;
@@ -15,7 +13,6 @@ import com.cleverm.smartpen.statistic.dao.StatsDao;
 import com.cleverm.smartpen.statistic.model.Stats;
 import com.cleverm.smartpen.util.excle.CreateExcel;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONException;
@@ -27,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import okhttp3.Call;
-import okhttp3.Response;
 
 /**
  * Created by xiong,An android project Engineer,on 2016/3/3.
@@ -113,6 +109,9 @@ public class StatisticsUtil {
 
     public static final int BACK_VIDEO=27;
     public static final String BACK_VIDEO_DESC="视频界面";
+
+    public static final int CLEAN_DESK=28;
+    public static final String CLEAN_DESK_DESC="收拾桌面";
 
 
 
