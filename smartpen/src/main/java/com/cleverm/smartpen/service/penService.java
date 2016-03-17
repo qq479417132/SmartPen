@@ -263,8 +263,16 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
             case Constant.DA_ZONG4:
             case Constant.DA_ZONG5: {
                 //周边优惠
-                LauncherApp(Constant.DA_ZONG_PACKAGE_NAME, StatisticsUtil.APP_AROUNDDISCOUNT, StatisticsUtil.APP_AROUNDDISCOUNT_DESC);
-                mActivityFlag = DISCOUNT;
+                if (!DISCOUNT.equals(mActivityFlag)) {
+                    Intent intent = new Intent(this, GameActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
+                            Intent.FLAG_ACTIVITY_NEW_TASK |
+                            Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra(GAME_URL, Constant.NEARBY_DISCOUNT_URL);
+                    startActivity(intent);
+                    mActivityFlag = DISCOUNT;
+                }
                 break;
             }
             case Constant.ZHI_ZHU1:

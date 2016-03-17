@@ -134,6 +134,7 @@ public class Constant {
     public static final int SET5 = 1190;
 
     public static final String URL = "http://cn.vonvon.net/quiz/r/546/6116/v1GiNqZBv4fzmVf";
+    public static final String NEARBY_DISCOUNT_URL = "http://sh.meituan.com/?utm_campaign=sogou&utm_medium=organic&utm_source=sogou&utm_content=homepage&utm_term=%25E7%25BE%258E%25E5%259B%25A2%25E7%25BD%2591";
     public static final String MAIN_VIDEO_PATH = Environment.getExternalStorageDirectory().getPath() +
             "/muye/mainVideo";
     public static final String AD_VIDEO_PATH = Environment.getExternalStorageDirectory().getPath() + "/muye/ad";
