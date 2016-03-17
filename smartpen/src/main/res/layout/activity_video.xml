@@ -15,6 +15,7 @@
         android:id="@+id/tv_setdesk"
         android:layout_width="450dp"
         android:layout_height="200dp"
+        android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:text="@string/connect_waiter_choice_desk"
