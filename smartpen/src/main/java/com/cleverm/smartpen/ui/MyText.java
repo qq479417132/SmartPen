@@ -2,6 +2,7 @@ package com.cleverm.smartpen.ui;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.Display;
@@ -12,10 +13,10 @@ import android.widget.TextView;
 import com.cleverm.smartpen.app.VideoActivity;
 
 /**
- * 第一个跑马灯MyTextView
+ * Created by Administrator on 2016/3/17.
  */
-class MyTextView extends TextView implements View.OnClickListener{
-    public final static String TAG = MyTextView.class.getSimpleName();
+public class MyText extends TextView implements View.OnClickListener{
+    public final static String TAG = MyText.class.getSimpleName();
 
     private float textLength = 0f;//文本长度
     private float viewWidth = 0f;//控件的长度
@@ -28,17 +29,17 @@ class MyTextView extends TextView implements View.OnClickListener{
     private String text = "";//文本内容
 
 
-    public MyTextView(Context context) {
+    public MyText(Context context) {
         super(context);
         initView();
     }
 
-    public MyTextView(Context context, AttributeSet attrs) {
+    public MyText(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView();
     }
 
-    public MyTextView(Context context, AttributeSet attrs, int defStyle) {
+    public MyText(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initView();
     }
@@ -51,6 +52,7 @@ class MyTextView extends TextView implements View.OnClickListener{
 
     public void init(WindowManager windowManager) {
         paint = getPaint();
+        paint.setColor(Color.WHITE);
         text = getText().toString();
         //measure()方法获取text的长度
         textLength = paint.measureText(text);
@@ -106,10 +108,6 @@ class MyTextView extends TextView implements View.OnClickListener{
      * 响应用户点击事件：点击则停止，再点击继续开始滚动
      */
     public void onClick(View v) {
-        if (isStarting) {
-            stopScroll();
-        } else {
-            startScroll();
-        }
+
     }
 }
