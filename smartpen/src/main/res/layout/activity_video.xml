@@ -10,65 +10,51 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <RelativeLayout
-        android:background="#55003300"
+
+    <com.cleverm.smartpen.ui.MyText
+        android:id="@+id/tv_setdesk"
         android:layout_width="450dp"
         android:layout_height="200dp"
         android:layout_centerHorizontal="true"
-        android:id="@+id/rl_NoticeDesk"
-        android:visibility="gone"
-        >
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="35dp"
-            android:layout_marginTop="35dp"
-            android:textColor="#ffffff"
-            android:gravity="center"
-            android:id="@+id/tv_setdesk"
-            android:text="@string/connect_waiter_choice_desk"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:layout_below="@+id/tv_setdesk"
-            android:layout_marginStart="130dp"
-            android:id="@+id/bt_setdesk"
-            android:background="@drawable/submit"/>
-    </RelativeLayout>
+        android:gravity="center"
+        android:text="@string/connect_waiter_choice_desk"
+        android:textColor="#ffffff"
+        android:textSize="35dp" />
+
 
     <RelativeLayout
+        android:id="@+id/rlNotice"
         android:layout_width="700dp"
         android:layout_height="250dp"
-        android:id="@+id/rlNotice"
-        android:layout_marginTop="427dp"
         android:layout_marginLeft="290dp"
-        android:visibility="gone"
-        >
+        android:layout_marginTop="427dp"
+        android:visibility="gone">
+
         <ImageView
+            android:id="@+id/ivNoticeImage"
             android:layout_width="250dp"
             android:layout_height="250dp"
             android:alpha="1"
-            android:src="@mipmap/icon_dish"
-            android:id="@+id/ivNoticeImage"/>
+            android:src="@mipmap/icon_dish" />
 
         <LinearLayout
             android:layout_width="450dp"
             android:layout_height="250dp"
-            android:background="@android:color/background_dark"
             android:layout_toRightOf="@+id/ivNoticeImage"
-            android:alpha="0.7">
-        <TextView
-            android:id="@+id/rlNoticeText"
-            android:layout_width="450dp"
-            android:layout_height="250dp"
-            android:alpha="1"
-            android:layout_alignParentRight="true"
-            android:text="@string/add_greens"
-            android:textColor="#ffffff"
-            android:paddingLeft="71dp"
-            android:layout_marginTop="75dp"
-            android:textSize="36dp" />
+            android:alpha="0.7"
+            android:background="@android:color/background_dark">
+
+            <TextView
+                android:id="@+id/rlNoticeText"
+                android:layout_width="450dp"
+                android:layout_height="250dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="75dp"
+                android:alpha="1"
+                android:paddingLeft="71dp"
+                android:text="@string/add_greens"
+                android:textColor="#ffffff"
+                android:textSize="36dp" />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>
