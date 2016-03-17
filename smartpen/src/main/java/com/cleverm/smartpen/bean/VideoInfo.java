@@ -10,6 +10,16 @@ public class VideoInfo extends BaseInfoBean{
     private String videoPath;
     private String type;
 
+    private Long videoSize;
+
+
+    public Long getVideoSize() {
+        return videoSize;
+    }
+
+    public void setVideoSize(Long videoSize) {
+        this.videoSize = videoSize;
+    }
 
     private int videoId;
 

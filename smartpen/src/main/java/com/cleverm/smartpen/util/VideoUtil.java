@@ -169,32 +169,4 @@ public class VideoUtil {
     }
 
 
-
-
-
-
-    //-------------------------------------------------------------------------------
-
-    public static int getVideoSeconde(int dutaion) {
-
-        int second = dutaion / 1000;
-
-        return second;
-    }
-
-    public static void playOnlineVideo(VideoView videoView, String httpUrl) {
-        videoView.setVideoPath(httpUrl);
-        videoView.start();
-        //videoView.setOnPreparedListener(viewPreListener);
-    }
-
-
-    MediaPlayer.OnPreparedListener viewPreListener = new MediaPlayer.OnPreparedListener() {
-
-        @Override
-        public void onPrepared(MediaPlayer mp) {
-            //Toast.makeText(VideoActivity.this, VideoUtil.getVideoSeconde(mp.getDuration()) + "", Toast.LENGTH_LONG).show();
-        }
-    };
-
 }
