@@ -77,7 +77,7 @@
                 android:id="@+id/bt_psw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/orgid_confirm"
+                android:background="@drawable/submit"
                 android:layout_marginTop="20dp"
                 android:textSize="@dimen/orgid_text_size" />
         </LinearLayout>
@@ -114,7 +114,7 @@
                 android:id="@+id/bt_orgid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/orgid_confirm"
+                android:background="@drawable/submit"
                 android:textSize="@dimen/orgid_text_size" />
         </LinearLayout>
     </android.support.v4.widget.DrawerLayout>

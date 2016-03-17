@@ -102,14 +102,14 @@ public class GameActivity extends BaseActivity implements MyWebView.WebViewTouch
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Log.v(TAG, "url= " + url);
-//                view.loadUrl(url);
-//                return true;
-                if( url.startsWith("http:") || url.startsWith("https:") ) {
-                    return false;
-                }
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(intent);
+                view.loadUrl(url);
                 return true;
+//                if( url.startsWith("http:") || url.startsWith("https:") ) {
+//                    return false;
+//                }
+//                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+//                startActivity(intent);
+//                return true;
             }
 
             @Override

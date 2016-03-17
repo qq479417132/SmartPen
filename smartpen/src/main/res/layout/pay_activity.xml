@@ -25,20 +25,24 @@
         
         <Button
             android:layout_width="280dp"
-            android:layout_height="55dp"
+            android:layout_height="60dp"
             android:layout_marginTop="46dp"
             android:layout_gravity="center_horizontal"
             android:text="@string/cash_pay"
+            android:textColor="#ffffff"
             android:textSize="@dimen/cash_pay_text_size"
+            android:paddingBottom="5dp"
             android:id="@+id/cash_pay"
             android:background="@drawable/select_cash_pay"/>
 
         <Button
             android:layout_width="280dp"
-            android:layout_height="55dp"
+            android:layout_height="60dp"
             android:layout_marginTop="20dp"
             android:layout_gravity="center_horizontal"
             android:text="@string/union_pay_card_pay"
+            android:textColor="#ffffff"
+            android:paddingBottom="5dp"
             android:textSize="@dimen/cash_pay_text_size"
             android:id="@+id/union_pay_card_pay"
             android:background="@drawable/select_cash_pay"/>
@@ -58,11 +62,12 @@
 
         <Button
             android:layout_width="280dp"
-            android:layout_height="55dp"
+            android:layout_height="60dp"
             android:layout_marginTop="30dp"
             android:layout_gravity="center_horizontal"
             android:text="@string/weixin_pay"
             android:textColor="#999999"
+            android:paddingBottom="5dp"
             android:textSize="@dimen/cash_pay_text_size"
             android:id="@+id/weixin_pay"
             android:background="@drawable/pay_unable"/>
@@ -70,11 +75,12 @@
 
         <Button
             android:layout_width="280dp"
-            android:layout_height="55dp"
+            android:layout_height="60dp"
             android:layout_marginTop="20dp"
             android:layout_gravity="center_horizontal"
             android:text="@string/ali_pay"
             android:textColor="#999999"
+            android:paddingBottom="5dp"
             android:id="@+id/ali_pay"
             android:textSize="@dimen/cash_pay_text_size"
             android:background="@drawable/pay_unable"/>

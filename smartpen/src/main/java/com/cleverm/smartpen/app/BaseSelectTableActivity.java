@@ -81,6 +81,7 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
     private android.support.v4.widget.DrawerLayout mDrawerLayout;
     private EditText mPsw;
     private Button mBtnPsw;
+    private boolean mHaveData;
     public Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -130,23 +131,92 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
      * 2.根据OrgID短连接去重新请求数据
      * 3.没有OrgID，输入OrgID，重新做第二步
      */
-    private void choiceRequestWay() {
+    private void initView() {
+        findViewById(R.id.btn_cancel).setOnClickListener(this);
+        findViewById(R.id.btn_confirm).setOnClickListener(this);
+        mBtnPsw = (Button) findViewById(R.id.bt_psw);
+        mBtnPsw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String psw = mPsw.getText().toString();
+                Log.v(TAG, "psw=" + psw);
+                if (Constant.PSW.equals(psw)) {
+                    //有数据前提，直接去设置桌号
+                    if(mHaveData){
+                        mDrawerLayout.setVisibility(View.GONE);
+                    }
+                    //无数据前提，去设置OrgID
+                    else {
+                        mInputOrgId.setHint("请输入商户ID");
+                        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                        mDrawerLayout.openDrawer(Gravity.RIGHT);
+                    }
+                } else {
+                    Toast.makeText(BaseSelectTableActivity.this, getString(R.string.psw_error), Toast.LENGTH_LONG).show();
+                }
+                mPsw.setText("");
+                mHandler.removeMessages(GOBack);
+                mHandler.sendEmptyMessageDelayed(GOBack, Constant.DELAY_BACK);
+                Log.v(TAG, "orgid==Constant.DESK_ID_DEF_DEFAUL");
+            }
+        });
+        mTableTabHost = (TabWidget) findViewById(R.id.table_category_tab_host);
+        mTableViewPager = (ViewPager) findViewById(R.id.table_panel_container);
+        mInputOrgId = (EditText) findViewById(R.id.et_orgid);
+        mInputOrgId.addTextChangedListener(watcher);
+        mOrgIdConfirm = (Button) findViewById(R.id.bt_orgid);
+        mPsw = (EditText) findViewById(R.id.et_psw);
+        mPsw.addTextChangedListener(watcher);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.dw_psw);
+        mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View view, float v) {
+                mHandler.removeMessages(GOBack);
+                mHandler.sendEmptyMessageDelayed(GOBack, Constant.DELAY_BACK);
+            }
+
+            @Override
+            public void onDrawerOpened(View view) {
+                mHandler.removeMessages(GOBack);
+                mHandler.sendEmptyMessageDelayed(GOBack, Constant.DELAY_BACK);
+            }
+
+            @Override
+            public void onDrawerClosed(View view) {
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                mHandler.removeMessages(GOBack);
+                mHandler.sendEmptyMessageDelayed(GOBack, Constant.DELAY_BACK);
+            }
+
+            @Override
+            public void onDrawerStateChanged(int i) {
+                mHandler.removeMessages(GOBack);
+                mHandler.sendEmptyMessageDelayed(GOBack, Constant.DELAY_BACK);
+            }
+        });
+        mDrawerLayout.closeDrawer(Gravity.RIGHT);
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         mTableTypes = DatabaseHelper.getsInstance(this).obtainAllTableTypes();//得到数据库中的桌子类型
-        if (mTableTypes.isEmpty()) {
+        Log.v(TAG, "mTableTypes=" + mTableTypes.size());
+        if (mTableTypes.isEmpty() || mTableTypes.size()==0) {
             /**
              * 数据库没有数据了，主动去请求数据
              */
+            mHaveData=false;
             initData();
             Log.v(TAG, "initData()");
         } else {
             /**
              * 数据库有数据直接去获取
              */
+            mHaveData=true;
             initTableData();
             init();
             Log.v(TAG, "initTableData()");
         }
     }
+
+
 
     private void initData() {
         //*******************************************
@@ -195,14 +265,14 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
          * data of the TableTypes
          */
         mTableTypes = DatabaseHelper.getsInstance(this).obtainAllTableTypes();//得到数据库中的桌子类型
-        if (mTableTypes == null || mTableTypes.size()==0) {
-            /**
-             * 数据库没有数据了，主动去请求数据
-             */
-            mDrawerLayout.setVisibility(View.VISIBLE);
-            initData();
-            return;
-        }
+//        if (mTableTypes == null || mTableTypes.size()==0) {
+//            /**
+//             * 数据库没有数据了，主动去请求数据
+//             */
+//            mDrawerLayout.setVisibility(View.VISIBLE);
+//            initData();
+//            return;
+//        }
         mSelectedTableId = OrderManager.getInstance(this).getTableId();
         mTablePagerAdapter = new TablePagerAdapter(getFragmentManager());
         //select the Table
@@ -214,84 +284,6 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
         OrderManager.getInstance(this).setTableId(defaultDeskId);
     }
 
-    private void initView() {
-        findViewById(R.id.btn_cancel).setOnClickListener(this);
-        findViewById(R.id.btn_confirm).setOnClickListener(this);
-        mBtnPsw = (Button) findViewById(R.id.bt_psw);
-        mBtnPsw.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String psw = mPsw.getText().toString();
-                Log.v(TAG, "psw=" + psw);
-                if (Constant.PSW.equals(psw)) {
-                    mPsw.setText("");
-                    mInputOrgId.setHint("请输入商户ID");
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                    mDrawerLayout.openDrawer(Gravity.RIGHT);
-                } else {
-                    mPsw.setText("");
-                    Toast.makeText(BaseSelectTableActivity.this, getString(R.string.psw_error), Toast.LENGTH_LONG).show();
-                }
-                mHandler.removeMessages(GOBack);
-                mHandler.sendEmptyMessageDelayed(GOBack, Constant.DELAY_BACK);
-                Log.v(TAG, "orgid==Constant.DESK_ID_DEF_DEFAUL");
-            }
-        });
-        mTableTabHost = (TabWidget) findViewById(R.id.table_category_tab_host);
-        mTableViewPager = (ViewPager) findViewById(R.id.table_panel_container);
-        mInputOrgId = (EditText) findViewById(R.id.et_orgid);
-        mInputOrgId.addTextChangedListener(watcher);
-        mOrgIdConfirm = (Button) findViewById(R.id.bt_orgid);
-        mPsw = (EditText) findViewById(R.id.et_psw);
-        mPsw.addTextChangedListener(watcher);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.dw_psw);
-        mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(View view, float v) {
-                mHandler.removeMessages(GOBack);
-                mHandler.sendEmptyMessageDelayed(GOBack, Constant.DELAY_BACK);
-            }
-
-            @Override
-            public void onDrawerOpened(View view) {
-                mHandler.removeMessages(GOBack);
-                mHandler.sendEmptyMessageDelayed(GOBack, Constant.DELAY_BACK);
-            }
-
-            @Override
-            public void onDrawerClosed(View view) {
-                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                mHandler.removeMessages(GOBack);
-                mHandler.sendEmptyMessageDelayed(GOBack, Constant.DELAY_BACK);
-            }
-
-            @Override
-            public void onDrawerStateChanged(int i) {
-                mHandler.removeMessages(GOBack);
-                mHandler.sendEmptyMessageDelayed(GOBack, Constant.DELAY_BACK);
-            }
-        });
-        mDrawerLayout.closeDrawer(Gravity.RIGHT);
-        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        mTableTypes = DatabaseHelper.getsInstance(this).obtainAllTableTypes();//得到数据库中的桌子类型
-        Log.v(TAG, "mTableTypes=" + mTableTypes.size());
-        if (mTableTypes.isEmpty() || mTableTypes.size()==0) {
-            /**
-             * 数据库没有数据了，主动去请求数据
-             */
-            mDrawerLayout.setVisibility(View.VISIBLE);
-            initData();
-            Log.v(TAG, "initData()");
-        } else {
-            /**
-             * 数据库有数据直接去获取
-             */
-            mDrawerLayout.setVisibility(View.GONE);
-            initTableData();
-            init();
-            Log.v(TAG, "initTableData()");
-        }
-    }
 
     private void init() {
         mTableViewPager.setAdapter(mTablePagerAdapter);
