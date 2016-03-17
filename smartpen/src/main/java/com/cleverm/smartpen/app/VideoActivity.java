@@ -1,18 +1,19 @@
 package com.cleverm.smartpen.app;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ import com.cleverm.smartpen.net.RequestNet;
 import com.cleverm.smartpen.service.ScreenLockListenService;
 import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.ui.FullScreenVideoView;
+import com.cleverm.smartpen.ui.MyText;
 import com.cleverm.smartpen.util.AlgorithmUtil;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.DownloadUtil;
@@ -49,14 +51,14 @@ import java.util.List;
 public class VideoActivity extends BaseActivity implements penService.MessageListener {
 
     public static final String TAG = VideoActivity.class.getSimpleName();
-
     FullScreenVideoView vvAdvertisement;
-
     private RelativeLayout mrlNotice;
     private ImageView mivNoticeImage;
     private TextView mrlNoticeText;
     private RelativeLayout mrlNoticeDesk;
-    private Button mBtNoticeDesk;
+    private MyText mtv;
+    public final static int updateSpeed=3;
+    public static float width;
     public static final int ANIMATION_TIME = 500;
     public static final int STOP_ANIMATION = 1;
     public static final int HANDLER_DATA = 2;
@@ -134,11 +136,10 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         QuickUtils.log("ActivityClay---onCreate()=" + videoValue);
-
-
         setContentView(R.layout.activity_video);
         QuickUtils.showHighApiBottomStatusBar();
         initView();
+
 
 
         //只有重启后的第一次才去取数据
@@ -233,22 +234,28 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         mrlNotice = (RelativeLayout) findViewById(R.id.rlNotice);
         mivNoticeImage = (ImageView) findViewById(R.id.ivNoticeImage);
         mrlNoticeText = (TextView) findViewById(R.id.rlNoticeText);
-        mrlNoticeDesk= (RelativeLayout) findViewById(R.id.rl_NoticeDesk);
+        /**
+         *跑马灯效果，可点击控制启动与暂停
+         */
+        mtv= (MyText) findViewById(R.id.tv_setdesk);
+        ViewTreeObserver vto = mtv.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mtv.getHeight();
+                width=mtv.getWidth();
+                mtv.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                mtv.init(getWindowManager());
+                mtv.startScroll();
+                mtv.setTextColor(Color.WHITE);
+            }
+        });
         //数据库为空或者没有选择桌号
         List<TableType> mTableTypes = DatabaseHelper.getsInstance(this).obtainAllTableTypes();
         long deskId = RememberUtil.getLong(SelectTableActivity.SELECTEDTABLEID, Constant.DESK_ID_DEF_DEFAULT);
         if(mTableTypes==null || mTableTypes.size()==0 || deskId == Constant.DESK_ID_DEF_DEFAULT){
-            mrlNoticeDesk.setVisibility(View.VISIBLE);
+            mtv.setVisibility(View.VISIBLE);
         }
-        mBtNoticeDesk= (Button) findViewById(R.id.bt_setdesk);
-        mBtNoticeDesk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(VideoActivity.this, SelectTableActivity.class));
-                VideoActivity.this.finish();
-                ((CleverM) getApplication()).getpenService().setActivityFlag("SelectTableActivity");
-            }
-        });
     }
 
 
