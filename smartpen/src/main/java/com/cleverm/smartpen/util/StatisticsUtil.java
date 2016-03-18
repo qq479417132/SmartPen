@@ -92,6 +92,8 @@ public class StatisticsUtil {
     public static final String H5_GAME_DESC="手游试玩";
     public static final int   SETTING =20;//设置
     public static final String SETTING_DESC="设置";
+    public static final int   UN_KNOW =100;//暂时没有加进来功能
+    public static final String UN_KNOW_DESC="预留功能";
 
     public static final int SECOND_DISCOUNT_ACTIVITY=21;//优惠专区活动轮播
     public static final String SECOND_DISCOUNT_ACTIVITY_DESC="优惠专区活动轮播";
