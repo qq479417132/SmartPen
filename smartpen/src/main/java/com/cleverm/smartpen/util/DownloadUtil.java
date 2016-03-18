@@ -174,13 +174,17 @@ public class DownloadUtil {
 
                     @Override
                     public void onError(okhttp3.Call call, Exception e) {
-                        Log.i("FILE", "onResponse :" + e.getMessage());
+                        Log.i("FILE", "onResponse onError:" + e.getMessage());
+                        //发生下载异常后
+
+
+
                     }
 
 
                     @Override
                     public void onResponse(File file) {
-                        Log.i("FILE", "onResponse :" + file.getAbsolutePath());
+                        Log.i("FILE", "onResponse onResponse:" + file.getAbsolutePath());
                     }
                 });
     }

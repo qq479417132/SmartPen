@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.util.Constant;
+import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
 import com.google.gson.Gson;
@@ -201,8 +202,7 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
                 break;
             }
             case R.id.other_confirm: {
-                //统计
-                StatisticsUtil.getInstance().insert(StatisticsUtil.OTHER_COMMENT_SUBMIT,StatisticsUtil.OTHER_COMMENT_SUBMIT_DESC);
+                insertData();
                 submit();
                 mHandler.sendEmptyMessage(GOBack);
                 //统计点击量
@@ -366,5 +366,26 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(meatInput.getWindowToken(), 0);
         imm.hideSoftInputFromWindow(mequipmentInput.getWindowToken(), 0);
+    }
+
+    private void insertData(){
+        try {
+            String text1 = meatInput.getText().toString().trim();
+            String text2 = mequipmentInput.getText().toString().trim();
+            String desc = StatisticsUtil.OTHER_COMMENT_SUBMIT_DESC +"/服务评价："+ text1 + "/设备评价："+text2;
+            String desc2 ;
+            int length = desc.length();
+            if(length>90){
+                desc2 = desc.substring(0,90);
+            }else{
+                desc2 = desc.substring(0,length);
+            }
+            //统计
+            StatisticsUtil.getInstance().insert(StatisticsUtil.OTHER_COMMENT_SUBMIT, desc2);
+        } catch (Exception e) {
+            e.printStackTrace();
+            //统计
+            StatisticsUtil.getInstance().insert(StatisticsUtil.OTHER_COMMENT_SUBMIT, StatisticsUtil.OTHER_COMMENT_SUBMIT_DESC);
+        }
     }
 }

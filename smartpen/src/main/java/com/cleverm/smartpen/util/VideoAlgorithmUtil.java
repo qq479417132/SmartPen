@@ -318,9 +318,9 @@ public class VideoAlgorithmUtil {
                     //服务器无,本地有(服务器没有本地的那个key)
                     for (int i = 0; i < files.length; i++) {
                         if (!serviceList.containsKey(QuickUtils.subVideoEnd(files[i].getName()))) {
-                            QuickUtils.log("Video----LocalList----删除="+AlgorithmUtil.VIDEO_FILE + QuickUtils.subVideoEnd(files[i].getName() + ".mp4"));
+                            QuickUtils.log("Video----LocalList----删除="+AlgorithmUtil.VIDEO_FILE +File.separator+ QuickUtils.subVideoEnd(files[i].getName() + ".mp4"));
                             //删除
-                            QuickUtils.deleteFile(AlgorithmUtil.VIDEO_FILE + QuickUtils.subVideoEnd(files[i].getName() + ".mp4"));
+                            QuickUtils.deleteFile(AlgorithmUtil.VIDEO_FILE +File.separator+QuickUtils.subVideoEnd(files[i].getName() + ".mp4"));
                         }
                     }
 
