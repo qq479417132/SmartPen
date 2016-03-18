@@ -255,6 +255,8 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         long deskId = RememberUtil.getLong(SelectTableActivity.SELECTEDTABLEID, Constant.DESK_ID_DEF_DEFAULT);
         if(mTableTypes==null || mTableTypes.size()==0 || deskId == Constant.DESK_ID_DEF_DEFAULT){
             mtv.setVisibility(View.VISIBLE);
+        }else {
+            mtv.setVisibility(View.GONE);
         }
     }
 
