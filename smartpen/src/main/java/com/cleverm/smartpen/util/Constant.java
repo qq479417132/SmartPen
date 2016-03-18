@@ -163,7 +163,7 @@ public class Constant {
      */
     public static final String MO_JI_PACKAGE_NAME = "sina.mobile.tianqitonghd";
     public static final String TOU_TIAO_PACKAGE_NAME = "com.myzaker.ZAKER_HD";
-    public static final String BAI_DU_PACKAGE_NAME = "com.baidu.BaiduMap";
+    public static final String BAI_DU_PACKAGE_NAME = "com.tuniu.HD.ui";
     public static final String ONE_SHOP_PACKAGE_NAME = "com.taobao.apad";
     public static final String DA_ZONG_PACKAGE_NAME = "com.dianping.v1";
     public static final String ZHIZ_ZHU_PACKAGE_NAME = "com.dooland.padfordooland.reader";

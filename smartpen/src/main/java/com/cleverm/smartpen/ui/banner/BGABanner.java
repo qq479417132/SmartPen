@@ -222,6 +222,13 @@ public class BGABanner extends RelativeLayout {
      * @param tips  每一页的提示文案集合
      */
     public void setViewsAndTips(List<View> views, List<String> tips) {
+
+        //xiong add this line code on 2016-03-17 fix one image bug still srcoll bug~~
+        if(views.size()<=1){
+            mAutoPlayAble=false;
+        }
+
+
         if (mAutoPlayAble && views.size() < 1) {
             //轮播时一个图片都没有
             throw new IllegalArgumentException("开启指定轮播时至少有一个页面");

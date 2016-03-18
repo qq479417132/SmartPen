@@ -59,27 +59,37 @@ public class GameActivity extends BaseActivity implements MyWebView.WebViewTouch
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_activity);
-        initIntent();
         initView();
     }
 
     @Override
+    protected void initSonIntent() {
+        super.initSonIntent();
+        Intent in=getIntent();
+        if(in==null){
+            return;
+        }
+        mURL=in.getStringExtra(GAME_URL);
+    }
+
+    @Override
     protected int onGetEventId() {
-        return StatisticsUtil.H5_GAME;
+        if(mURL.equals(Constant.NEARBY_DISCOUNT_URL)){
+            return StatisticsUtil.APP_AROUNDDISCOUNT;
+        }else{
+            return StatisticsUtil.H5_GAME;
+        }
     }
 
     @Override
     protected String onGetDesc() {
-        return StatisticsUtil.H5_GAME_DESC;
+        if(mURL.equals(Constant.NEARBY_DISCOUNT_URL)){
+            return StatisticsUtil.APP_AROUNDDISCOUNT_DESC;
+        }else{
+            return StatisticsUtil.H5_GAME_DESC;
+        }
     }
 
-    private void initIntent() {
-        Intent in=getIntent();
-        if(in==null){
-           return;
-        }
-        mURL=in.getStringExtra(GAME_URL);
-    }
 
     private void initView() {
         mProgressDialog=ProgressDialog.show(this,getString(R.string.waiting), getString(R.string.isloading), true);
