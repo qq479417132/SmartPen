@@ -1,9 +1,11 @@
 package com.cleverm.smartpen.pushtable;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
+import com.cleverm.smartpen.app.VideoActivity;
 import com.cleverm.smartpen.database.DatabaseHelper;
 import com.cleverm.smartpen.database.TableColumns;
 import com.cleverm.smartpen.database.TableTypeColumns;
@@ -119,6 +121,7 @@ public class UpdateTableHandler extends NoticeHandler<RestaurantVo, Void> {
             String name=ListTableInfo.get(i).getTableName();
             databaseHelper.insertTable(new TableImpl(tableId, typeid, name));
         }
+        sendUpdateTableHandlerSuccess();
 
 //        databaseHelper.insertTableType(new TableTypeImpl(1L,"2 People",2,2,"1"));
 //        databaseHelper.insertTableType(new TableTypeImpl(2L,"3 People",3,3,"2"));
@@ -134,6 +137,12 @@ public class UpdateTableHandler extends NoticeHandler<RestaurantVo, Void> {
 //        databaseHelper.insertTable(new TableImpl(212L, 3L, "C02"));
 //        databaseHelper.insertTable(new TableImpl(213L, 3L, "C03"));
 
+    }
+
+    private void sendUpdateTableHandlerSuccess() {
+        Intent in=new Intent(mContext, VideoActivity.UpdateTableHandlerSuccess.class);
+        in.setAction("UpdateTableHandlerSuccess");
+        mContext.sendBroadcast(in);
     }
 
     private boolean update(RestaurantVo in) {
@@ -326,7 +335,7 @@ public class UpdateTableHandler extends NoticeHandler<RestaurantVo, Void> {
         try {
             String restaurant_comments = jsonObject.getString(Constant.KEY_RESTAURANT_COMMENTS);
             PreferencesHelper.getInstance(mContext).putString(Constant.KEY_RESTAURANT_COMMENTS,
-                restaurant_comments);
+                    restaurant_comments);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -382,4 +391,6 @@ public class UpdateTableHandler extends NoticeHandler<RestaurantVo, Void> {
     public void onError(int code, String message) {
         // TODO Auto-generated method stub
     }
+
+
 }

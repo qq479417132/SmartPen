@@ -1,6 +1,9 @@
 package com.cleverm.smartpen.app;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -57,6 +60,8 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     private TextView mrlNoticeText;
     private RelativeLayout mrlNoticeDesk;
     private MyText mtv;
+    private UpdateTableHandlerSuccess mUpdateTableHandlerSuccess;
+    public static final String SUCCESSACTION="UpdateTableHandlerSuccess";
     public final static int updateSpeed=3;
     public static float width;
     public static final int ANIMATION_TIME = 500;
@@ -139,7 +144,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         setContentView(R.layout.activity_video);
         QuickUtils.showHighApiBottomStatusBar();
         initView();
-
+        initBroadcastReceiver();
 
 
         //只有重启后的第一次才去取数据
@@ -162,6 +167,11 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         mHandler.sendEmptyMessage(GET_PENSERVICE);
         initVersion();
 
+    }
+
+    private void initBroadcastReceiver() {
+        mUpdateTableHandlerSuccess=new UpdateTableHandlerSuccess();
+        registerReceiver(mUpdateTableHandlerSuccess,new IntentFilter(SUCCESSACTION));
     }
 
     @Override
@@ -255,6 +265,8 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         long deskId = RememberUtil.getLong(SelectTableActivity.SELECTEDTABLEID, Constant.DESK_ID_DEF_DEFAULT);
         if(mTableTypes==null || mTableTypes.size()==0 || deskId == Constant.DESK_ID_DEF_DEFAULT){
             mtv.setVisibility(View.VISIBLE);
+        }else {
+            mtv.setVisibility(View.GONE);
         }
     }
 
@@ -315,6 +327,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     protected void onDestroy() {
         super.onDestroy();
         QuickUtils.log("ActivityClay---onDestroy()");
+        unregisterReceiver(mUpdateTableHandlerSuccess);
     }
 
 
@@ -543,5 +556,15 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         });
         mrlNotice.startAnimation(set);
         Log.v(TAG, "AnimationStart mrlNotice.startAnimation(set)" + i);
+    }
+
+    public class UpdateTableHandlerSuccess extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+               String action=intent.getAction();
+               if(SUCCESSACTION.equals(action)){
+                   mtv.setVisibility(View.GONE);
+               }
+        }
     }
 }
