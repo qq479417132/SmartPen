@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.cleverm.smartpen.bean.VideoInfo;
 import com.cleverm.smartpen.util.AlgorithmUtil;
@@ -58,10 +59,10 @@ public class DownloaderDifferenceService extends Service {
 
     private void getIntent(Intent intent) {
         info = (List<VideoInfo>) intent.getSerializableExtra(SERVICE_DIFFERENCE_LIST);
-
         Bundle bundle = intent.getExtras();
         ArrayList<Map<String, String>> lists = (ArrayList<Map<String, String>>) bundle.getSerializable(SERVICE_CONTAINSKEY_MAP);
         LocalList = lists.get(0);
+        Log.e("copyFile", "LocalList.service.size()=" + LocalList.size());
     }
 
     private void startDownloader() {
@@ -76,4 +77,5 @@ public class DownloaderDifferenceService extends Service {
     public void onDestroy() {
         super.onDestroy();
     }
+
 }

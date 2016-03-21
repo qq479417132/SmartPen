@@ -39,11 +39,13 @@ import com.cleverm.smartpen.util.DownloadUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
+import com.cleverm.smartpen.util.VideoTimeTask;
 import com.cleverm.smartpen.util.VideoUtil;
 import com.cleverm.smartpen.util.excle.CreateExcel;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Timer;
 
 
 /**
@@ -168,7 +170,16 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         initIntent();
         mHandler.sendEmptyMessage(GET_PENSERVICE);
         initVersion();
+        initTimeTask();
 
+    }
+
+    /**
+     * 60秒后再次检查
+     */
+    private void initTimeTask() {
+        Timer timer = new Timer();
+        timer.schedule(new VideoTimeTask(vvAdvertisement,this), 3600000);
     }
 
     private void initBroadcastReceiver() {

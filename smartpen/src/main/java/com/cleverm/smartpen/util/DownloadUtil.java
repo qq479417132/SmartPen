@@ -40,7 +40,6 @@ public class DownloadUtil {
     public static final String  DISOUNT_HEADOFFICE_JSON="DISOUNT_HEADOFFICE_JSON";
 
 
-
     public static void getVideoFlag(final ServiceUtil.JsonInterface jsonInterface){
         String url = "http://120.25.159.173:8280/api/api/v10/video/list";
         OkHttpUtils
@@ -194,8 +193,6 @@ public class DownloadUtil {
                         //发生下载异常后
                         try {
                             QuickUtils.deleteFile(AlgorithmUtil.VIDEO_FILE +File.separator+ num + ".mp4");
-
-
 
                         } catch (Exception e1) {
                             e1.printStackTrace();
