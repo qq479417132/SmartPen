@@ -47,6 +47,7 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
     public static final String DISCOUNT = "discount";
     public static final String MAGAZINE = "magazine";
     public static final String VIDEO_ENTERTAINMENT = "video_entertainment";
+    public static final String UN_KNOW = "un_know";
     public static final String GAME_ACTIVITY = "game_activity";
     public static final String GAME_URL = "game_url";
 
@@ -183,7 +184,6 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
                 break;
             }
             case Constant.YOU_HUI1:
-
             case Constant.YOU_HUI2:
             case Constant.YOU_HUI3:
             case Constant.YOU_HUI4:
@@ -313,12 +313,12 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
                 }
                 break;
             }
+            //自主买单
             case Constant.TWO_DIMENSION_CODE1:
             case Constant.TWO_DIMENSION_CODE2:
             case Constant.TWO_DIMENSION_CODE3:
             case Constant.TWO_DIMENSION_CODE4:
             case Constant.TWO_DIMENSION_CODE5: {
-                //自主买单
                 if (!"FutureActivity".equals(mActivityFlag)) {
                     Intent intent = new Intent(this, FutureActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
@@ -329,6 +329,32 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
                     intent.putExtra(StatisticsUtil.FUTRUE_INTENT_EVENTDESC, StatisticsUtil.SERVICE_BUY_MYSELF_DESC);
                     startActivity(intent);
                     mActivityFlag = "FutureActivity";
+                }
+                break;
+            }
+            //火锅加汤
+            case Constant.ADD_SOUP:
+                //更换餐具
+            case Constant.CHANGE_TABLEWARE:
+                //打赏
+            case Constant.AWARD:
+                //金融
+            case Constant.FINANCIAL:
+                //未知功能
+            case Constant.UN_KNOW1:
+            case Constant.UN_KNOW2:
+            case Constant.UN_KNOW3:
+            case Constant.UN_KNOW4:{
+                if (!UN_KNOW.equals(mActivityFlag)) {
+                    Intent intent = new Intent(this, FutureActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
+                            Intent.FLAG_ACTIVITY_NEW_TASK |
+                            Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra(StatisticsUtil.FUTURE_INTNET_EVENTID, StatisticsUtil.UN_KNOW);
+                    intent.putExtra(StatisticsUtil.FUTRUE_INTENT_EVENTDESC, StatisticsUtil.UN_KNOW_DESC);
+                    startActivity(intent);
+                    mActivityFlag = UN_KNOW;
                 }
                 break;
             }

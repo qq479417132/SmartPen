@@ -142,6 +142,20 @@ public class Constant {
     public static final int RECOMMEND5 = 1189;
     public static final int SET5 = 1190;
 
+    /**
+     * 后面加进来的新码
+     *
+     */
+    public static final int ADD_SOUP = 1058;
+    public static final int CHANGE_TABLEWARE = 1059;
+    public static final int AWARD = 1055;
+    public static final int FINANCIAL = 1057;
+    public static final int UN_KNOW1 = 1060;
+    public static final int UN_KNOW2 = 1061;
+    public static final int UN_KNOW3 = 1062;
+    public static final int UN_KNOW4 = 1063;
+
+
     public static final String URL = "http://cn.vonvon.net/quiz/r/546/6116/v1GiNqZBv4fzmVf";
     public static final String NEARBY_DISCOUNT_URL = "http://sh.meituan.com/?utm_campaign=sogou&utm_medium=organic&utm_source=sogou&utm_content=homepage&utm_term=%25E7%25BE%258E%25E5%259B%25A2%25E7%25BD%2591";
     public static final String MAIN_VIDEO_PATH = Environment.getExternalStorageDirectory().getPath() +
