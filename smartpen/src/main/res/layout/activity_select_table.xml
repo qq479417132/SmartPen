@@ -78,6 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/select_table_confirm"
+                android:textColor="#ffffff"
                 android:layout_marginTop="20dp"
                 android:text="@string/sure"
                 android:textSize="@dimen/orgid_text_size" />
@@ -116,6 +117,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/select_table_confirm"
+                android:textColor="#ffffff"
                 android:text="@string/sure"
                 android:textSize="@dimen/orgid_text_size" />
         </LinearLayout>
