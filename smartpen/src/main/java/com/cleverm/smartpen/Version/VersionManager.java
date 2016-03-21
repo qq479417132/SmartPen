@@ -94,10 +94,10 @@ public class VersionManager {
     }
 
     public  void post_to_server1() {
-        long ClientId=getClientId();
-        if(ClientId==Constant.DESK_ID_DEF_DEFAULT){
-            return;
-        }
+//        long ClientId=getClientId();
+//        if(ClientId==Constant.DESK_ID_DEF_DEFAULT){
+//            return;
+//        }
         try {
             HttpClient Client=new DefaultHttpClient();
             HttpGet get=new HttpGet(SERVER_ADDRESS);
