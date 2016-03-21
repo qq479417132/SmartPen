@@ -44,7 +44,7 @@
         android:id="@+id/dw_psw"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ff5533aa">
+        android:background="@mipmap/discount_background">
         <!-- 输入密码-->
         <LinearLayout
             android:layout_width="match_parent"
@@ -77,8 +77,9 @@
                 android:id="@+id/bt_psw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/submit"
+                android:background="@drawable/select_table_confirm"
                 android:layout_marginTop="20dp"
+                android:text="@string/sure"
                 android:textSize="@dimen/orgid_text_size" />
         </LinearLayout>
 
@@ -87,7 +88,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
-            android:background="#55d737"
+            android:background="@mipmap/discount_background"
             android:layout_gravity="right"
             android:gravity="center"
             android:focusable="true"
@@ -114,7 +115,8 @@
                 android:id="@+id/bt_orgid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/submit"
+                android:background="@drawable/select_table_confirm"
+                android:text="@string/sure"
                 android:textSize="@dimen/orgid_text_size" />
         </LinearLayout>
     </android.support.v4.widget.DrawerLayout>
@@ -127,5 +129,5 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/select_table_cancel_btn_margin_end"
         android:layout_marginTop="@dimen/select_table_cancel_btn_margin_top"
-        android:background="@drawable/btn_cancel" />
+        android:src="@mipmap/icon_close" />
 </RelativeLayout>
