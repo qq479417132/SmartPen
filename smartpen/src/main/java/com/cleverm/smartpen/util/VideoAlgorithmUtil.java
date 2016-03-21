@@ -118,13 +118,14 @@ public class VideoAlgorithmUtil {
     }
 
 
+
     /**
      * 第一次下载所有视频的方法
      *
      * @param path
      * @param num
      */
-    public void downloadVideoFirst(String path, final String num) {
+    public void downloadVideoFirst(final String path, final String num) {
 
         //存储的地址为storage/emulated/0/muye/木爷我们的视频.mp4
         OkHttpUtils//
@@ -138,12 +139,14 @@ public class VideoAlgorithmUtil {
                 {
                     @Override
                     public void inProgress(float progress) {
-                        Log.i("FILE", "onResponse inProgress :" + progress);
+                        Log.i("FILE", "onResponse inProgress " +num+".mp4 :"+ progress);
                     }
 
                     @Override
                     public void onError(okhttp3.Call call, Exception e) {
                         Log.i("FILE", "onResponse onError :" + e.getMessage());
+                        //下载视频失败去做retry机制
+                        downloadVideoFirst(path,num);
                     }
 
 
@@ -151,7 +154,8 @@ public class VideoAlgorithmUtil {
                     public void onResponse(File file) {
                         Log.i("FILE", "onResponse onResponse:" + file.getAbsolutePath());
                         //copy操作
-                        CopyFileUtil.copyFile(AlgorithmUtil.VIDEO_FILE+File.separator+num + ".mp4",AlgorithmUtil.VIDEO_FILE_PLAY+File.separator+num+".mp4",false);
+                        //CopyFileUtil.copyFile(AlgorithmUtil.VIDEO_FILE+File.separator+num + ".mp4",AlgorithmUtil.VIDEO_FILE_PLAY+File.separator+num+".mp4",false);
+                        CopyFileUtil.copyByNIO(AlgorithmUtil.VIDEO_FILE+File.separator+num + ".mp4",AlgorithmUtil.VIDEO_FILE_PLAY+File.separator+num+".mp4",false);
 
                     }
                 });
@@ -328,6 +332,8 @@ public class VideoAlgorithmUtil {
                         }
                     }
 
+                    Log.e("copyFile", "LocalList.size()="+LocalList.size());
+
                     //Step2:若服务器，本地也有,则比对大小,然后决定是否删除.删除后重新得到新的localList集合
                     for(int i = 0; i < files.length; i++){
                         //服务端有这个key
@@ -346,13 +352,14 @@ public class VideoAlgorithmUtil {
 
                                         QuickUtils.deleteFile(AlgorithmUtil.VIDEO_FILE +File.separator+QuickUtils.subVideoEnd(files[i].getName() + ".mp4"));
                                         //更新集合
-                                        LocalList.remove(files[i]);
+                                        LocalList.remove(QuickUtils.subVideoEnd(files[i].getName()));
                                     }
                                 }
                             }
                         }
                     }
 
+                    Log.e("copyFile", "LocalList.remove.size()="+LocalList.size());
 
                     //Step3:服务器有,本地无(本地没有服务器的那个key)
                     downloadDifferVideoByService(activity,infos,LocalList);

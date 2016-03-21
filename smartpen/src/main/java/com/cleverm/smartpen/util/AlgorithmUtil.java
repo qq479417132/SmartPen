@@ -252,8 +252,6 @@ public class AlgorithmUtil {
             QuickUtils.log("Video----first----");
             VideoAlgorithmUtil.getInstance().getVideoFirst(videoView,activity);
         }
-
-
     }
 
     /**

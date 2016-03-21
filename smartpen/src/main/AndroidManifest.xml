@@ -83,7 +83,8 @@
             android:screenOrientation="landscape" />
         <activity
             android:name=".app.SelectTableActivity"
-            android:screenOrientation="landscape" />
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="userLandscape" />
         <activity
             android:name=".app.DiscountActivity"
             android:screenOrientation="landscape" />
