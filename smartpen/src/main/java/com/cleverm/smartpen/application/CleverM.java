@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.os.BatteryManager;
 import android.os.Environment;
 import android.os.IBinder;
@@ -25,8 +26,22 @@ import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
 import com.cleverm.smartpen.util.evnet.BroadcastEvent;
+import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.decode.BaseImageDecoder;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.thin.downloadmanager.ThinDownloadManager;
 import com.umeng.analytics.MobclickAgent;
+
+import java.io.File;
 
 /**
  * Created by 95 on 2016/1/13.
@@ -84,12 +99,32 @@ public class CleverM extends Application {
 
         MobclickAgent.setCatchUncaughtExceptions(true);
         RememberUtil.init(getApplicationContext(), PREFS_NAME);
-
+        initImageLoader();
         initDownloader();
         initNet();
         initEvnet();
         initDataBase();
         mPowerReceiver.register();
+    }
+
+    private void initImageLoader() {
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .bitmapConfig(Bitmap.Config.RGB_565)// 设置图片的解码类型
+                .cacheInMemory(false)
+                .cacheOnDisc(true)// 设置下载的图片是否缓存在SD卡中
+                .imageScaleType(ImageScaleType.EXACTLY)// 设置图片的缩放方式:图像将被二次采样的整数倍
+                .displayer(new FadeInBitmapDisplayer(300))// 正常显示一张图片,不是圆角RoundedBitmapDisplayer和渐变FadeInBitmapDisplayer
+                .build();
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).threadPriority(Thread.NORM_PRIORITY - 2)// 线程池内加载数量
+                .denyCacheImageMultipleSizesInMemory()
+                .discCacheSize(50 * 1024 * 1024)// 硬盘缓存的最大大小30MB
+                .discCacheFileCount(150)
+                .discCacheFileNameGenerator(new Md5FileNameGenerator())// 将保存的时候的URI名称用MD5
+                        // 加密
+                .tasksProcessingOrder(QueueProcessingType.LIFO)
+                .defaultDisplayImageOptions(options).build();//LIFO队列
+
+        ImageLoader.getInstance().init(config);
     }
 
     private void initDataBase() {

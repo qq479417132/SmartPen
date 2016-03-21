@@ -106,6 +106,7 @@
         <service android:name=".service.CommunicationService" />
         <service android:name=".service.DownloaderService" />
         <service android:name=".service.DownloaderDifferenceService" />
+        <service android:name=".service.DownloadPicassoService"/>
 
         <receiver android:name=".broadcast.BootRestartReceiver" >
             

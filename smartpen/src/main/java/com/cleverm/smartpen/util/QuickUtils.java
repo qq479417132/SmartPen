@@ -1,6 +1,7 @@
 package com.cleverm.smartpen.util;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Environment;
 import android.support.annotation.DrawableRes;
 import android.util.Log;
@@ -17,6 +18,12 @@ import com.cleverm.smartpen.bean.DiscountInfo;
 import com.cleverm.smartpen.net.InfoSendSMSVo;
 import com.cleverm.smartpen.net.RequestNet;
 import com.cleverm.smartpen.pushtable.UpdateTableHandler;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -229,6 +236,18 @@ public class QuickUtils {
         }
     }
 
+    public static boolean isHasVideoFolder(String sPath) {
+        File file = new File(sPath);
+        //如果目录不存在public
+        if (!file.exists() && !file.isDirectory()) {
+            //先创建目录，然后返回false
+            file.mkdir();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     /**
      * 判断目录下是否有文件
      *
@@ -263,6 +282,22 @@ public class QuickUtils {
 
     public static boolean isVideoFolderHaveFiel2() {
         File file = new File(AlgorithmUtil.VIDEO_FILE);
+        File[] files = file.listFiles();
+
+        if (files != null) {
+            QuickUtils.log("files=" + files.toString());
+        }
+
+
+        if ((files == null) || (files.length == 0)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public static boolean isVideoFolderHaveFiel2(String sPath) {
+        File file = new File(sPath);
         File[] files = file.listFiles();
 
         if (files != null) {
@@ -379,4 +414,56 @@ public class QuickUtils {
         }.start();
 
     }
+
+    private static ImageLoader imageLoader = ImageLoader.getInstance();
+    public static void displayImage(String url ,ImageView imageView){
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                    .bitmapConfig(Bitmap.Config.RGB_565).cacheInMemory()
+                    .cacheOnDisc(true).imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+                    .displayer(new SimpleBitmapDisplayer()).build();
+        imageLoader.displayImage(url, imageView, options, new ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String s, View view) {
+            }
+
+            @Override
+            public void onLoadingFailed(String s, View view, FailReason failReason) {
+            }
+
+            @Override
+            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+            }
+
+            @Override
+            public void onLoadingCancelled(String s, View view) {
+            }
+        });
+    }
+
+    public static void loadImage(String url){
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .bitmapConfig(Bitmap.Config.RGB_565).cacheInMemory()
+                .cacheOnDisc(true).imageScaleType(ImageScaleType.IN_SAMPLE_INT)
+                .displayer(new SimpleBitmapDisplayer()).build();
+
+        imageLoader.loadImage(url,options, new ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String s, View view) {
+            }
+
+            @Override
+            public void onLoadingFailed(String s, View view, FailReason failReason) {
+            }
+
+            @Override
+            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                Log.e("onLoadingComplete","onLoadingComplete");
+            }
+
+            @Override
+            public void onLoadingCancelled(String s, View view) {
+            }
+        });
+    }
+
 }

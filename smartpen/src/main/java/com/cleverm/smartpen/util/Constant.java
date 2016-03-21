@@ -8,6 +8,15 @@ import java.io.File;
  * Created by 95 on 2015/12/22.
  */
 public class Constant {
+
+
+     /**
+     * URL地址
+     */
+     public static final String  DDP_URL= Constant.BASE_TEST_URL;
+     private static final String BASE_URL="http://www.myee7.com/api";//正式机
+     private static final String BASE_TEST_URL="http://www.myee7.com/api_test";//测试机
+
     /**
      * Code 1
      */

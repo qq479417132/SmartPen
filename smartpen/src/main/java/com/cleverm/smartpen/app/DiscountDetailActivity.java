@@ -3,6 +3,7 @@ package com.cleverm.smartpen.app;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
 import android.view.View;
@@ -161,12 +162,19 @@ public class DiscountDetailActivity extends BaseBackActivity {
         } else {
             //读取rollDetailList的第一个数据
             if (rollDetailList.size() > 0) {
-                Picasso.with(this).load(QuickUtils.spliceUrl(info.getRollDetailList().get(0).getPictruePath())).into(ivDisountImage);
+                QuickUtils.displayImage(QuickUtils.spliceUrl(info.getRollDetailList().get(0).getPictruePath()),ivDisountImage);
+                //Picasso.with(this).load(QuickUtils.spliceUrl(info.getRollDetailList().get(0).getPictruePath())).into(ivDisountImage);
             } else {
                 ivDisountImage.setImageResource(R.mipmap.discount_background);
             }
         }
+        
+        scrollToTop();
+        
+        
     }
+
+
 
 
     private void handlerNewAd() {
@@ -181,7 +189,8 @@ public class DiscountDetailActivity extends BaseBackActivity {
         for(int i =0 ;i < view_s.size();i++){
             View rootView = view_s.get(i);
             ImageView view = (ImageView) rootView.findViewById(R.id.ivDisountImage);
-            Picasso.with(this).load(QuickUtils.spliceUrl(rollDetailList.get(i).getPictruePath())).placeholder(R.mipmap.discount_background).into(view);
+            QuickUtils.displayImage(QuickUtils.spliceUrl(rollDetailList.get(i).getPictruePath()), view);
+            //Picasso.with(this).load(QuickUtils.spliceUrl(rollDetailList.get(i).getPictruePath())).placeholder(R.mipmap.discount_background).into(view);
         }
     }
 
@@ -206,8 +215,6 @@ public class DiscountDetailActivity extends BaseBackActivity {
         }
 
 
-
-
     }
 
     @Deprecated
@@ -226,6 +233,18 @@ public class DiscountDetailActivity extends BaseBackActivity {
 
         }
 
+    }
+
+    private void scrollToTop() {
+        if (info.getTitle() != null && info.getDescriptionText() != null) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.svTop).scrollTo(0, 0);
+                }
+            }, 100);
+
+        }
     }
 
     @Override

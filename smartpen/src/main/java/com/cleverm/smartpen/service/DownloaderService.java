@@ -17,7 +17,7 @@ import java.util.List;
  * Created by xiong,An android project Engineer,on 2016/2/29.
  * Data:2016-02-29  15:40
  * Base on clever-m.com(JAVA Service)
- * Describe: 下载服务
+ * Describe: 下载服务  第一次有关的下载
  * Version:1.0
  * Open source
  */

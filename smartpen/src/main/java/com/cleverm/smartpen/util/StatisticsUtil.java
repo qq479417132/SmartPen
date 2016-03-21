@@ -507,9 +507,10 @@ public class StatisticsUtil {
      */
     public void  updateExcleToService(String url,File file){
 
+        if(!getDeskId().equals(Constant.DESK_ID_DEF_DEFAULT)){
             OkHttpUtils.post()
-                    .addParams("orgId", "100")
-                    .addParams("tableId", "100")
+                    .addParams("orgId", getOrgStrId())
+                    .addParams("tableId", getDeskId()+"")
                     .addParams("path", "statistic")
                     .addFile("resFile", file.getName(), file)//
                     .url(url)
@@ -531,15 +532,14 @@ public class StatisticsUtil {
                                 if(code.equals("1000")){
                                     RememberUtil.putBooleanSync(getEventHappenTime(),true);
                                 }
-                            } catch (JSONException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
 
 
                         }
                     });
-
-
+        }
     }
 
     public File getStatsFile(){

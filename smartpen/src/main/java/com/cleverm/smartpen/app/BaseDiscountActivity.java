@@ -144,7 +144,10 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
             QuickUtils.log("---IMAGE---views=" + views.size() + "images=" + images.size());
 
             if (views.size() == 1) {
-                Picasso.with(this).load(QuickUtils.spliceUrl(images.get(0))).placeholder(R.mipmap.discount_background).into(view);
+                ivLeft.setVisibility(View.INVISIBLE);
+                ivRight.setVisibility(View.INVISIBLE);
+                //Picasso.with(this).load().placeholder(R.mipmap.discount_background).into(view);
+                QuickUtils.displayImage(QuickUtils.spliceUrl(images.get(0)),view);
                 vpImage.getViewPager().setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
@@ -154,9 +157,12 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
             } else if (views.size() == 2 || views.size() == 3) {
                 int index = (i > (images.size() - 1)) ? i - images.size() : i;
                 QuickUtils.log("---IMAGE---index=" + index);
-                Picasso.with(this).load(QuickUtils.spliceUrl(images.get((i > (images.size() - 1)) ? i - images.size() : i))).placeholder(R.mipmap.discount_background).into(view);
+                //Picasso.with(this).load(QuickUtils.spliceUrl(images.get((i > (images.size() - 1)) ? i - images.size() : i))).placeholder(R.mipmap.discount_background).into(view);
+                QuickUtils.displayImage(QuickUtils.spliceUrl(images.get((i > (images.size() - 1)) ? i - images.size() : i)),view);
+
             } else {
-                Picasso.with(this).load(QuickUtils.spliceUrl(images.get(i))).placeholder(R.mipmap.discount_background).into(view);
+                //Picasso.with(this).load(QuickUtils.spliceUrl(images.get(i))).into(view);
+                QuickUtils.displayImage(QuickUtils.spliceUrl(images.get(i)),view);
             }
 
 

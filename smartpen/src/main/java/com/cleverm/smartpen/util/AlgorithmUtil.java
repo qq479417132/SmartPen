@@ -26,9 +26,9 @@ import java.util.List;
  */
 public class AlgorithmUtil {
 
-
+    //逻辑视频目录
     public static final String VIDEO_FILE= Environment.getExternalStorageDirectory().getAbsolutePath() + "/muyevideo";
-
+    public static final String VIDEO_FILE_PLAY = Environment.getExternalStorageDirectory().getAbsolutePath()+"/muyepaly";
 
     private static AlgorithmUtil INSTANCE =new AlgorithmUtil();
 
@@ -253,6 +253,27 @@ public class AlgorithmUtil {
             VideoAlgorithmUtil.getInstance().getVideoFirst(videoView,activity);
         }
 
+
+    }
+
+    /**
+     * 1.删除paly目录的video
+     * 2.请求接口后进行数据比对，然后要播放的数据copy到新目录中
+     * 3.开启播放play目录
+     * @param videoView
+     * @param activity
+     */
+    public void startVideoPlayNewAlgorithm(FullScreenVideoView videoView,Activity activity){
+        //访问API,存储所有数据到DB
+        if(QuickUtils.isHasVideoFolder(AlgorithmUtil.VIDEO_FILE_PLAY)&&QuickUtils.isVideoFolderHaveFiel2(AlgorithmUtil.VIDEO_FILE_PLAY)){
+            QuickUtils.log("Video----nofirst----");
+            //3.如果有,那么就直接循环遍历去判断服务端这次给的videoId是否存在于了存储中.对于没有的videoId就进行下载
+            VideoAlgorithmUtil.getInstance().loopFileName2(videoView,activity);
+        }else{
+            //2.木有就表示这是第一次使用,直接走服务端请求并存储video
+            QuickUtils.log("Video----first----");
+            VideoAlgorithmUtil.getInstance().getVideoFirst(videoView,activity);
+        }
 
     }
 

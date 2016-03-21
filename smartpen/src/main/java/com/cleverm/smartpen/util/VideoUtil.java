@@ -2,10 +2,12 @@ package com.cleverm.smartpen.util;
 
 import android.media.MediaPlayer;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.VideoView;
 
 
 import com.cleverm.smartpen.bean.VideoInfo;
+import com.iflytek.cloud.Setting;
 
 import java.io.File;
 import java.util.List;
@@ -55,11 +57,17 @@ public class VideoUtil {
      * @param mPath
      */
     public void prepareLocalVideo(final String mPath,int currentPosition) {
+
+
+
         //初始化videoIndex=0;
         videoIndex=0;
 
         final String[] videoUrls = getVideoURIs(mPath);
-        if (videoUrls == null) {
+
+        Log.e("DOWNLOAD-","videoUrls="+videoUrls);
+
+        if (videoUrls == null || videoUrls.length <=0) {
             return;
         }
 
@@ -167,6 +175,8 @@ public class VideoUtil {
         }
         return videoUrls;
     }
+
+
 
 
 }

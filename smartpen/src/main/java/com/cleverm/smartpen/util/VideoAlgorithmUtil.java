@@ -124,7 +124,7 @@ public class VideoAlgorithmUtil {
      * @param path
      * @param num
      */
-    public void downloadVideoFirst(String path, String num) {
+    public void downloadVideoFirst(String path, final String num) {
 
         //存储的地址为storage/emulated/0/muye/木爷我们的视频.mp4
         OkHttpUtils//
@@ -138,18 +138,21 @@ public class VideoAlgorithmUtil {
                 {
                     @Override
                     public void inProgress(float progress) {
-                        Log.i("FILE", "onResponse :" + progress);
+                        Log.i("FILE", "onResponse inProgress :" + progress);
                     }
 
                     @Override
                     public void onError(okhttp3.Call call, Exception e) {
-                        Log.i("FILE", "onResponse :" + e.getMessage());
+                        Log.i("FILE", "onResponse onError :" + e.getMessage());
                     }
 
 
                     @Override
                     public void onResponse(File file) {
-                        Log.i("FILE", "onResponse :" + file.getAbsolutePath());
+                        Log.i("FILE", "onResponse onResponse:" + file.getAbsolutePath());
+                        //copy操作
+                        CopyFileUtil.copyFile(AlgorithmUtil.VIDEO_FILE+File.separator+num + ".mp4",AlgorithmUtil.VIDEO_FILE_PLAY+File.separator+num+".mp4",false);
+
                     }
                 });
     }
@@ -315,16 +318,43 @@ public class VideoAlgorithmUtil {
                     QuickUtils.log("Video----serviceList----" + serviceList.size() + "/LocalList" + LocalList.size());
 
 
-                    //服务器无,本地有(服务器没有本地的那个key)
+                    //Step1:服务器无,本地有(服务器没有本地的那个key)
                     for (int i = 0; i < files.length; i++) {
                         if (!serviceList.containsKey(QuickUtils.subVideoEnd(files[i].getName()))) {
-                            QuickUtils.log("Video----LocalList----删除="+AlgorithmUtil.VIDEO_FILE +File.separator+ QuickUtils.subVideoEnd(files[i].getName() + ".mp4"));
+                            QuickUtils.log("Video----LocalList----删除=" + AlgorithmUtil.VIDEO_FILE + File.separator + QuickUtils.subVideoEnd(files[i].getName() + ".mp4"));
                             //删除
                             QuickUtils.deleteFile(AlgorithmUtil.VIDEO_FILE +File.separator+QuickUtils.subVideoEnd(files[i].getName() + ".mp4"));
+                            QuickUtils.deleteFile(AlgorithmUtil.VIDEO_FILE_PLAY +File.separator+QuickUtils.subVideoEnd(files[i].getName() + ".mp4"));
                         }
                     }
 
-                    //服务器有,本地无(本地没有服务器的那个key)
+                    //Step2:若服务器，本地也有,则比对大小,然后决定是否删除.删除后重新得到新的localList集合
+                    for(int i = 0; i < files.length; i++){
+                        //服务端有这个key
+                        if(serviceList.containsKey(QuickUtils.subVideoEnd(files[i].getName()))){
+                            //然后迭代拿到服务端的这个key   和   本地的这   name
+                            for(int j =0 ; j<infos.size();j++){
+                                String ser_id = String.valueOf(infos.get(j).getVideoId());
+                                String loc_id = QuickUtils.subVideoEnd(files[i].getName());
+                                Log.e("copyFile","ser_id="+ser_id+"/loc_id="+loc_id);
+                                if(ser_id.equals(loc_id)){
+                                    Log.e("copyFile","ser_id2="+ser_id+"/loc_id2="+loc_id);
+                                    Long Service_VideoSize = infos.get(j).getVideoSize();
+                                    long Local_VideoSize = getVideoFileLength(AlgorithmUtil.VIDEO_FILE +File.separator+QuickUtils.subVideoEnd(files[i].getName() + ".mp4"));
+                                    Log.e("copyFile","Service_VideoSize="+Service_VideoSize+"/Local_VideoSize="+Local_VideoSize);
+                                    if(Local_VideoSize!=Service_VideoSize){
+
+                                        QuickUtils.deleteFile(AlgorithmUtil.VIDEO_FILE +File.separator+QuickUtils.subVideoEnd(files[i].getName() + ".mp4"));
+                                        //更新集合
+                                        LocalList.remove(files[i]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+                    //Step3:服务器有,本地无(本地没有服务器的那个key)
                     downloadDifferVideoByService(activity,infos,LocalList);
                     /*for (int i = 0; i < infos.size(); i++) {
                         if (!LocalList.containsKey(infos.get(i).getVideoId() + "")) {
@@ -334,18 +364,18 @@ public class VideoAlgorithmUtil {
                         }
                     }*/
 
-                    //服务端有,本地也有,不操作
 
 
                     //因为无法判断多个视频在下载时多久结束,所以我只读这个目录中的,而且是循环的读
                     VideoUtil videoUtil = new VideoUtil(videoView);
-                    videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE, 0);
+                    //videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE, 0);
+                    videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE_PLAY, 0);
 
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     VideoUtil videoUtil = new VideoUtil(videoView);
-                    videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE, 0);
+                    videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE_PLAY, 0);
                 }
 
             }
@@ -353,7 +383,7 @@ public class VideoAlgorithmUtil {
             @Override
             public void onFail(String error) {
                 VideoUtil videoUtil = new VideoUtil(videoView);
-                videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE, 0);
+                videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE_PLAY, 0);
             }
         });
 
@@ -391,6 +421,12 @@ public class VideoAlgorithmUtil {
         CleverM.getThinDownloadManager().add(downloadRequest);
 
 
+    }
+
+
+    public long getVideoFileLength(String sPath){
+        File file = new File(sPath);
+        return file.length();
     }
 
 

@@ -27,6 +27,8 @@ import com.cleverm.smartpen.database.DatabaseHelper;
 import com.cleverm.smartpen.modle.TableType;
 import com.cleverm.smartpen.net.InfoSendSMSVo;
 import com.cleverm.smartpen.net.RequestNet;
+import com.cleverm.smartpen.service.DownloadPicassoService;
+import com.cleverm.smartpen.service.DownloaderDifferenceService;
 import com.cleverm.smartpen.service.ScreenLockListenService;
 import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.ui.FullScreenVideoView;
@@ -40,6 +42,7 @@ import com.cleverm.smartpen.util.StatisticsUtil;
 import com.cleverm.smartpen.util.VideoUtil;
 import com.cleverm.smartpen.util.excle.CreateExcel;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -146,7 +149,6 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         initView();
         initBroadcastReceiver();
 
-
         //只有重启后的第一次才去取数据
         if(RememberUtil.getBoolean(Constant.BROADCAST_RESATRT_EVENT,true)){
             initData();
@@ -155,7 +157,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         }else{
             if(QuickUtils.isHasVideoFolder()&&QuickUtils.isVideoFolderHaveFiel2()){
                 VideoUtil videoUtil = new VideoUtil(vvAdvertisement);
-                videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE, 0);
+                videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE_PLAY, 0);
             }else{
                 initData();
             }

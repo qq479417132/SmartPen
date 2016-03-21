@@ -1,9 +1,15 @@
 package com.cleverm.smartpen.util;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.cleverm.smartpen.application.CleverM;
+import com.cleverm.smartpen.bean.DiscountInfo;
 import com.cleverm.smartpen.bean.VideoInfo;
+import com.cleverm.smartpen.service.DownloadPicassoService;
+import com.cleverm.smartpen.service.DownloaderDifferenceService;
 import com.cleverm.smartpen.ui.FullScreenVideoView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
@@ -12,6 +18,7 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import org.json.JSONException;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.List;
 
 import okhttp3.Call;
@@ -126,7 +133,10 @@ public class DownloadUtil {
                     public void onResponse(String response) {
                         QuickUtils.log("cacheDiscountJson");
                         //存储起来,准备特惠专区界面使用
-                        FileCacheUtil.get(CleverM.getApplication()).put(DISOUNT_JSON,response);
+                        FileCacheUtil.get(CleverM.getApplication()).put(DISOUNT_JSON, response);
+                        Intent intent = new Intent(CleverM.getApplication(), DownloadPicassoService.class);
+                        intent.putExtra(DownloadPicassoService.PICASSO_JSON, response);
+                        CleverM.getApplication().startService(intent);
                     }
                 });
 
@@ -155,10 +165,16 @@ public class DownloadUtil {
 
     /**
      * online down Video File
+     * 1.出现异常的情况：删除视频 ，然后 重新下载  , 下载两次
+     *
+     * 2.两次后依然异常，会记录问题url，然后定时再次去进行下载
+     *
      * @param path
      * @param num
      */
-    public static void downloadFile(String path, String num) {
+    public static void downloadFile(String path, final String num) {
+
+
 
         //存储的地址为storage/emulated/0/muye/木爷我们的视频.mp4
         OkHttpUtils//
@@ -176,9 +192,14 @@ public class DownloadUtil {
                     public void onError(okhttp3.Call call, Exception e) {
                         Log.i("FILE", "onResponse onError:" + e.getMessage());
                         //发生下载异常后
+                        try {
+                            QuickUtils.deleteFile(AlgorithmUtil.VIDEO_FILE +File.separator+ num + ".mp4");
 
 
 
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
                     }
 
 
