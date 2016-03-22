@@ -510,6 +510,7 @@ public class StatisticsUtil {
     public void  updateExcleToService(String url,File file){
 
         if(!getDeskId().equals(Constant.DESK_ID_DEF_DEFAULT)){
+            QuickUtils.log("updateExcleToService");
             OkHttpUtils.post()
                     .addParams("orgId", getOrgStrId())
                     .addParams("tableId", getDeskId()+"")

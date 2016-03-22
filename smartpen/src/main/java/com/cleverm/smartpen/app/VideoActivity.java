@@ -209,7 +209,6 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                 QuickUtils.log("由DB导出为excle的时间为" + (end - start));
                 if(!RememberUtil.getBoolean(StatisticsUtil.getInstance().getEventHappenTime(),false)){
                     //上传文件到服务器
-                    QuickUtils.log("updateExcleToService");
                     StatisticsUtil.getInstance().updateExcleToService(StatisticsUtil.UPLOAD_FILE_URL,StatisticsUtil.getInstance().getStatsFile());
                 }
 
