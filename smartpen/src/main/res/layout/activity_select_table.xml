@@ -54,30 +54,24 @@
             android:focusable="true"
             android:focusableInTouchMode="true">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="请输入密码"
-                android:textColor="#ffffff"
-                android:textSize="45dp" />
 
             <EditText
                 android:id="@+id/et_psw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:hint="密码输入区域"
+                android:hint="请输入服务员密码"
                 android:textColor="#ffffff"
                 android:layout_marginTop="20dp"
                 android:inputType="numberPassword"
-                android:textSize="50dp" />
+                android:textSize="35dp" />
 
             <Button
                 android:id="@+id/bt_psw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/select_table_confirm"
+                android:textColor="#ffffff"
                 android:layout_marginTop="20dp"
                 android:text="@string/sure"
                 android:textSize="@dimen/orgid_text_size" />
@@ -93,14 +87,7 @@
             android:gravity="center"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/orgid"
-                android:textColor="#ffffff"
-                android:textSize="@dimen/orgid_text_size" />
+            android:orientation="vertical">
 
             <EditText
                 android:id="@+id/et_orgid"
@@ -108,6 +95,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:inputType="number"
+                android:textColor="#ffffff"
+                android:layout_marginStart="-20dp"
+                android:hint="请输入商户ID"
                 android:maxLength="25"
                 android:textSize="@dimen/orgid_text_size" />
 
@@ -116,6 +106,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/select_table_confirm"
+                android:textColor="#ffffff"
+                android:layout_marginTop="20dp"
                 android:text="@string/sure"
                 android:textSize="@dimen/orgid_text_size" />
         </LinearLayout>
