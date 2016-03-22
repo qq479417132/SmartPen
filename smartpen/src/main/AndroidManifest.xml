@@ -59,6 +59,7 @@
             android:name=".app.VideoActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
+            android:theme="@style/VideoTheme"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="userLandscape" >
             <intent-filter>
@@ -123,12 +124,13 @@
             </intent-filter>
         </receiver>
 
+        <!--点点笔友盟-->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="56aa058767e58e9f95000206" />
+            android:value="56f1439767e58e95b1000cf3" />
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="itcast" />
+            android:value="点点笔" />
 
     </application>
 

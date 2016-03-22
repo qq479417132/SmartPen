@@ -163,7 +163,7 @@ public class VideoAlgorithmUtil {
 
 
     private void videoAPI(final videoInterface videoInterface) {
-        String url = "http://120.25.159.173:8280/api/api/v10/video/list";
+        String url = Constant.DDP_URL+"/api/api/v10/video/list";
         OkHttpUtils
                 .get()
                 .url(url)

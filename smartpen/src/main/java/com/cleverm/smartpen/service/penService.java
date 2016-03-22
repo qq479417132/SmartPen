@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.cleverm.smartpen.app.DemoActivity;
 import com.cleverm.smartpen.app.DiscountActivity;
@@ -25,6 +26,7 @@ import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.NetWorkUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.StatisticsUtil;
+import com.cleverm.smartpen.util.WeakHandler;
 
 import java.util.HashMap;
 

@@ -76,6 +76,7 @@ public abstract class BaseBackActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        MobclickAgent.onResume(this);
         MobclickAgent.onEvent(this, "E_JIA");
     }
 
@@ -83,6 +84,7 @@ public abstract class BaseBackActivity extends Activity {
     public void onPause() {
         super.onPause();
         mHandler.removeCallbacksAndMessages(null);
+        MobclickAgent.onPause(this);
         MobclickAgent.onEvent(this, "E_JIA");
     }
 

@@ -188,7 +188,7 @@ public class PayActivity extends BaseActivity {
                 .NOTIFICATION).header("Notice-Type", "SEND_SMSINTO").json(infoSendSMSVo).build();
         HttpURLConnection conn = null;
         try {
-            URL url = new URL("http://120.25.159.173:8080/cleverm/sockjs/execCommand");
+            URL url = new URL(Constant.DDP_URL+"/cleverm/sockjs/execCommand");
             Log.v(TAG,"http://120.25.159.173:8080/cleverm/sockjs/execCommand==");
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("Content-Type", "application/json");

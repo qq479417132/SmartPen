@@ -236,15 +236,14 @@ public class DiscountDetailActivity extends BaseBackActivity {
     }
 
     private void scrollToTop() {
-        if (info.getTitle() != null && info.getDescriptionText() != null) {
+        /*if (info.getTitle() != null && info.getDescriptionText() != null) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     findViewById(R.id.svTop).scrollTo(0, 0);
                 }
             }, 100);
-
-        }
+        }*/
     }
 
     @Override

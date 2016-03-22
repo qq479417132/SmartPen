@@ -13,9 +13,12 @@ public class Constant {
      /**
      * URL地址
      */
-     public static final String  DDP_URL= Constant.BASE_TEST_URL;
-     private static final String BASE_URL="http://www.myee7.com/api";//正式机
+     public static final String  DDP_URL= Constant.BASE_URL;
+     private static final String BASE_URL="http://www.myee7.com";//正式机
      private static final String BASE_TEST_URL="http://www.myee7.com/api_test";//测试机
+     private static final String Base_Common_IP_URL="http://120.25.159.173:8280";
+    private static final String Base_Clever_IP_URL="http://120.25.159.173:8080";
+    private static final String Base_Push_IP_URL="http://120.25.159.173";
 
     /**
      * Code 1
@@ -201,7 +204,7 @@ public class Constant {
     public static final String WEB_URL = "web_url";
     public static final int DELAY_BACK = 60000;
 
-    public static final String NET_PATH = "http://120.25.159.173:8080/cleverm/sockjs/execCommand";
+    public static final String NET_PATH = Constant.DDP_URL+"/cleverm/sockjs/execCommand";
 
 //    public static final String NET_PATH = "http://192.168.1.72:8080/sockjs/execCommand";
 

@@ -116,7 +116,9 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                 case Constant.OTHER5:
                 case Constant.CLEAN_DESK:{
                     Log.v(TAG, "AnimationStart(msg.what)=" + msg.what);
-                    AnimationStart(msg.what);
+                    //xiong change on 20160322
+                    //AnimationStart(msg.what);
+                    AnimationStartNoAnim(msg.what);
                     break;
                 }
                 case STOP_ANIMATION: {
@@ -568,6 +570,69 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         });
         mrlNotice.startAnimation(set);
         Log.v(TAG, "AnimationStart mrlNotice.startAnimation(set)" + i);
+    }
+
+    private void AnimationStartNoAnim(final int id) {
+        mrlNotice.setVisibility(View.VISIBLE);
+
+        String text = null;
+        Log.v(TAG, "nimationStart onAnimationEnd" + id);
+        switch (id) {
+            case Constant.ORDER_DISHES1:
+            case Constant.ORDER_DISHES2:
+            case Constant.ORDER_DISHES3:
+            case Constant.ORDER_DISHES4:
+            case Constant.ORDER_DISHES5: {
+                mivNoticeImage.setImageResource(R.mipmap.icon_dish);
+                text = getString(R.string.add_greens);
+                break;
+            }
+            case Constant.ADD_WATER1:
+            case Constant.ADD_WATER2:
+            case Constant.ADD_WATER3:
+            case Constant.ADD_WATER4:
+            case Constant.ADD_WATER5: {
+                mivNoticeImage.setImageResource(R.mipmap.icon_water);
+                text = getString(R.string.add_water);
+                break;
+            }
+            case Constant.TISSUE1:
+            case Constant.TISSUE2:
+            case Constant.TISSUE3:
+            case Constant.TISSUE4:
+            case Constant.TISSUE5: {
+                mivNoticeImage.setImageResource(R.mipmap.icon_tissue);
+                text = getString(R.string.tissue);
+                break;
+            }
+            case Constant.PAY1:
+            case Constant.PAY2:
+            case Constant.PAY3:
+            case Constant.PAY4:
+            case Constant.PAY5: {
+                mivNoticeImage.setImageResource(R.mipmap.icon_pay);
+                text = getString(R.string.pay);
+                break;
+            }
+            case Constant.OTHER1:
+            case Constant.OTHER2:
+            case Constant.OTHER3:
+            case Constant.OTHER4:
+            case Constant.OTHER5: {
+                mivNoticeImage.setImageResource(R.mipmap.icon_service);
+                text = getString(R.string.other);
+                break;
+            }
+            case Constant.CLEAN_DESK: {
+                mivNoticeImage.setImageResource(R.mipmap.icon_clean);
+                text = getString(R.string.clean);
+                break;
+            }
+        }
+        Log.v(TAG, "AnimationStart=" + id);
+        mrlNoticeText.setText(text);
+        mHandler.sendEmptyMessageDelayed(STOP_ANIMATION, DELAY_TIME);
+
     }
 
     public class UpdateTableHandlerSuccess extends BroadcastReceiver{

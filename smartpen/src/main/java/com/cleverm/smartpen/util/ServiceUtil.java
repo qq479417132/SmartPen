@@ -44,7 +44,7 @@ public class ServiceUtil {
      * @param orgId
      */
     public void getDiscountData(String orgId, String type, final JsonInterface jsonInterface) {
-        String url = "http://120.25.159.173:8280/api/api/v10/roll/main/list";
+        String url = Constant.DDP_URL+"/api/api/v10/roll/main/list";
         OkHttpUtils
                 .get()
                 .url(url)

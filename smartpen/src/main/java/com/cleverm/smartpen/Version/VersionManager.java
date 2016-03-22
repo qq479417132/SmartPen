@@ -51,7 +51,7 @@ public class VersionManager {
 
     public static final String PACKAGE_NAME = "com.cleverm.smartpen";
     public static final String APP_NAME = Constant.APP_NAME;
-    public static final String SERVER_IP = "http://120.25.159.173/push/105/app/smartpen/";
+    public static final String SERVER_IP = Constant.DDP_URL+"/push/105/app/smartpen/";
     public static final String SERVER_ADDRESS = SERVER_IP + "version.json";
     public static final String UPDATESOFTADDRESS = SERVER_IP + "smartpen.apk";
 
