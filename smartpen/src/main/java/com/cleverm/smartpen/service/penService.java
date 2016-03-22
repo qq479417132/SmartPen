@@ -368,6 +368,7 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.e("onScan()","penService-onCreate()");
         mWandAPI = new WandAPI(this, this);
         mWandAPI.onCreate();
         mWandAPI.setOnConnectListener(this);
@@ -529,10 +530,11 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
             //弹跳APP的统计代码
             StatisticsUtil.getInstance().insert(eventId, eventDesc);
             Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
-            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
-                    Intent.FLAG_ACTIVITY_NEW_TASK |
-                    Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
-                    Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
+//                    Intent.FLAG_ACTIVITY_NEW_TASK |
+//                    Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
+//                    Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         } catch (Exception e) {
             Log.v(TAG, "no this APK packageName=" + packageName);
