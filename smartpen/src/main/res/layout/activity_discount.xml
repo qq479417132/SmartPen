@@ -40,13 +40,13 @@
 
         <ImageView
             android:id="@+id/ivClose"
-            android:padding="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="40dp"
-            android:src="@mipmap/icon_close" />
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:src="@drawable/select_close" />
 
 
         <TextView

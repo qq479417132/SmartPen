@@ -41,7 +41,7 @@ public class DownloadUtil {
 
 
     public static void getVideoFlag(final ServiceUtil.JsonInterface jsonInterface){
-        String url = "http://120.25.159.173:8280/api/api/v10/video/list";
+        String url = Constant.DDP_URL+"/api/api/v10/video/list";
         OkHttpUtils
                 .get()
                 .url(url)
@@ -69,7 +69,7 @@ public class DownloadUtil {
 
 
     public static void preVideoFileFromService(final FullScreenVideoView vvAdvertisement) {
-        String url = "http://120.25.159.173:8280/api/api/v10/video/list";
+        String url = Constant.DDP_URL+"/api/api/v10/video/list";
         OkHttpUtils
                 .get()
                 .url(url)
@@ -115,7 +115,7 @@ public class DownloadUtil {
      */
     public static void cacheDiscountJson(String orgId) {
 
-        String url = "http://120.25.159.173:8280/api/api/v10/roll/main/list";
+        String url = Constant.DDP_URL+"/api/api/v10/roll/main/list";
         OkHttpUtils
                 .get()
                 .url(url)

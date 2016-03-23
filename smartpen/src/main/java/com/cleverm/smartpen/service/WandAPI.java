@@ -33,7 +33,7 @@ public class WandAPI {
     @SuppressWarnings("unused")
     private static final String TAG = WandAPI.class.getSimpleName();
 
-    private static final String ACTION_USB_PERMISSION = "com.cleverm.order" +
+    private static final String ACTION_USB_PERMISSION = "com.cleverm.smartpen" +
             ".WAND_PERMISSION";
     private static final String[] DEVICES = {"1a86:7523", "1a86:5523",
             "04f2:0111"};
@@ -137,14 +137,14 @@ public class WandAPI {
                     "product id = " + device.getProductId());
             for (String dev : DEVICES) {
                 if (String.format("%04x:%04x", device.getVendorId(), device
-                        .getProductId())
-                        .equalsIgnoreCase(dev)) {
-                    if (mUsbManager.hasPermission(device)) {
-                        setDevices(device);
-                    } else {
-                        mUsbManager.requestPermission(device, PendingIntent
-                                .getBroadcast(mContext,
-                                        0, new Intent(ACTION_USB_PERMISSION), 0));
+                            .getProductId())
+                            .equalsIgnoreCase(dev)) {
+                        if (mUsbManager.hasPermission(device)) {
+                            Log.v(TAG,"hasPermission");
+                            setDevices(device);
+                        } else {
+                            Log.v(TAG,"!hasPermission");
+                        mUsbManager.requestPermission(device, PendingIntent.getBroadcast(mContext, 0, new Intent(ACTION_USB_PERMISSION), 0));
                     }
                     //添加代码：连接回调
                     if (mOnConnectListener != null) {
@@ -246,6 +246,7 @@ public class WandAPI {
         }
 
         public void register(Context context) {
+            Log.e(TAG,"registerReceiver");
             IntentFilter filter = new IntentFilter();
             filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
             filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);

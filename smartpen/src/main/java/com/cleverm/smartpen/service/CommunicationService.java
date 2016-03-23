@@ -57,7 +57,7 @@ public class CommunicationService extends Service {
 
     private static final String WS_URL = "ws://120.25.159.173:8080/cleverm/sockjs/notification";
     private static final String SYNCHRO_URL =
-        "http://120.25.159.173:8080/cleverm/sockjs/execCommand";
+        Constant.DDP_URL+"/cleverm/sockjs/execCommand";
     private final WebSocketConnection mConnection = new WebSocketConnection();
     private final Queue<String> mTextMsgQueue = new LinkedList<String>();
     private final HashMap<String, HttpHandler> mHandlerMap = new HashMap<String, HttpHandler>();

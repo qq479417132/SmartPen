@@ -8,6 +8,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.cleverm.smartpen.util.StatisticsUtil;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by 95 on 2016/2/3.
@@ -58,4 +59,18 @@ public abstract class BaseActivity extends Activity {
         super.onDestroy();
         StatisticsUtil.getInstance().onDestory(timeValue);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+
 }

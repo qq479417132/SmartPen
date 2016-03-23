@@ -473,7 +473,7 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
         com.cleverm.smartpen.pushtable.Message message = com.cleverm.smartpen.pushtable.Message.create().messageType(MessageType.NOTIFICATION).header("Notice-Type", "FETCH_ORG_INFO").json(fileVo).build();
         HttpURLConnection conn = null;
         try {
-            URL url = new URL("http://120.25.159.173:8080/cleverm/sockjs/execCommand");
+            URL url = new URL(Constant.DDP_URL+"/cleverm/sockjs/execCommand");
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setDoInput(true);

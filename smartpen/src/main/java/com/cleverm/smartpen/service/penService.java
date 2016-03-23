@@ -1,12 +1,15 @@
 package com.cleverm.smartpen.service;
 
+import android.app.ActivityManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.cleverm.smartpen.app.DemoActivity;
 import com.cleverm.smartpen.app.DiscountActivity;
@@ -23,6 +26,7 @@ import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.NetWorkUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.StatisticsUtil;
+import com.cleverm.smartpen.util.WeakHandler;
 
 import java.util.HashMap;
 
@@ -368,7 +372,6 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.e("onScan()","penService-onCreate()");
         mWandAPI = new WandAPI(this, this);
         mWandAPI.onCreate();
         mWandAPI.setOnConnectListener(this);
@@ -529,12 +532,16 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
         try {
             //弹跳APP的统计代码
             StatisticsUtil.getInstance().insert(eventId, eventDesc);
+            String topActivityAppName = getTopActivityAppName();
+            if(topActivityAppName.equals(packageName)){
+                return;
+            }
             Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
-//                    Intent.FLAG_ACTIVITY_NEW_TASK |
-//                    Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
-//                    Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(
+                    Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
+                    Intent.FLAG_ACTIVITY_NEW_TASK |
+                    Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         } catch (Exception e) {
             Log.v(TAG, "no this APK packageName=" + packageName);
@@ -551,5 +558,13 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
                 mActivityFlag = "FutureActivity";
             }
         }
+    }
+
+
+    private String getTopActivityAppName(){
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager.RunningTaskInfo info = manager.getRunningTasks(1).get(0);
+        String packageName = info.topActivity.getPackageName(); //包名
+        return packageName;
     }
 }
