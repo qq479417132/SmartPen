@@ -172,11 +172,11 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     }
 
     /**
-     * 60秒后再次检查
+     * 30分钟后再次检查
      */
     private void initTimeTask() {
         Timer timer = new Timer();
-        timer.schedule(new VideoTimeTask(vvAdvertisement,this), 3600000);
+        timer.schedule(new VideoTimeTask(vvAdvertisement,this), 1800000);
     }
 
     private void initBroadcastReceiver() {
