@@ -22,13 +22,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cleverm.smartpen.R;
+import com.cleverm.smartpen.Version.VersionManager;
 import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.database.DatabaseHelper;
 import com.cleverm.smartpen.modle.TableType;
 import com.cleverm.smartpen.net.InfoSendSMSVo;
 import com.cleverm.smartpen.net.RequestNet;
-import com.cleverm.smartpen.service.DownloadPicassoService;
-import com.cleverm.smartpen.service.DownloaderDifferenceService;
 import com.cleverm.smartpen.service.ScreenLockListenService;
 import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.ui.FullScreenVideoView;
@@ -43,7 +42,6 @@ import com.cleverm.smartpen.util.VideoTimeTask;
 import com.cleverm.smartpen.util.VideoUtil;
 import com.cleverm.smartpen.util.excle.CreateExcel;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Timer;
 
@@ -158,6 +156,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
             initData();
             initCacheJson();
             initStats();
+            new VersionManager(this).uddateVersion();
         }else{
             if(QuickUtils.isHasVideoFolder()&&QuickUtils.isVideoFolderHaveFiel2()){
                 VideoUtil videoUtil = new VideoUtil(vvAdvertisement);
@@ -166,14 +165,10 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                 initData();
             }
         }
-
         RememberUtil.putBoolean(Constant.BROADCAST_RESATRT_EVENT,false);
-
         initIntent();
         mHandler.sendEmptyMessage(GET_PENSERVICE);
-        initVersion();
         initTimeTask();
-
     }
 
     /**
@@ -219,9 +214,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     }
 
 
-    private void initVersion() {
-        ((CleverM) CleverM.getApplication()).UpdataApp(this);
-    }
+
 
     private void initIntent() {
         Intent in = getIntent();
