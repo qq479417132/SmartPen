@@ -14,7 +14,6 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.cleverm.smartpen.Version.VersionManager;
 import com.cleverm.smartpen.log.CrashHandler;
 import com.cleverm.smartpen.net.InfoSendSMSVo;
 import com.cleverm.smartpen.net.RequestNet;
@@ -55,7 +54,7 @@ public class CleverM extends Application {
     public static final String SELECTEDTABLEID="SelectedTableId";
     private Object object=new Object();
     private PowerReceiver mPowerReceiver = new PowerReceiver();
-    private boolean isUpdata=true;
+
 
     private penService mpenService;
     private ServiceConnection mConn = new ServiceConnection() {
@@ -87,14 +86,14 @@ public class CleverM extends Application {
         super.onCreate();
         application=this;
 
-
+        initNet();
         CrashHandler.getInstance().init(this, PATH);
 
         MobclickAgent.setCatchUncaughtExceptions(true);
         RememberUtil.init(getApplicationContext(), PREFS_NAME);
         initImageLoader();
         initDownloader();
-        initNet();
+
         initEvnet();
         initDataBase();
         mPowerReceiver.register();
@@ -252,14 +251,6 @@ public class CleverM extends Application {
                 }
             }.start();
         }
-    }
-
-    public void UpdataApp(Context context){
-           if(isUpdata){
-               new VersionManager(context).uddateVersion();
-               Log.v(TAG,"UpdataApp");
-               isUpdata=false;
-           }
     }
 
 }
