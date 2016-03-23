@@ -224,7 +224,7 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
             @Override
             public void onClick(View view) {
                 String OrgID = mInputOrgId.getText().toString();
-                if (OrgID == null) {
+                if (OrgID == null || OrgID.equals("")) {
                     Toast.makeText(BaseSelectTableActivity.this, "商户ID不能为空！", Toast.LENGTH_LONG).show();
                     return;
                 }
