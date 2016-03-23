@@ -16,6 +16,7 @@ import com.cleverm.smartpen.adapter.DiscountDetailPagerAdapter;
 import com.cleverm.smartpen.bean.DiscountAdInfo;
 import com.cleverm.smartpen.bean.DiscountInfo;
 import com.cleverm.smartpen.bean.DiscountRollInfo;
+import com.cleverm.smartpen.ui.CircleIndicator;
 import com.cleverm.smartpen.ui.ListViewForScrollView;
 import com.cleverm.smartpen.ui.banner.BGABanner;
 import com.cleverm.smartpen.ui.banner.NoTouchBGABanner;
@@ -62,6 +63,7 @@ public class DiscountDetailActivity extends BaseBackActivity {
 
     ListViewForScrollView lvAdList;
     ViewPager vpView;
+    CircleIndicator ciIndicator;
 
 
     /**
@@ -125,7 +127,7 @@ public class DiscountDetailActivity extends BaseBackActivity {
 
             vpView= (ViewPager) findViewById(R.id.vpView);
             lvAdList= (ListViewForScrollView) findViewById(R.id.lvAdList);
-
+            ciIndicator= (CircleIndicator) findViewById(R.id.ciIndicator);
 
         } else {
             ivDisountImage = (ImageView) findViewById(R.id.ivDisountImage);
@@ -185,6 +187,10 @@ public class DiscountDetailActivity extends BaseBackActivity {
     private void handlerNewBanner() {
         List<View> view_s = QuickUtils.getViews(mContext, rollDetailList.size());
         vpView.setAdapter(new DiscountDetailPagerAdapter(view_s));
+        if(view_s.size()>1){
+            ciIndicator.setViewPager(vpView);
+        }
+
 
         for(int i =0 ;i < view_s.size();i++){
             View rootView = view_s.get(i);
