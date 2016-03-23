@@ -146,8 +146,7 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
             if (views.size() == 1) {
                 ivLeft.setVisibility(View.INVISIBLE);
                 ivRight.setVisibility(View.INVISIBLE);
-                //Picasso.with(this).load().placeholder(R.mipmap.discount_background).into(view);
-                QuickUtils.displayImage(QuickUtils.spliceUrl(images.get(0)),view);
+                QuickUtils.displayImage(images.get(0),view);
                 vpImage.getViewPager().setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
@@ -156,17 +155,13 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
                 });
             } else if (views.size() == 2 || views.size() == 3) {
                 int index = (i > (images.size() - 1)) ? i - images.size() : i;
-                QuickUtils.log("---IMAGE---index=" + index);
-                //Picasso.with(this).load(QuickUtils.spliceUrl(images.get((i > (images.size() - 1)) ? i - images.size() : i))).placeholder(R.mipmap.discount_background).into(view);
-                QuickUtils.displayImage(QuickUtils.spliceUrl(images.get((i > (images.size() - 1)) ? i - images.size() : i)),view);
+                QuickUtils.displayImage(images.get((i > (images.size() - 1)) ? i - images.size() : i),view);
 
             } else {
-                //Picasso.with(this).load(QuickUtils.spliceUrl(images.get(i))).into(view);
-                QuickUtils.displayImage(QuickUtils.spliceUrl(images.get(i)),view);
+                QuickUtils.displayImage(images.get(i),view);
             }
 
 
-            //Picasso.with(this).load(images.get((i > (images.size()-1)) ? i -images.size()  : i)).placeholder(R.mipmap.discount_background).into(view);
 
 
             // 点击事件
@@ -178,19 +173,19 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    QuickUtils.log("listImageSequence.size()="+listImageSequence.size());
-
-                    DiscountInfo discountInfo = listImageSequence.get(finalPosition);
-                    //统计代码
-                    if(isDisountArea){
-                        StatisticsUtil.getInstance().insertWithSecondEvent(StatisticsUtil.SECOND_DISCOUNT_ACTIVITY,StatisticsUtil.SECOND_DISCOUNT_ACTIVITY_DESC,StatisticsUtil.getInstance().str2Long(discountInfo.getRollMainId()));
-                    }else{
-                        StatisticsUtil.getInstance().insertWithSecondEvent(StatisticsUtil.SECOND_LOACL_DISCOUNT_ACTIVITY,StatisticsUtil.SECOND_LOACL_DISCOUNT_ACTIVITY_DESC,StatisticsUtil.getInstance().str2Long(discountInfo.getRollMainId()));
+                    QuickUtils.log("listImageSequence.size()=" + listImageSequence.size());
+                    if(listImageSequence.size()>0){
+                        DiscountInfo discountInfo = listImageSequence.get(finalPosition);
+                        //统计代码
+                        if(isDisountArea){
+                            StatisticsUtil.getInstance().insertWithSecondEvent(StatisticsUtil.SECOND_DISCOUNT_ACTIVITY,StatisticsUtil.SECOND_DISCOUNT_ACTIVITY_DESC,StatisticsUtil.getInstance().str2Long(discountInfo.getRollMainId()));
+                        }else{
+                            StatisticsUtil.getInstance().insertWithSecondEvent(StatisticsUtil.SECOND_LOACL_DISCOUNT_ACTIVITY,StatisticsUtil.SECOND_LOACL_DISCOUNT_ACTIVITY_DESC,StatisticsUtil.getInstance().str2Long(discountInfo.getRollMainId()));
+                        }
+                        Intent intent = new Intent(mContext, DiscountDetailActivity.class);
+                        intent.putExtra(DiscountDetailActivity.INTENT_NAME, discountInfo);
+                        startActivity(intent);
                     }
-                    Intent intent = new Intent(mContext, DiscountDetailActivity.class);
-                    intent.putExtra(DiscountDetailActivity.INTENT_NAME, discountInfo);
-                    startActivity(intent);
                 }
             });
         }
@@ -238,7 +233,6 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
     @Override
     protected void onDestroy() {
         QuickUtils.log("listImageSequence-onDestroy");
-        //AlgorithmUtil.getInstance().clearImageSequence();
         super.onDestroy();
 
     }

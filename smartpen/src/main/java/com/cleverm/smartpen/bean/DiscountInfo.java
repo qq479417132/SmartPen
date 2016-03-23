@@ -20,10 +20,17 @@ public class DiscountInfo extends BaseInfoBean{
     private int orderSeq;
     private String pictruePath;
 
+    private String qiniuPath;
+
     private String rollMainId;
 
+    public String getQiniuPath() {
+        return qiniuPath;
+    }
 
-
+    public void setQiniuPath(String qiniuPath) {
+        this.qiniuPath = qiniuPath;
+    }
 
     private String title;
     private String descriptionText;

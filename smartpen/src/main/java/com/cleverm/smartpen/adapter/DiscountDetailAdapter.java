@@ -29,7 +29,7 @@ public class DiscountDetailAdapter extends QuickAdapter<DiscountAdInfo> {
     @Override
     public void convert(ViewHolder viewHolder, DiscountAdInfo item, int position) {
         ImageView ivAdapterImage = viewHolder.getView(R.id.ivAdapterImage);
-        QuickUtils.displayImage(QuickUtils.spliceUrl(item.getPictruePath()), ivAdapterImage);
+        QuickUtils.displayImage(QuickUtils.spliceUrl(item.getPictruePath(),item.getQiniuPath()), ivAdapterImage);
         //Picasso.with(mContext).load(QuickUtils.spliceUrl(item.getPictruePath())).resize(330,180).into(ivAdapterImage);
     }
 }

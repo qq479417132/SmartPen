@@ -36,7 +36,7 @@ import okhttp3.Call;
  */
 public class StatisticsUtil {
 
-    public static final String UPLOAD_FILE_URL="http://www.myee.online/api/api/v10/uploadAccessLog/save";
+    public static final String UPLOAD_FILE_URL=Constant.DDP_URL+"/api/api/v10/uploadAccessLog/save";
 
     //统计Event对应表
     public static final int   CALL_ADD_FOOD =1;//点餐加菜

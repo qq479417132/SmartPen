@@ -72,19 +72,19 @@ public class DownloadPicassoService extends Service {
             try {
                 List<DiscountInfo> discountInfos = ServiceUtil.getInstance().parserDiscountData(json);
                 for (int i = 0; i < discountInfos.size(); i++) {
-                    String  out_image = QuickUtils.spliceUrl(discountInfos.get(i).getPictruePath());
+                    String  out_image = QuickUtils.spliceUrl(discountInfos.get(i).getPictruePath(),discountInfos.get(i).getQiniuPath());
                     QuickUtils.loadImage(out_image);
                     List<DiscountAdInfo> advertisementList = discountInfos.get(i).getAdvertisementList();
                     List<DiscountRollInfo> rollDetailList = discountInfos.get(i).getRollDetailList();
                     if (advertisementList != null && advertisementList.size() > 0) {
                         for (int j = 0; j < advertisementList.size(); j++) {
-                            String image = QuickUtils.spliceUrl(advertisementList.get(j).getPictruePath());
+                            String image = QuickUtils.spliceUrl(advertisementList.get(j).getPictruePath(),advertisementList.get(j).getQiniuPath());
                             QuickUtils.loadImage(image);
                         }
                     }
                     if (rollDetailList != null && rollDetailList.size() > 0) {
                         for (int j = 0; j < rollDetailList.size(); j++) {
-                            String image = QuickUtils.spliceUrl(rollDetailList.get(j).getPictruePath());
+                            String image = QuickUtils.spliceUrl(rollDetailList.get(j).getPictruePath(),advertisementList.get(j).getQiniuPath());
                             QuickUtils.loadImage(image);
                         }
                     }

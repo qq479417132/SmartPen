@@ -169,7 +169,7 @@ public class VideoUtil {
             if (info.size() > 0) {
                 for (int i =0 ;i<info.size();i++) {
                     //注意前缀为本地拼接
-                    videoUrls[i] = QuickUtils.spliceUrl(info.get(i).getVideoPath());
+                    videoUrls[i] = QuickUtils.spliceUrl(info.get(i).getVideoPath(),info.get(i).getQiniuPath());
                 }
             }
         }

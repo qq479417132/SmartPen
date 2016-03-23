@@ -64,7 +64,7 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
     public static final String SELECTEDTABLEID = "SelectedTableId";
     public static final String ORGID ="OrgID";
     public static final String CLIENTID ="clientId";
-    public static final String URL = "http://www.myee.online/api/api/v10/evaluation/save";
+    public static final String URL = Constant.DDP_URL+"/api/api/v10/evaluation/save";
 
 
     private Handler mHandler = new Handler() {

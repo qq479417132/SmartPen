@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
+import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
 import com.github.yoojia.zxing.qrcode.Encoder;
@@ -34,7 +35,7 @@ public class DriverActivity extends BaseActivity {
     private String morgId;
     private String mclientId;
     private String mtableId;
-    private String mCodeText = "http://www.myee.online/api/api/v10/forward/driveCar?orgId="+morgId+"&clientId="+mclientId+"&tableId="+mtableId;
+    private String mCodeText = Constant.DDP_URL+"/api/api/v10/forward/driveCar?orgId="+morgId+"&clientId="+mclientId+"&tableId="+mtableId;
     private ImageView mdriveCode;
     private Handler mHandler = new Handler() {
         @Override

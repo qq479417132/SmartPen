@@ -14,6 +14,16 @@ public class DiscountRollInfo extends BaseInfoBean {
 
     private String pictruePath;
 
+    private String qiniuPath;
+
+    public String getQiniuPath() {
+        return qiniuPath;
+    }
+
+    public void setQiniuPath(String qiniuPath) {
+        this.qiniuPath = qiniuPath;
+    }
+
     public String getPictruePath() {
         return pictruePath;
     }

@@ -118,7 +118,11 @@ public class QuickUtils {
     public static ArrayList<String> getDiscountImage(List<DiscountInfo> lists) {
         ArrayList<String> images = new ArrayList<String>();
         for (int i = 0; i < lists.size(); i++) {
-            images.add(lists.get(i).getPictruePath());
+            if(lists.get(i).getQiniuPath()!=null&&!lists.get(i).getQiniuPath().equals("")){
+                images.add(spliceQiniuUrl(lists.get(i).getQiniuPath()));
+            }else{
+                images.add(spliceOriUrl(lists.get(i).getPictruePath()));
+            }
         }
         return images;
     }
@@ -386,11 +390,23 @@ public class QuickUtils {
     /**
      * 拼接URL前缀
      *
-     * @param url
+     * @param oriUrl
+     * @param qiniuUrl
      * @return
      */
-    public static String spliceUrl(String url) {
-        return "http://www.myee.online/push/" + url;
+    public static String spliceUrl(String oriUrl,String qiniuUrl) {
+        if(qiniuUrl!=null && !qiniuUrl.equals("")){
+            return Constant.QINIU_URL+qiniuUrl;
+        }
+        return Constant.DDP_URL+"/push/" + oriUrl;
+    }
+
+    public static String spliceQiniuUrl(String qiniuUrl){
+        return Constant.QINIU_URL+qiniuUrl;
+    }
+
+    public static String spliceOriUrl(String oriUrl){
+        return Constant.DDP_URL+"/push/" + oriUrl;
     }
 
 

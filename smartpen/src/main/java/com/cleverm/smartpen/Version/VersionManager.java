@@ -1,5 +1,6 @@
 package com.cleverm.smartpen.Version;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -111,7 +112,7 @@ public class VersionManager {
             Log.v(TAG,"version post_to_server1 "+Response.getStatusLine().getStatusCode());
         } catch (IOException e) {
             e.printStackTrace();
-            Log.v(TAG,"version post_to_server1 IOException");
+            Log.v(TAG, "version post_to_server1 IOException");
         }
     }
 
@@ -224,7 +225,15 @@ public class VersionManager {
     private  void down() {
         m_mainHandler.post(new Runnable() {
             public void run() {
-                m_progressDlg.cancel();
+                //xiong fix bug on 20160323
+                try {
+                    Activity activity = (Activity) context;
+                    if(!activity.isFinishing()){
+                        m_progressDlg.cancel();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 update();
             }
         });

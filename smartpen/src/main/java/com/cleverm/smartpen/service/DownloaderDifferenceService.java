@@ -68,7 +68,7 @@ public class DownloaderDifferenceService extends Service {
     private void startDownloader() {
         for (int i = 0; i < info.size(); i++) {
             if (!LocalList.containsKey(info.get(i).getVideoId() + "")) {
-                VideoAlgorithmUtil.getInstance().downloadVideoFirst(QuickUtils.spliceUrl(info.get(i).getVideoPath()), info.get(i).getVideoId() + "");
+                VideoAlgorithmUtil.getInstance().downloadVideoFirst(QuickUtils.spliceUrl(info.get(i).getVideoPath(),info.get(i).getQiniuPath()), info.get(i).getVideoId() + "");
             }
         }
     }

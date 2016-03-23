@@ -92,7 +92,7 @@ public class DownloadUtil {
                             //第一个视频为在线直接播放，其他所有视频为下载后再播放
 
                             for (int i = 0; i < info.size(); i++) {
-                                DownloadUtil.downloadFile(QuickUtils.spliceUrl(info.get(i).getVideoPath()), (i + 1) + "");
+                                DownloadUtil.downloadFile(QuickUtils.spliceUrl(info.get(i).getVideoPath(),info.get(i).getQiniuPath()), (i + 1) + "");
                             }
 
                             VideoUtil videoUtil = new VideoUtil(vvAdvertisement);

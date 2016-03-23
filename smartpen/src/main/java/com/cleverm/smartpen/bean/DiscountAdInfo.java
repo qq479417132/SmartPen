@@ -17,6 +17,15 @@ public class DiscountAdInfo extends BaseInfoBean {
     private String description;
     private String pictruePath;
 
+    private String qiniuPath;
+
+    public String getQiniuPath() {
+        return qiniuPath;
+    }
+
+    public void setQiniuPath(String qiniuPath) {
+        this.qiniuPath = qiniuPath;
+    }
 
     public String getTitle() {
         return title;

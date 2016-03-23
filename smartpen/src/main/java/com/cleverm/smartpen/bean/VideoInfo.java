@@ -8,10 +8,19 @@ import java.io.Serializable;
 public class VideoInfo extends BaseInfoBean{
 
     private String videoPath;
+    private String qiniuPath;
+
     private String type;
 
     private Long videoSize;
 
+    public String getQiniuPath() {
+        return qiniuPath;
+    }
+
+    public void setQiniuPath(String qiniuPath) {
+        this.qiniuPath = qiniuPath;
+    }
 
     public Long getVideoSize() {
         return videoSize;

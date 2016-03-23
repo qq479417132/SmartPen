@@ -10,15 +10,16 @@ import java.io.File;
 public class Constant {
 
 
-     /**
+    /**
      * URL地址
      */
-     public static final String  DDP_URL= Constant.BASE_URL;
-     private static final String BASE_URL="http://www.myee7.com";//正式机
-     private static final String BASE_TEST_URL="http://www.myee7.com/api_test";//测试机
-     private static final String Base_Common_IP_URL="http://120.25.159.173:8280";
-    private static final String Base_Clever_IP_URL="http://120.25.159.173:8080";
-    private static final String Base_Push_IP_URL="http://120.25.159.173";
+    public static final String DDP_URL = Constant.BASE_URL;
+    private static final String BASE_URL = "http://www.myee7.com";//正式机
+    private static final String BASE_TEST_URL = "http://www.myee7.com/api_test";//测试机
+    private static final String BASE_COMMON_IP_URL = "http://120.25.159.173:8280";
+    private static final String BASE_CLEVER_IP_URL = "http://120.25.159.173:8080";
+    private static final String BASE_PUSH_IP_URL = "http://120.25.159.173";
+    public static final String QINIU_URL = "http://7xs3f5.com2.z0.glb.qiniucdn.com/";
 
     /**
      * Code 1
@@ -147,7 +148,6 @@ public class Constant {
 
     /**
      * 后面加进来的新码
-     *
      */
     public static final int ADD_SOUP = 1058;
     public static final int CHANGE_TABLEWARE = 1059;
@@ -199,12 +199,10 @@ public class Constant {
     public static final String OTHER_STATE = "other_state";
 
 
-
-
     public static final String WEB_URL = "web_url";
     public static final int DELAY_BACK = 60000;
 
-    public static final String NET_PATH = Constant.DDP_URL+"/cleverm/sockjs/execCommand";
+    public static final String NET_PATH = Constant.DDP_URL + "/cleverm/sockjs/execCommand";
 
 //    public static final String NET_PATH = "http://192.168.1.72:8080/sockjs/execCommand";
 
@@ -215,13 +213,13 @@ public class Constant {
 
     public static final String KEY_ID = "key_id";
 
-    public static final long DESK_ID_DEF_DEFAULT=8888L;
-    public static final int USB_DISCONNECT=100;
+    public static final long DESK_ID_DEF_DEFAULT = 8888L;
+    public static final int USB_DISCONNECT = 100;
 
-    public static final String DB_NAME="clevermodel1.db";
-    public static final String TAB_NAME="RestaurantData";
-    public static final String TAB_ID="id";
-    public static final String TAB_DESKID="DeskId";
+    public static final String DB_NAME = "clevermodel1.db";
+    public static final String TAB_NAME = "RestaurantData";
+    public static final String TAB_ID = "id";
+    public static final String TAB_DESKID = "DeskId";
 
 
     public static final int FOOD_ADD = 1;
@@ -230,19 +228,17 @@ public class Constant {
     public static final int PAY_MONRY = 4;
     public static final int OTHER_SERVICE = 5;
     public static final int CLEAN = 20;
-    public static final int PEN_PULL_OUT=15;
-    public static final int CASH_PAY=16;
-    public static final int UNION_CARD_PAY=17;
+    public static final int PEN_PULL_OUT = 15;
+    public static final int CASH_PAY = 16;
+    public static final int UNION_CARD_PAY = 17;
     public static final int TEMPLATEID_DELAY = 30000;
 
 
-
-
-    public static final String WEATHER="http://www.weather.com.cn/weather/101020100.shtml";
-    public static final String NEWS="http://news.baidu.com/";
-    public static final String HAPPY="http://www.dianping.com/";
-    public static final String SHOP="https://www.tmall.com/?ali_trackid=2:mm_26632325_6860397_24008452:1453968939_252_1805956268";
-    public static final String CONCESSIONS="https://ju.taobao.com/?ali_trackid=2:mm_26866744_2384196_21258512:1453969006_2k1_86931745";
+    public static final String WEATHER = "http://www.weather.com.cn/weather/101020100.shtml";
+    public static final String NEWS = "http://news.baidu.com/";
+    public static final String HAPPY = "http://www.dianping.com/";
+    public static final String SHOP = "https://www.tmall.com/?ali_trackid=2:mm_26632325_6860397_24008452:1453968939_252_1805956268";
+    public static final String CONCESSIONS = "https://ju.taobao.com/?ali_trackid=2:mm_26866744_2384196_21258512:1453969006_2k1_86931745";
 
 
     /**
@@ -335,22 +331,22 @@ public class Constant {
     public static final String KEY_PROX_TIME_02_START_MINUTE = "key-prox-time-02-start-minute";
     public static final String KEY_PROX_TIME_02_END_HOUR = "key-prox-time-02-end-hour";
     public static final String KEY_PROX_TIME_02_END_MINUTE = "key-prox-time-02-end-minute";
-    public static final String[] KEY_PROX_SWITCH = new String[] { KEY_PROX_1,
-            KEY_PROX_2 };
-    public static final String[] KEY_PROX_TIME_START_HOUR = new String[] {
-            KEY_PROX_TIME_01_START_HOUR, KEY_PROX_TIME_02_START_HOUR };
-    public static final String[] KEY_PROX_TIME_START_MINUTE = new String[] {
-            KEY_PROX_TIME_01_START_MINUTE, KEY_PROX_TIME_02_START_MINUTE };
-    public static final String[] KEY_PROX_TIME_END_HOUR = new String[] {
-            KEY_PROX_TIME_01_END_HOUR, KEY_PROX_TIME_02_END_HOUR };
-    public static final String[] KEY_PROX_TIME_END_MINUTE = new String[] {
-            KEY_PROX_TIME_01_END_MINUTE, KEY_PROX_TIME_02_END_MINUTE };
+    public static final String[] KEY_PROX_SWITCH = new String[]{KEY_PROX_1,
+            KEY_PROX_2};
+    public static final String[] KEY_PROX_TIME_START_HOUR = new String[]{
+            KEY_PROX_TIME_01_START_HOUR, KEY_PROX_TIME_02_START_HOUR};
+    public static final String[] KEY_PROX_TIME_START_MINUTE = new String[]{
+            KEY_PROX_TIME_01_START_MINUTE, KEY_PROX_TIME_02_START_MINUTE};
+    public static final String[] KEY_PROX_TIME_END_HOUR = new String[]{
+            KEY_PROX_TIME_01_END_HOUR, KEY_PROX_TIME_02_END_HOUR};
+    public static final String[] KEY_PROX_TIME_END_MINUTE = new String[]{
+            KEY_PROX_TIME_01_END_MINUTE, KEY_PROX_TIME_02_END_MINUTE};
     public static final String KEY_WELCOME_PERIOD_SWITCH_1 = "key-welcome-switch1";
     public static final String KEY_WELCOME_PERIOD_SWITCH_2 = "key-welcome-switch2";
     public static final String KEY_WELCOME_PERIOD_SWITCH_3 = "key-welcome-switch3";
-    public static final String[] KEY_WELCOME_SWITCH = new String[] {
+    public static final String[] KEY_WELCOME_SWITCH = new String[]{
             KEY_WELCOME_PERIOD_SWITCH_1, KEY_WELCOME_PERIOD_SWITCH_2,
-            KEY_WELCOME_PERIOD_SWITCH_3 };
+            KEY_WELCOME_PERIOD_SWITCH_3};
     public static final String KEY_WELCOME_PERIOD_01_START_HOUR = "key-welcome-01-start-hour";
     public static final String KEY_WELCOME_PERIOD_01_START_MINUTE = "key-welcome-01-start-minute";
     public static final String KEY_WELCOME_PERIOD_01_END_HOUR = "key-welcome-01-end-hour";
@@ -363,24 +359,24 @@ public class Constant {
     public static final String KEY_WELCOME_PERIOD_03_START_MINUTE = "key-welcome-03-start-minute";
     public static final String KEY_WELCOME_PERIOD_03_END_HOUR = "key-welcome-03-end-hour";
     public static final String KEY_WELCOME_PERIOD_03_END_MINUTE = "key-welcome-03-end-minute";
-    public static final String[] KEY_WELCOME_PERIOD_START_HOUR = new String[] {
+    public static final String[] KEY_WELCOME_PERIOD_START_HOUR = new String[]{
             KEY_WELCOME_PERIOD_01_START_HOUR, KEY_WELCOME_PERIOD_02_START_HOUR,
-            KEY_WELCOME_PERIOD_03_START_HOUR };
-    public static final String[] KEY_WELCOME_PERIOD_START_MINUTE = new String[] {
+            KEY_WELCOME_PERIOD_03_START_HOUR};
+    public static final String[] KEY_WELCOME_PERIOD_START_MINUTE = new String[]{
             KEY_WELCOME_PERIOD_01_START_MINUTE,
             KEY_WELCOME_PERIOD_02_START_MINUTE,
-            KEY_WELCOME_PERIOD_03_START_MINUTE };
-    public static final String[] KEY_WELCOME_PERIOD_END_HOUR = new String[] {
+            KEY_WELCOME_PERIOD_03_START_MINUTE};
+    public static final String[] KEY_WELCOME_PERIOD_END_HOUR = new String[]{
             KEY_WELCOME_PERIOD_01_END_HOUR, KEY_WELCOME_PERIOD_02_END_HOUR,
-            KEY_WELCOME_PERIOD_03_END_HOUR };
-    public static final String[] KEY_WELCOME_PERIOD_END_MINUTE = new String[] {
+            KEY_WELCOME_PERIOD_03_END_HOUR};
+    public static final String[] KEY_WELCOME_PERIOD_END_MINUTE = new String[]{
             KEY_WELCOME_PERIOD_01_END_MINUTE, KEY_WELCOME_PERIOD_02_END_MINUTE,
-            KEY_WELCOME_PERIOD_03_END_MINUTE };
+            KEY_WELCOME_PERIOD_03_END_MINUTE};
     public static final String KEY_WELCOME_PATH_01 = "key-welcome-path-01";
     public static final String KEY_WELCOME_PATH_02 = "key-welcome-path-02";
     public static final String KEY_WELCOME_PATH_03 = "key-welcome-path-03";
-    public static final String[] KEY_WELCOME_PATHS = new String[] {
-            KEY_WELCOME_PATH_01, KEY_WELCOME_PATH_02, KEY_WELCOME_PATH_03 };
+    public static final String[] KEY_WELCOME_PATHS = new String[]{
+            KEY_WELCOME_PATH_01, KEY_WELCOME_PATH_02, KEY_WELCOME_PATH_03};
 
     public static final String KEY_BONUS_SWITCH = "key-bonus-switch";
 
@@ -409,10 +405,10 @@ public class Constant {
     /**
      * Discount
      */
-    public static final String DEFALUT_ORGID="100";
-    public static final String MEMORY_PLAY_KEY="MEMORY_PLAY_KEY";
-    public static final String MEMORY_PLAY_VIDEO_URI_KEY="MEMORY_PLAY_VIDEO_URI_KEY";
-    public static final String BROADCAST_RESATRT_EVENT="BROADCAST_RESATRT_EVENT";
+    public static final String DEFALUT_ORGID = "100";
+    public static final String MEMORY_PLAY_KEY = "MEMORY_PLAY_KEY";
+    public static final String MEMORY_PLAY_VIDEO_URI_KEY = "MEMORY_PLAY_VIDEO_URI_KEY";
+    public static final String BROADCAST_RESATRT_EVENT = "BROADCAST_RESATRT_EVENT";
 
 }
 
