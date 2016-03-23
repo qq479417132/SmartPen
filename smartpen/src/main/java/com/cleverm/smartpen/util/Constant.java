@@ -209,7 +209,7 @@ public class Constant {
 //    public static final String NET_PATH = "http://192.168.1.72:8080/sockjs/execCommand";
 
     public static final String APP_NAME = "美味点点笔";
-    public static final String PSW = "123456";
+    public static final String PSW = "160323";
 
     public static final String SHARE = "CleverM";
 
