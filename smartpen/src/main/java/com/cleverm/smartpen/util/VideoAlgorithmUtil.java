@@ -127,6 +127,8 @@ public class VideoAlgorithmUtil {
      */
     public void downloadVideoFirst(final String path, final String num) {
 
+        Log.e("videoUrl","videoUrl"+path);
+
         //存储的地址为storage/emulated/0/muye/木爷我们的视频.mp4
         OkHttpUtils//
                 .get()//
