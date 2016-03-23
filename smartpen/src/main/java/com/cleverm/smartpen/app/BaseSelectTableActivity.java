@@ -373,7 +373,7 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
             String data = br.readLine();
             Log.v(TAG, "data=" + data);
             JSONObject object = new JSONObject(data);
-            ClientId = Long.parseLong(object.getString("clientID"));
+            ClientId = Long.parseLong(object.getString("OrgID"));
             Log.v(TAG, "ClientId=" + ClientId);
         } catch (FileNotFoundException e) {
             e.printStackTrace();

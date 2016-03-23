@@ -11,6 +11,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -146,6 +147,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         QuickUtils.log("ActivityClay---onCreate()=" + videoValue);
+        unLockScreen();
         setContentView(R.layout.activity_video);
         QuickUtils.showHighApiBottomStatusBar();
         initView();
@@ -165,10 +167,10 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                 initData();
             }
         }
-        RememberUtil.putBoolean(Constant.BROADCAST_RESATRT_EVENT,false);
-        initIntent();
+        RememberUtil.putBoolean(Constant.BROADCAST_RESATRT_EVENT, false);
         mHandler.sendEmptyMessage(GET_PENSERVICE);
         initTimeTask();
+        initIntent();
     }
 
     /**
@@ -239,7 +241,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     private void initStubListener() {
         ScreenLockListenService.ScreenLockListenServiceStub stub = ((CleverM) getApplication()).getStub();
         if (stub == null) {
-            mHandler.sendEmptyMessageDelayed(GET_STUB, 500);
+            mHandler.sendEmptyMessageDelayed(GET_STUB, 5000);
         } else {
             stub.setTaskId(getTaskId());
             stub.setWindow(getWindow());
@@ -636,5 +638,15 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                    mtv.setVisibility(View.GONE);
                }
         }
+    }
+
+    /**
+     * 不锁屏
+     */
+    private void unLockScreen(){
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD,
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 }
