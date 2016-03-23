@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -43,7 +42,7 @@ public class DriverActivity extends BaseActivity {
             switch (msg.what) {
                 case GOBack: {
                     Log.v(TAG, "come hand====");
-                    startActivity(new Intent(DriverActivity.this, DiscountActivity.class));
+                    startActivity(new Intent(DriverActivity.this, VideoActivity.class));
                     DriverActivity.this.finish();
                     ((CleverM) getApplication()).getpenService().setActivityFlag("VideoActivity");
                     break;
