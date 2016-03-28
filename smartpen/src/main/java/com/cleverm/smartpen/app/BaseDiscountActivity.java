@@ -15,6 +15,7 @@ import com.cleverm.smartpen.util.AlgorithmUtil;
 import com.cleverm.smartpen.util.DownloadUtil;
 import com.cleverm.smartpen.util.FileCacheUtil;
 import com.cleverm.smartpen.util.QuickUtils;
+import com.cleverm.smartpen.util.RememberUtil;
 import com.cleverm.smartpen.util.ServiceUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
 import com.squareup.picasso.Picasso;
@@ -78,12 +79,16 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
     }
 
     private void initDate() {
-        if (FileCacheUtil.get(this).getAsString(DownloadUtil.DISOUNT_JSON) != null && FileCacheUtil.get(this).getAsString(DownloadUtil.DISOUNT_HEADOFFICE_JSON) != null) {//从File缓存中读取json串
+
+        if(RememberUtil.getString(DownloadUtil.DISOUNT_JSON,null)!=null && RememberUtil.getString(DownloadUtil.DISOUNT_HEADOFFICE_JSON,null)!=null){
+        //if (FileCacheUtil.get(this).getAsString(DownloadUtil.DISOUNT_JSON) != null && FileCacheUtil.get(this).getAsString(DownloadUtil.DISOUNT_HEADOFFICE_JSON) != null) {//从File缓存中读取json串
             if (isDisountArea) {
-                String json = FileCacheUtil.get(this).getAsString(DownloadUtil.DISOUNT_JSON);
+                //String json = FileCacheUtil.get(this).getAsString(DownloadUtil.DISOUNT_JSON);
+                String json = RememberUtil.getString(DownloadUtil.DISOUNT_JSON, null);
                 handlerJosn(json);
             } else {
-                String json = FileCacheUtil.get(this).getAsString(DownloadUtil.DISOUNT_HEADOFFICE_JSON);
+                //String json = FileCacheUtil.get(this).getAsString(DownloadUtil.DISOUNT_HEADOFFICE_JSON);
+                String json = RememberUtil.getString(DownloadUtil.DISOUNT_HEADOFFICE_JSON,null);
                 handlerJosn(json);
             }
         } else {//缓存中没有就从服务端再次读取
@@ -208,13 +213,27 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
         switch (view.getId()) {
 
             case R.id.ivLeft:
-                vpImage.setDec(vpImage);
+                if(judgeImagelistSize()){
+                    vpImage.setDec(vpImage);
+                }
                 break;
 
             case R.id.ivRight:
-                vpImage.setAdd(vpImage);
+                if(judgeImagelistSize()){
+                    vpImage.setAdd(vpImage);
+                }
                 break;
         }
+    }
+
+
+    public boolean judgeImagelistSize(){
+        if(images!=null){
+            if(images.size()>0){
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -226,14 +245,14 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
 
     @Override
     public void onPause() {
-        super.onPause();
-        MobclickAgent.onEvent(this, "E_Discount");
+            super.onPause();
+            MobclickAgent.onEvent(this, "E_Discount");
     }
 
     @Override
     protected void onDestroy() {
         QuickUtils.log("listImageSequence-onDestroy");
-        super.onDestroy();
+            super.onDestroy();
 
     }
 

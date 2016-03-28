@@ -114,7 +114,6 @@ public class DownloadUtil {
      * @param orgId 餐厅Id
      */
     public static void cacheDiscountJson(String orgId) {
-
         String url = Constant.DDP_URL+"/api/api/v10/roll/main/list";
         OkHttpUtils
                 .get()
@@ -130,9 +129,9 @@ public class DownloadUtil {
 
                     @Override
                     public void onResponse(String response) {
-                        QuickUtils.log("cacheDiscountJson");
                         //存储起来,准备特惠专区界面使用
-                        FileCacheUtil.get(CleverM.getApplication()).put(DISOUNT_JSON, response);
+                        RememberUtil.putStringSync(DISOUNT_JSON, response);
+                        //FileCacheUtil.get(CleverM.getApplication()).put(DISOUNT_JSON, response);
                         Intent intent = new Intent(CleverM.getApplication(), DownloadPicassoService.class);
                         intent.putExtra(DownloadPicassoService.PICASSO_JSON, response);
                         CleverM.getApplication().startService(intent);
@@ -154,7 +153,8 @@ public class DownloadUtil {
                     @Override
                     public void onResponse(String response) {
                         //存储起来,准备本店推荐界面使用
-                        FileCacheUtil.get(CleverM.getApplication()).put(DISOUNT_HEADOFFICE_JSON, response);
+                        RememberUtil.putStringSync(DISOUNT_HEADOFFICE_JSON, response);
+                        //FileCacheUtil.get(CleverM.getApplication()).put(DISOUNT_HEADOFFICE_JSON, response);
                     }
                 });
 

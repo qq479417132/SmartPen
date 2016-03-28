@@ -21,6 +21,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.Version.VersionManager;
@@ -161,8 +162,12 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
             new VersionManager(this).uddateVersion();
         }else{
             if(QuickUtils.isHasVideoFolder()&&QuickUtils.isVideoFolderHaveFiel2()){
-                VideoUtil videoUtil = new VideoUtil(vvAdvertisement);
-                videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE_PLAY, 0);
+                if(QuickUtils.isHasVideoFolder(AlgorithmUtil.VIDEO_FILE_PLAY)&&QuickUtils.isVideoFolderHaveFiel2(AlgorithmUtil.VIDEO_FILE_PLAY)){
+                    VideoUtil videoUtil = new VideoUtil(vvAdvertisement);
+                    videoUtil.prepareLocalVideo(AlgorithmUtil.VIDEO_FILE_PLAY, 0);
+                }else{
+                    initData();
+                }
             }else{
                 initData();
             }
@@ -434,6 +439,10 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
      * @param code
      */
     private void sendMessageToService(final InfoSendSMSVo infoSendSMSVo, final int code, final boolean isSend) {
+
+        //QuickUtils.toast("桌号="+infoSendSMSVo.getTableID()+"店铺号="+infoSendSMSVo.getOrgID()+"商品号="+infoSendSMSVo.getClientID());
+
+
         new Thread() {
             @Override
             public void run() {
