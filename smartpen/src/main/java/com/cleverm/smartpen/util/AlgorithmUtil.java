@@ -242,14 +242,17 @@ public class AlgorithmUtil {
      *
      */
     public void startVideoPlayAlgorithm(FullScreenVideoView videoView,Activity activity){
+        if(!QuickUtils.isHasVideoFolder(AlgorithmUtil.VIDEO_FILE_PLAY)&&!QuickUtils.isVideoFolderHaveFiel2(AlgorithmUtil.VIDEO_FILE_PLAY)){
+            //删除muyevideo的文件
+            File file = new File(AlgorithmUtil.VIDEO_FILE);
+            QuickUtils.deleteDir(file);
+        }
         //访问API,存储所有数据到DB
         if(QuickUtils.isHasVideoFolder()&&QuickUtils.isVideoFolderHaveFiel2()){
-            QuickUtils.log("Video----nofirst----");
             //3.如果有,那么就直接循环遍历去判断服务端这次给的videoId是否存在于了存储中.对于没有的videoId就进行下载
             VideoAlgorithmUtil.getInstance().loopFileName2(videoView,activity);
         }else{
             //2.木有就表示这是第一次使用,直接走服务端请求并存储video
-            QuickUtils.log("Video----first----");
             VideoAlgorithmUtil.getInstance().getVideoFirst(videoView,activity);
         }
     }

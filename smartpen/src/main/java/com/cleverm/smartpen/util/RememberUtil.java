@@ -300,6 +300,10 @@ public class RememberUtil {
         return getInstance().saveAsync(key, value, null);
     }
 
+    public static RememberUtil putStringSync(String key, String value){
+        return getInstance().saveSync(key,value);
+    }
+
     /**
      * Put a boolean. This saves to memory immediately and saves to disk asynchronously.
      */

@@ -327,9 +327,10 @@ public class QuickUtils {
      * 递归删除目录
      *
      * @param dir
-     * @return
+     * @return true 删除成功
+     *         false 删除失败
      */
-    private static boolean deleteDir(File dir) {
+     static boolean deleteDir(File dir) {
         if (dir.isDirectory()) {
             String[] children = dir.list();
             //递归删除目录中的子目录下

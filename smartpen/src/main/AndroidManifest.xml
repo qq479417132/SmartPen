@@ -94,6 +94,7 @@
             android:screenOrientation="landscape" />
         <activity
             android:name=".app.DiscountDetailActivity"
+            android:theme="@style/DiscountDetailTheme"
             android:screenOrientation="landscape" />
         <activity
             android:name=".app.GameActivity"
