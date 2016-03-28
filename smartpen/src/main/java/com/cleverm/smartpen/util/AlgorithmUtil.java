@@ -6,12 +6,9 @@ import android.os.Environment;
 import com.cleverm.smartpen.bean.DiscountInfo;
 import com.cleverm.smartpen.bean.VideoInfo;
 import com.cleverm.smartpen.ui.FullScreenVideoView;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 
-import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -277,11 +274,5 @@ public class AlgorithmUtil {
         }
 
     }
-
-
-
-
-
-
 
 }

@@ -20,7 +20,6 @@ public class SelectTableActivity extends BaseSelectTableActivity {
     @SuppressWarnings("unused")
     private static final String TAG = SelectTableActivity.class.getSimpleName();
     public static final String SELECTEDTABLEID="SelectedTableId";
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

@@ -1,7 +1,6 @@
 package com.cleverm.smartpen.app;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,7 +10,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.util.StatisticsUtil;
 import com.umeng.analytics.MobclickAgent;
 

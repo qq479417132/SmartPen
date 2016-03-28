@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -21,7 +22,6 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.Version.VersionManager;
@@ -183,7 +183,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
      */
     private void initTimeTask() {
         Timer timer = new Timer();
-        timer.schedule(new VideoTimeTask(vvAdvertisement,this), 1800000);
+        timer.schedule(new VideoTimeTask(vvAdvertisement, this), 1800000);
     }
 
     private void initBroadcastReceiver() {
@@ -316,7 +316,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
 
     int videoValue = 0;
 
-
+    PowerManager.WakeLock mWakeLock;
     @Override
     protected void onResume() {
         super.onResume();
@@ -333,7 +333,6 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                 vvAdvertisement.start();
             }
         }, 250);
-
     }
 
 
@@ -657,5 +656,11 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                 WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
     }
+
+
+
+
+
 }
