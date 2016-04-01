@@ -11,5 +11,4 @@
         android:clickable="true"
         android:scaleType="centerCrop" />
 
-
 </RelativeLayout>

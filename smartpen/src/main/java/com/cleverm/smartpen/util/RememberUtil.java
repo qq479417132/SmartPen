@@ -194,7 +194,7 @@ public class RememberUtil {
      * @param <T>
      * @return
      */
-    private <T> RememberUtil saveSync(final String key, final T value) {
+        private <T> RememberUtil saveSync(final String key, final  T value) {
         // Put it in memory
         mData.put(key, value);
         // Save it to disk
@@ -429,7 +429,7 @@ public class RememberUtil {
      * Gets the value mapped by the given key, casted to the given class. If the value doesn't exist or isn't of the
      * right class, return null instead.
      */
-    private <T> T get(String key, Class<T> clazz) {
+    private <T>T get(String key, Class<T> clazz) {
         Object value = mData.get(key);
         T castedObject = null;
         if (clazz.isInstance(value)) {
@@ -437,6 +437,8 @@ public class RememberUtil {
         }
         return castedObject;
     }
+
+
 
     /**
      * The callback interface for async operations.
