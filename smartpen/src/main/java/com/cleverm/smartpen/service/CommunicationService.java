@@ -157,7 +157,7 @@ public class CommunicationService extends Service {
     }
 
     private void startStomp() {
-        Config config = Config.create(Config.Mode.REMOTE, Utils.getSerialNumber(this)+"-ddb");
+        Config config = Config.create(Config.Mode.REMOTE, Utils.getSerialNumber(this));
         config.setWebsocketUrl(WS_URL);
         config.setHttpUrl(SYNCHRO_URL);
         mConnectClient = new ClevermClient(getApplicationContext(), config);
