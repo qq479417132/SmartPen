@@ -136,15 +136,19 @@ public class WandAPI {
             Log.d(TAG, "device vendorId = " + device.getVendorId() + ", " +
                     "product id = " + device.getProductId());
             for (String dev : DEVICES) {
-                if (String.format("%04x:%04x", device.getVendorId(), device
-                            .getProductId())
-                            .equalsIgnoreCase(dev)) {
-                        if (mUsbManager.hasPermission(device)) {
-                            Log.v(TAG,"hasPermission");
-                            setDevices(device);
-                        } else {
-                            Log.v(TAG,"!hasPermission");
-                        mUsbManager.requestPermission(device, PendingIntent.getBroadcast(mContext, 0, new Intent(ACTION_USB_PERMISSION), 0));
+
+                Log.v(TAG, "dev="+dev);
+
+                if (String.format("%04x:%04x", device.getVendorId(), device.getProductId()).equalsIgnoreCase(dev)) {
+
+                    Log.v(TAG, "device.getVendorId()="+device.getVendorId()+"device.getProductId()="+device.getProductId());
+
+                    if (mUsbManager.hasPermission(device)) {
+                        setDevices(device);
+                    } else {
+                        mUsbManager.requestPermission(device, PendingIntent
+                                .getBroadcast(mContext,
+                                        0, new Intent(ACTION_USB_PERMISSION), 0));
                     }
                     //添加代码：连接回调
                     if (mOnConnectListener != null) {
@@ -186,7 +190,7 @@ public class WandAPI {
                 (mUsbInterface, true)) {
             return;
         }
-        mHandler.postDelayed(mScanRunnable, 1000l);
+        mHandler.postDelayed(mScanRunnable, 300);
     }
 
     private UsbInterface getUsbInterface(UsbDevice device) {
@@ -246,7 +250,6 @@ public class WandAPI {
         }
 
         public void register(Context context) {
-            Log.e(TAG,"registerReceiver");
             IntentFilter filter = new IntentFilter();
             filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
             filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);

@@ -16,6 +16,7 @@ import android.view.WindowManager;
 
 import com.cleverm.smartpen.app.VideoActivity;
 import com.cleverm.smartpen.application.CleverM;
+import com.cleverm.smartpen.util.Constant;
 
 
 /**
@@ -86,6 +87,9 @@ public class ScreenLockListenService extends Service{
                 ((CleverM) getApplication()).getpenService().setActivityFlag("VideoActivity");
                 if(mWindow != null){
                     mWindow.getAttributes().flags |= WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
+                }
+                if(!Constant.DIAN_CAI_PACKAGE_NAME.equals(packageName)){
+                    am.moveTaskToFront(taskId, ActivityManager.MOVE_TASK_WITH_HOME);
                 }
                 mWakelock.acquire();
                 mWakelock.release();

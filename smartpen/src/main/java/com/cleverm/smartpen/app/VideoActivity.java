@@ -164,6 +164,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         QuickUtils.showHighApiBottomStatusBar();
         initView();
         initBroadcastReceiver();
+
         //只有重启后的第一次才去取数据
         if(RememberUtil.getBoolean(Constant.BROADCAST_RESATRT_EVENT,true)){
             initData();
@@ -187,8 +188,6 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         initTimeTask();
         initIntent();
     }
-
-
 
     /**
      * 30分钟后再次检查
@@ -328,7 +327,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
 
     int videoValue = 0;
 
-
+    PowerManager.WakeLock mWakeLock;
     @Override
     protected void onResume() {
         super.onResume();
