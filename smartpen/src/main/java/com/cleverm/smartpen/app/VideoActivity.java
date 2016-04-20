@@ -1,7 +1,5 @@
 package com.cleverm.smartpen.app;
 
-import android.app.Activity;
-import android.bluetooth.BluetoothGatt;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,14 +21,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bleframe.library.BleManager;
-import com.bleframe.library.bundle.OnChangedBundle;
-import com.bleframe.library.bundle.OnLeScanBundle;
-import com.bleframe.library.bundle.OnWriteReadBundle;
-import com.bleframe.library.callback.BlatandAPICallback;
-import com.bleframe.library.callback.SimpleBlatandAPICallback;
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.Version.VersionManager;
 import com.cleverm.smartpen.application.CleverM;
@@ -47,7 +38,6 @@ import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.DownloadUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
-import com.cleverm.smartpen.util.ScanUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
 import com.cleverm.smartpen.util.VideoTimeTask;
 import com.cleverm.smartpen.util.VideoUtil;
@@ -327,7 +317,6 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
 
     int videoValue = 0;
 
-    PowerManager.WakeLock mWakeLock;
     @Override
     protected void onResume() {
         super.onResume();
@@ -651,7 +640,6 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         Log.v(TAG, "AnimationStart=" + id);
         mrlNoticeText.setText(text);
         mHandler.sendEmptyMessageDelayed(STOP_ANIMATION, DELAY_TIME);
-
     }
 
     public class UpdateTableHandlerSuccess extends BroadcastReceiver{
