@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
+import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
@@ -66,5 +67,14 @@ public class SelectTableActivity extends BaseSelectTableActivity {
     @Override
     protected String onGetDesc() {
         return StatisticsUtil.SETTING_DESC;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        penService penService = ((CleverM) getApplication()).getpenService();
+        if(penService!=null){
+            penService.setActivityFlag("SelectTableActivity");
+        }
     }
 }

@@ -11,6 +11,7 @@ import com.cleverm.smartpen.bean.VideoInfo;
 import com.cleverm.smartpen.service.DownloadPicassoService;
 import com.cleverm.smartpen.service.DownloaderDifferenceService;
 import com.cleverm.smartpen.ui.FullScreenVideoView;
+import com.cleverm.smartpen.util.cache.FileRememberUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -36,8 +37,10 @@ public class DownloadUtil {
 
     //优惠专区
     public static final String  DISOUNT_JSON="DISOUNT_JSON";
+    public static final String  Dir_DISOUNT_JSON="Dir_DISOUNT_JSON";
     //本店推荐
     public static final String  DISOUNT_HEADOFFICE_JSON="DISOUNT_HEADOFFICE_JSON";
+    public static final String  Dir_DISOUNT_HEADOFFICE_JSON="Dir_DISOUNT_HEADOFFICE_JSON";
 
 
     public static void getVideoFlag(final ServiceUtil.JsonInterface jsonInterface){
@@ -130,7 +133,10 @@ public class DownloadUtil {
                     @Override
                     public void onResponse(String response) {
                         //存储起来,准备特惠专区界面使用
-                        RememberUtil.putStringSync(DISOUNT_JSON, response);
+                        //RememberUtil.putStringSync(DISOUNT_JSON, response);
+                        if (FileRememberUtil.has(Dir_DISOUNT_JSON)) {
+                            FileRememberUtil.put(response, Dir_DISOUNT_JSON, DISOUNT_JSON);
+                        }
                         //FileCacheUtil.get(CleverM.getApplication()).put(DISOUNT_JSON, response);
                         Intent intent = new Intent(CleverM.getApplication(), DownloadPicassoService.class);
                         intent.putExtra(DownloadPicassoService.PICASSO_JSON, response);
@@ -152,8 +158,12 @@ public class DownloadUtil {
 
                     @Override
                     public void onResponse(String response) {
+                        //QuickUtils.toast(response);
                         //存储起来,准备本店推荐界面使用
-                        RememberUtil.putStringSync(DISOUNT_HEADOFFICE_JSON, response);
+                        //RememberUtil.putStringSync(DISOUNT_HEADOFFICE_JSON, response);
+                        if(FileRememberUtil.has(Dir_DISOUNT_HEADOFFICE_JSON)){
+                            FileRememberUtil.put(response,Dir_DISOUNT_HEADOFFICE_JSON,DISOUNT_HEADOFFICE_JSON);
+                        }
                         //FileCacheUtil.get(CleverM.getApplication()).put(DISOUNT_HEADOFFICE_JSON, response);
                     }
                 });

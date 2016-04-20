@@ -17,6 +17,7 @@ import android.widget.ImageView;
 
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
+import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.StatisticsUtil;
 
@@ -190,5 +191,12 @@ public class DemoActivity extends BaseActivity {
         return null;
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        penService penService = ((CleverM) getApplication()).getpenService();
+        if(penService!=null){
+            penService.setActivityFlag("DemoActivity");
+        }
+    }
 }

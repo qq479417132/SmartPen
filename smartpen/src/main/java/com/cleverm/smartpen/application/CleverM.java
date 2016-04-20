@@ -1,6 +1,7 @@
 package com.cleverm.smartpen.application;
 
 import android.app.Application;
+import android.bluetooth.BluetoothGatt;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -12,8 +13,22 @@ import android.graphics.Bitmap;
 import android.os.BatteryManager;
 import android.os.Environment;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.bleframe.library.BleManager;
+import com.bleframe.library.bundle.OnChangedBundle;
+import com.bleframe.library.bundle.OnLeScanBundle;
+import com.bleframe.library.bundle.OnWriteReadBundle;
+import com.bleframe.library.bundle.onReadRemoteRssiBundle;
+import com.bleframe.library.callback.BlatandAPICallback;
+import com.bleframe.library.callback.SimpleBlatandAPICallback;
+import com.bleframe.library.config.BleConfig;
+import com.bleframe.library.log.BleLog;
+import com.bleframe.library.profile.SmartPenProfile;
+import com.bleframe.library.util.BleUtils;
+import com.cleverm.smartpen.app.VideoActivity;
 import com.cleverm.smartpen.log.CrashHandler;
 import com.cleverm.smartpen.net.InfoSendSMSVo;
 import com.cleverm.smartpen.net.RequestNet;
@@ -22,8 +37,11 @@ import com.cleverm.smartpen.service.ScreenLockListenService;
 import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.statistic.dao.StatsDao;
 import com.cleverm.smartpen.util.Constant;
+import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
+import com.cleverm.smartpen.util.ScanUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
+import com.cleverm.smartpen.util.cache.FileRememberUtil;
 import com.cleverm.smartpen.util.evnet.BroadcastEvent;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -35,10 +53,17 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.thin.downloadmanager.ThinDownloadManager;
 import com.umeng.analytics.MobclickAgent;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
 /**
  * Created by 95 on 2016/1/13.
  */
 public class CleverM extends Application {
+
 
     private static Application application;
     private static ThinDownloadManager thinDownloadManager;
@@ -54,6 +79,10 @@ public class CleverM extends Application {
     public static final String SELECTEDTABLEID="SelectedTableId";
     private Object object=new Object();
     private PowerReceiver mPowerReceiver = new PowerReceiver();
+
+    private static final String sOidText = "oid.txt";
+    private static final String sPath= Environment.getExternalStorageDirectory().getAbsolutePath() + "/muyeoid";
+    private static final String  sDefaultOid="001";
 
 
     private penService mpenService;
@@ -85,19 +114,120 @@ public class CleverM extends Application {
     public void onCreate() {
         super.onCreate();
         application=this;
-
         initNet();
+        initWirelessPen();
         CrashHandler.getInstance().init(this, PATH);
-
         MobclickAgent.setCatchUncaughtExceptions(true);
         RememberUtil.init(getApplicationContext(), PREFS_NAME);
+        FileRememberUtil.init(getApplicationContext());
         initImageLoader();
         initDownloader();
-
         initEvnet();
         initDataBase();
         mPowerReceiver.register();
     }
+
+    private void initWirelessPen() {
+        String name= getOidName();
+        BleConfig config = new BleConfig.Builder(this).
+                setDefaultValue(false).
+                setBluetoothName(name).
+                setMaxScanTime(15000).
+                setAutoConnect().
+                setAutoScan().
+                setAutoNotify().
+                setConfigUUID(true).
+                setProfile(new SmartPenProfile()).
+                build();
+        BleManager.getInstance().init(config);
+        BleManager.getInstance().onCreate(this, wirelessCallback);
+    }
+
+    /**
+     * 从muye-oid中读取值
+     * 如果没有值,默认为Pen_001
+     * @return
+     */
+    public String getOidName() {
+        String oidName;
+        try {
+            oidName = BleUtils.rmSpecialSymbol("Pen_" + String.valueOf(getFileContext(sPath, sOidText, sDefaultOid).trim()));
+        } catch (IOException e) {
+            e.printStackTrace();
+            oidName=sDefaultOid;
+        }
+        return oidName;
+    }
+
+    public BlatandAPICallback wirelessCallback = new SimpleBlatandAPICallback() {
+        @Override
+        public void onNotifyValue(OnChangedBundle onChangedBundle) {
+            BleLog.e(TAG+"onNotifyValue="+onChangedBundle.getValue());
+            ScanUtil instance = ScanUtil.getInstance();
+            instance.onScan(CleverM.this,QuickUtils.hexToString(onChangedBundle.getValue()),false);
+        }
+
+        @Override
+        public void onStartScan() {
+            super.onStartScan();
+            BleLog.e(TAG + "onStartScan");
+        }
+
+        @Override
+        public boolean onDeviceFound(OnLeScanBundle info) {
+            BleLog.e(TAG+"发现设备");
+            Toast.makeText(CleverM.getApplication(), "发现设备", Toast.LENGTH_LONG).show();
+            return super.onDeviceFound(info);
+        }
+
+        @Override
+        public void onScanTimeOut() {
+            Toast.makeText(CleverM.getApplication(), "搜索超时", Toast.LENGTH_LONG).show();
+            BleLog.e(TAG+"搜索超时");
+            super.onScanTimeOut();
+        }
+
+        @Override
+        public boolean onServiceDiscover(BluetoothGatt gatt) {
+            Toast.makeText(CleverM.getApplication(), "蓝牙服务发现", Toast.LENGTH_LONG).show();
+            BleLog.e(TAG+"蓝牙服务发现");
+            return super.onServiceDiscover(gatt);
+        }
+
+        @Override
+        public void onWriteValue(OnWriteReadBundle info) {
+            super.onWriteValue(info);
+        }
+
+        @Override
+        public void onReadValue(OnWriteReadBundle info) {
+            super.onReadValue(info);
+        }
+
+        @Override
+        public void onConnectOff() {
+            Toast.makeText(CleverM.getApplication(), "断开连接", Toast.LENGTH_LONG).show();
+            BleLog.e(TAG+"断开连接");
+            super.onConnectOff();
+        }
+
+        @Override
+        public void onConnectOn() {
+            Toast.makeText(CleverM.getApplication(), "连接中", Toast.LENGTH_LONG).show();
+            BleLog.e(TAG+"连接中");
+            super.onConnectOn();
+        }
+
+        @Override
+        public void onReadRemoteRssi(onReadRemoteRssiBundle info) {
+            super.onReadRemoteRssi(info);
+            BleLog.e(TAG + "onReadRemoteRssi"+info.getRssi());
+        }
+    };
+
+
+
+
 
     private void initImageLoader() {
         DisplayImageOptions options = new DisplayImageOptions.Builder()
@@ -252,5 +382,35 @@ public class CleverM extends Application {
             }.start();
         }
     }
+
+    public String getFileContext(String directory,String txtName,String defalutOid) throws IOException {
+        File file=new File(directory,txtName);
+        File parent = file.getParentFile();
+        if(parent!=null&&!parent.exists()){
+            parent.mkdirs();
+        }
+        if(!file.exists()){
+            file.createNewFile();
+        }
+        if(file.length()<=0){
+            return defalutOid;
+        }
+        if(!file.exists()||file.isDirectory()) throw new FileNotFoundException();
+        String result = "";
+        try{
+            BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
+            String s = null;
+            while((s = br.readLine())!=null){//使用readLine方法，一次读一行
+                result = result + "\n" +s;
+            }
+            br.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return result;
+
+
+    }
+
 
 }

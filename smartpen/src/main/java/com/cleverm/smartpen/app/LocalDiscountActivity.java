@@ -1,5 +1,7 @@
 package com.cleverm.smartpen.app;
 
+import com.cleverm.smartpen.application.CleverM;
+import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.util.StatisticsUtil;
 
 /**
@@ -25,5 +27,14 @@ public class LocalDiscountActivity extends BaseDiscountActivity {
     @Override
     protected String onGetDesc() {
         return StatisticsUtil.SERVICE_LOCAL_DISCOUNT_DESC;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        penService penService = ((CleverM) getApplication()).getpenService();
+        if(penService!=null){
+            penService.setActivityFlag("LocalDiscountActivity");
+        }
     }
 }

@@ -16,6 +16,7 @@ import android.widget.ImageView;
 
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
+import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.ui.MyWebView;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.StatisticsUtil;
@@ -163,5 +164,21 @@ public class GameActivity extends BaseActivity implements MyWebView.WebViewTouch
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        penService penService = ((CleverM) getApplication()).getpenService();
+        if(mURL.equals(Constant.NEARBY_DISCOUNT_URL)){
+            if(penService!=null){
+                penService.setActivityFlag(penService.DISCOUNT);
+            }
+        }else{
+            if(penService!=null){
+                penService.setActivityFlag("GAME_ACTIVITY");
+            }
+        }
 
+
+
+    }
 }

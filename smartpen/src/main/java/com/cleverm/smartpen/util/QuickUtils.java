@@ -18,12 +18,15 @@ import com.cleverm.smartpen.bean.DiscountInfo;
 import com.cleverm.smartpen.net.InfoSendSMSVo;
 import com.cleverm.smartpen.net.RequestNet;
 import com.cleverm.smartpen.pushtable.UpdateTableHandler;
+import com.cleverm.smartpen.util.cache.FileRememberUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+
+import org.json.JSONException;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -463,7 +466,7 @@ public class QuickUtils {
                 .cacheOnDisc(true).imageScaleType(ImageScaleType.IN_SAMPLE_INT)
                 .displayer(new SimpleBitmapDisplayer()).build();
 
-        imageLoader.loadImage(url,options, new ImageLoadingListener() {
+        imageLoader.loadImage(url, options, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
             }
@@ -474,13 +477,46 @@ public class QuickUtils {
 
             @Override
             public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                Log.e("onLoadingComplete","onLoadingComplete");
+                Log.e("onLoadingComplete", "onLoadingComplete");
             }
 
             @Override
             public void onLoadingCancelled(String s, View view) {
             }
         });
+    }
+
+    /**
+     * 16进制转10进制
+     * @return
+     */
+    public static  int hexToString(String hexadecimal){
+        return  Integer.valueOf(hexadecimal, 16);
+    }
+
+    /**
+     * 是否是空数据
+     * @param json
+     * @return
+     */
+    public static boolean isEmptyData(String json){
+        try {
+            List<DiscountInfo> discountInfos = ServiceUtil.getInstance().parserDiscountData(json);
+            if(discountInfos.size()<=0){
+                return true;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean checkDiscountEmptyData(){
+        if (FileRememberUtil.get(DownloadUtil.Dir_DISOUNT_JSON, DownloadUtil.DISOUNT_JSON) != null) {
+            return isEmptyData(FileRememberUtil.get(DownloadUtil.Dir_DISOUNT_JSON, DownloadUtil.DISOUNT_JSON));
+        }
+        return true;
     }
 
 }
