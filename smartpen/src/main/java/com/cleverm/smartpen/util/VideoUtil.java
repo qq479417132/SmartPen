@@ -148,6 +148,9 @@ public class VideoUtil {
         if (files.length == 0) {
             return null;
         }
+
+        //TODO 如果里面有子文件夹需要先删除
+
         String[] videoUrls = new String[files.length];
         for (int i = 0; i < files.length; i++) {
             videoUrls[i] = files[i].getAbsolutePath();

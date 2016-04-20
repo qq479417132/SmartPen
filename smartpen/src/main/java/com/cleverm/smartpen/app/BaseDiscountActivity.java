@@ -2,7 +2,6 @@ package com.cleverm.smartpen.app;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,13 +12,13 @@ import com.cleverm.smartpen.bean.DiscountInfo;
 import com.cleverm.smartpen.ui.banner.BGABanner;
 import com.cleverm.smartpen.util.AlgorithmUtil;
 import com.cleverm.smartpen.util.DownloadUtil;
-import com.cleverm.smartpen.util.FileCacheUtil;
 import com.cleverm.smartpen.util.QuickUtils;
-import com.cleverm.smartpen.util.RememberUtil;
 import com.cleverm.smartpen.util.ServiceUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
-import com.squareup.picasso.Picasso;
+import com.cleverm.smartpen.util.cache.FileRememberUtil;
 import com.umeng.analytics.MobclickAgent;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +54,6 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
     }
 
 
-
     @Override
     protected ImageView getBackResId() {
         return (ImageView) findViewById(R.id.ivClose);
@@ -80,18 +78,19 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
 
     private void initDate() {
 
-        if(RememberUtil.getString(DownloadUtil.DISOUNT_JSON,null)!=null && RememberUtil.getString(DownloadUtil.DISOUNT_HEADOFFICE_JSON,null)!=null){
-        //if (FileCacheUtil.get(this).getAsString(DownloadUtil.DISOUNT_JSON) != null && FileCacheUtil.get(this).getAsString(DownloadUtil.DISOUNT_HEADOFFICE_JSON) != null) {//从File缓存中读取json串
+        if (FileRememberUtil.get(DownloadUtil.Dir_DISOUNT_JSON, DownloadUtil.DISOUNT_JSON) != null) {
             if (isDisountArea) {
-                //String json = FileCacheUtil.get(this).getAsString(DownloadUtil.DISOUNT_JSON);
-                String json = RememberUtil.getString(DownloadUtil.DISOUNT_JSON, null);
+                String json = FileRememberUtil.get(DownloadUtil.Dir_DISOUNT_JSON, DownloadUtil.DISOUNT_JSON);
                 handlerJosn(json);
             } else {
-                //String json = FileCacheUtil.get(this).getAsString(DownloadUtil.DISOUNT_HEADOFFICE_JSON);
-                String json = RememberUtil.getString(DownloadUtil.DISOUNT_HEADOFFICE_JSON,null);
-                handlerJosn(json);
+                if (FileRememberUtil.get(DownloadUtil.Dir_DISOUNT_HEADOFFICE_JSON, DownloadUtil.DISOUNT_HEADOFFICE_JSON) != null) {
+                    String json = FileRememberUtil.get(DownloadUtil.Dir_DISOUNT_HEADOFFICE_JSON, DownloadUtil.DISOUNT_HEADOFFICE_JSON);
+                    handlerJosn(json);
+                } else {
+                    getDiscountDataFromService("0");
+                }
             }
-        } else {//缓存中没有就从服务端再次读取
+        } else {
             if (isDisountArea) {
                 getDiscountDataFromService("1");
             } else {
@@ -112,10 +111,10 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
             AlgorithmUtil.getInstance().clearImageSequence();
             //解析Json
             List<DiscountInfo> discountInfos = ServiceUtil.getInstance().parserDiscountData(json);
-            QuickUtils.log("discountInfos="+discountInfos.size());
+            QuickUtils.log("discountInfos=" + discountInfos.size());
             //图片顺序算法
             List<DiscountInfo> listImageSequence = AlgorithmUtil.getInstance().getSimpleImageSequence(discountInfos);
-            QuickUtils.log("listImageSequence="+listImageSequence.size());
+            QuickUtils.log("listImageSequence=" + listImageSequence.size());
             //图片数据
             images = QuickUtils.getDiscountImage(listImageSequence);
             //图片控件处理
@@ -126,6 +125,7 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
 
 
     }
+
 
     private void initClick() {
         ivLeft.setOnClickListener(this);
@@ -151,41 +151,29 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
             if (views.size() == 1) {
                 ivLeft.setVisibility(View.INVISIBLE);
                 ivRight.setVisibility(View.INVISIBLE);
-                QuickUtils.displayImage(images.get(0),view);
-                vpImage.getViewPager().setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        return true;
-                    }
-                });
+                QuickUtils.displayImage(images.get(0), view);
             } else if (views.size() == 2 || views.size() == 3) {
                 int index = (i > (images.size() - 1)) ? i - images.size() : i;
-                QuickUtils.displayImage(images.get((i > (images.size() - 1)) ? i - images.size() : i),view);
+                QuickUtils.displayImage(images.get((i > (images.size() - 1)) ? i - images.size() : i), view);
 
             } else {
-                QuickUtils.displayImage(images.get(i),view);
+                QuickUtils.displayImage(images.get(i), view);
             }
-
-
 
 
             // 点击事件
             final int finalPosition = i;
-
-            QuickUtils.log("listImageSequence="+listImageSequence+"/finalPosition="+finalPosition+"/view="+view+"/images.size()="+images.size()+"/views.size()="+views.size());
-
-
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     QuickUtils.log("listImageSequence.size()=" + listImageSequence.size());
-                    if(listImageSequence.size()>0){
+                    if (listImageSequence.size() > 0) {
                         DiscountInfo discountInfo = listImageSequence.get(finalPosition);
                         //统计代码
-                        if(isDisountArea){
-                            StatisticsUtil.getInstance().insertWithSecondEvent(StatisticsUtil.SECOND_DISCOUNT_ACTIVITY,StatisticsUtil.SECOND_DISCOUNT_ACTIVITY_DESC,StatisticsUtil.getInstance().str2Long(discountInfo.getRollMainId()));
-                        }else{
-                            StatisticsUtil.getInstance().insertWithSecondEvent(StatisticsUtil.SECOND_LOACL_DISCOUNT_ACTIVITY,StatisticsUtil.SECOND_LOACL_DISCOUNT_ACTIVITY_DESC,StatisticsUtil.getInstance().str2Long(discountInfo.getRollMainId()));
+                        if (isDisountArea) {
+                            StatisticsUtil.getInstance().insertWithSecondEvent(StatisticsUtil.SECOND_DISCOUNT_ACTIVITY, StatisticsUtil.SECOND_DISCOUNT_ACTIVITY_DESC, StatisticsUtil.getInstance().str2Long(discountInfo.getRollMainId()));
+                        } else {
+                            StatisticsUtil.getInstance().insertWithSecondEvent(StatisticsUtil.SECOND_LOACL_DISCOUNT_ACTIVITY, StatisticsUtil.SECOND_LOACL_DISCOUNT_ACTIVITY_DESC, StatisticsUtil.getInstance().str2Long(discountInfo.getRollMainId()));
                         }
                         Intent intent = new Intent(mContext, DiscountDetailActivity.class);
                         intent.putExtra(DiscountDetailActivity.INTENT_NAME, discountInfo);
@@ -213,13 +201,13 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
         switch (view.getId()) {
 
             case R.id.ivLeft:
-                if(judgeImagelistSize()){
+                if (judgeImagelistSize()) {
                     vpImage.setDec(vpImage);
                 }
                 break;
 
             case R.id.ivRight:
-                if(judgeImagelistSize()){
+                if (judgeImagelistSize()) {
                     vpImage.setAdd(vpImage);
                 }
                 break;
@@ -227,9 +215,9 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
     }
 
 
-    public boolean judgeImagelistSize(){
-        if(images!=null){
-            if(images.size()>0){
+    public boolean judgeImagelistSize() {
+        if (images != null) {
+            if (images.size() > 0) {
                 return true;
             }
         }
@@ -245,14 +233,14 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
 
     @Override
     public void onPause() {
-            super.onPause();
-            MobclickAgent.onEvent(this, "E_Discount");
+        super.onPause();
+        MobclickAgent.onEvent(this, "E_Discount");
     }
 
     @Override
     protected void onDestroy() {
         QuickUtils.log("listImageSequence-onDestroy");
-            super.onDestroy();
+        super.onDestroy();
 
     }
 
@@ -269,15 +257,17 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
         ServiceUtil.getInstance().getDiscountData(QuickUtils.getOrgIdFromSp(), type, new ServiceUtil.JsonInterface() {
             @Override
             public void onSucced(String json) {
-                handlerJosn(json);
+                if (json != null && !json.equals("")) {
+                    handlerJosn(json);
+                }
             }
-
 
             @Override
             public void onFail(String error) {
 
             }
         });
+
     }
 
 

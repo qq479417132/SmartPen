@@ -16,6 +16,7 @@ import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.net.InfoSendSMSVo;
 import com.cleverm.smartpen.net.RequestNet;
 import com.cleverm.smartpen.pushtable.MessageType;
+import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.NetWorkUtil;
 import com.cleverm.smartpen.util.QuickUtils;
@@ -163,6 +164,10 @@ public class PayActivity extends BaseActivity {
         super.onResume();
         mHandler.removeCallbacksAndMessages(null);
         mHandler.sendEmptyMessageDelayed(GOBack, TIME);
+        penService penService = ((CleverM) getApplication()).getpenService();
+        if(penService!=null){
+            penService.setActivityFlag("PayActivity");
+        }
 
     }
 

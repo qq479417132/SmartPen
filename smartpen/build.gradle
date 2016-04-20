@@ -17,10 +17,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
-    }
 }
 
 dependencies {
@@ -48,4 +44,5 @@ dependencies {
     compile 'de.greenrobot:greendao:2.1.0'
     compile files('libs/jxl.jar')
     compile files('libs/universal-image-loader-1.9.5.jar')
+    compile files('libs/bleframe-1.0.1.jar')
 }

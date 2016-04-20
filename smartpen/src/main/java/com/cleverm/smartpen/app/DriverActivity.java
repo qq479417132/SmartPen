@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
+import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
@@ -92,6 +93,10 @@ public class DriverActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         MobclickAgent.onEvent(this, "E_JIA");
+        penService penService = ((CleverM) getApplication()).getpenService();
+        if(penService!=null){
+            penService.setActivityFlag("DriverActivity");
+        }
     }
 
     @Override

@@ -171,7 +171,12 @@ public class VersionManager {
                                                 int whichButton) {
                             }
                         }).create();
-        dialog.show();
+        //xiong Fix bug on 20160329 :Unable to add window — token android.os.BinderProxy is not valid; is your activity running?
+        if(!((Activity) context).isFinishing()) {
+            //show dialog
+            dialog.show();
+        }
+
     }
 
     private  void downFile(final String url) {

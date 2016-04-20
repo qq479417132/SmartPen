@@ -2,6 +2,8 @@ package com.cleverm.smartpen.app;
 
 import android.content.Intent;
 
+import com.cleverm.smartpen.application.CleverM;
+import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.util.StatisticsUtil;
 
 /**
@@ -27,5 +29,14 @@ public class DiscountActivity extends BaseDiscountActivity{
     @Override
     protected String onGetDesc() {
         return StatisticsUtil.SERVICE_DISCOUNT_DESC;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        penService penService = ((CleverM) getApplication()).getpenService();
+        if(penService!=null){
+            penService.setActivityFlag("DiscountActivity");
+        }
     }
 }

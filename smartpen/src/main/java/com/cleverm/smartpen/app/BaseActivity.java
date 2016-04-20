@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.cleverm.smartpen.application.CleverM;
+import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.util.StatisticsUtil;
 import com.umeng.analytics.MobclickAgent;
 

@@ -1,5 +1,7 @@
 package com.cleverm.smartpen.app;
 
+import android.app.Activity;
+import android.bluetooth.BluetoothGatt;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +10,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -22,7 +23,14 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bleframe.library.BleManager;
+import com.bleframe.library.bundle.OnChangedBundle;
+import com.bleframe.library.bundle.OnLeScanBundle;
+import com.bleframe.library.bundle.OnWriteReadBundle;
+import com.bleframe.library.callback.BlatandAPICallback;
+import com.bleframe.library.callback.SimpleBlatandAPICallback;
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.Version.VersionManager;
 import com.cleverm.smartpen.application.CleverM;
@@ -39,6 +47,7 @@ import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.DownloadUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
+import com.cleverm.smartpen.util.ScanUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
 import com.cleverm.smartpen.util.VideoTimeTask;
 import com.cleverm.smartpen.util.VideoUtil;
@@ -59,6 +68,7 @@ import java.util.Timer;
 public class VideoActivity extends BaseActivity implements penService.MessageListener {
 
     public static final String TAG = VideoActivity.class.getSimpleName();
+    public static VideoActivity activity;
     FullScreenVideoView vvAdvertisement;
     private RelativeLayout mrlNotice;
     private ImageView mivNoticeImage;
@@ -150,6 +160,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         QuickUtils.log("ActivityClay---onCreate()=" + videoValue);
         unLockScreen();
         setContentView(R.layout.activity_video);
+        activity=this;
         QuickUtils.showHighApiBottomStatusBar();
         initView();
         initBroadcastReceiver();
@@ -321,6 +332,10 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     protected void onResume() {
         super.onResume();
         videoValue = RememberUtil.getInt(Constant.MEMORY_PLAY_KEY, 0);
+        penService penService = ((CleverM) getApplication()).getpenService();
+        if(penService!=null){
+            penService.setActivityFlag("VideoActivity");
+        }
         /**
          * 因为VideoActivity会被不断的重启,算法太耗时导致必须延迟
          */
@@ -333,6 +348,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                 vvAdvertisement.start();
             }
         }, 250);
+
     }
 
 
@@ -656,11 +672,13 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                 WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
     }
 
 
-
-
-
+    public static VideoActivity getVideoActivity(){
+        if(activity!=null){
+            return activity;
+        }
+        return null;
+    }
 }

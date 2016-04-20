@@ -10,6 +10,7 @@ import android.view.animation.AnimationUtils;
 
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
+import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.StatisticsUtil;
 
@@ -85,5 +86,14 @@ public class FutureActivity extends BaseActivity {
         super.onPause();
         Log.v(TAG, "OthersFragment onPause()=====");
         mHandler.removeCallbacksAndMessages(null);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        penService penService = ((CleverM) getApplication()).getpenService();
+        if(penService!=null){
+            penService.setActivityFlag("FutureActivity");
+        }
     }
 }
