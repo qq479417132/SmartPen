@@ -327,7 +327,6 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
 
     int videoValue = 0;
 
-    PowerManager.WakeLock mWakeLock;
     @Override
     protected void onResume() {
         super.onResume();
