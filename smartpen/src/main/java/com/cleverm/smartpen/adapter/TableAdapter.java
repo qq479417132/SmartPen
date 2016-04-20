@@ -2,6 +2,7 @@ package com.cleverm.smartpen.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,7 @@ public class TableAdapter extends BaseAdapter {
     public TableAdapter(Context context, final List<Table> tables) {
         mContext = context;
         mLayoutInflater = (LayoutInflater) mContext.getSystemService(
-            Context.LAYOUT_INFLATER_SERVICE);
+                Context.LAYOUT_INFLATER_SERVICE);
         mTables = tables;
     }
 
@@ -62,7 +63,7 @@ public class TableAdapter extends BaseAdapter {
         ViewHolder vh;
         if (convertView == null || convertView.getTag() == null) {
             convertView = mLayoutInflater.inflate(R.layout.item_table_grid,
-                null);
+                    null);
 
             vh = new ViewHolder();
             vh.table = (TextView) convertView.findViewById(R.id.table);
@@ -72,6 +73,7 @@ public class TableAdapter extends BaseAdapter {
         }
         final Table table = (Table) getItem(position);
         vh.table.setText(table.getName());
+        settableNameSize(table.getName(), vh.table);
         if (mSelectedTableId == table.getId()) {
             vh.table.setBackgroundResource(R.mipmap.ic_table_selected);
         } else {
@@ -83,5 +85,18 @@ public class TableAdapter extends BaseAdapter {
 
     class ViewHolder {
         TextView table;
+    }
+
+    private void settableNameSize(String tableName, TextView tv) {
+        if (tableName == null) {
+            return;
+        }
+        int len = tableName.getBytes().length;
+        Log.v(TAG,"tableName="+tableName+"  len="+len);
+        if (len <= 6) {
+            tv.setTextSize(34f);
+        } else if (len < 12) {
+            tv.setTextSize(25f);
+        }
     }
 }

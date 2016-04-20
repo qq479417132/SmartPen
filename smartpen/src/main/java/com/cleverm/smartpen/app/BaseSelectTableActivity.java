@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TabWidget;
@@ -101,10 +102,10 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
                     Log.v(TAG, "showtable");
                     break;
                 }
-                case SHOW_INPUY_PSW:{
+                case SHOW_INPUY_PSW: {
                     mDrawerLayout.setVisibility(View.VISIBLE);
                     mInputOrgId.setText("");
-                    Toast.makeText(BaseSelectTableActivity.this,"输入的商户ID有误,请重新输入！",Toast.LENGTH_LONG).show();
+                    Toast.makeText(BaseSelectTableActivity.this, "输入的商户ID有误,请重新输入！", Toast.LENGTH_LONG).show();
                     mHandler.removeMessages(GOBack);
                     mHandler.sendEmptyMessageDelayed(GOBack, Constant.DELAY_BACK);
                     break;
@@ -124,7 +125,6 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
         mHandler.sendEmptyMessageDelayed(GOBack, Constant.DELAY_BACK);
     }
 
-
     /**
      * 选择访问数据方式
      * 1.读取长连接数据库中的数据
@@ -142,7 +142,7 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
                 Log.v(TAG, "psw=" + psw);
                 if (Constant.PSW.equals(psw)) {
                     //有数据前提，直接去设置桌号
-                    if(mHaveData){
+                    if (mHaveData) {
                         mDrawerLayout.setVisibility(View.GONE);
                     }
                     //无数据前提，去设置OrgID
@@ -198,25 +198,23 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         mTableTypes = DatabaseHelper.getsInstance(this).obtainAllTableTypes();//得到数据库中的桌子类型
         Log.v(TAG, "mTableTypes=" + mTableTypes.size());
-        if (mTableTypes.isEmpty() || mTableTypes.size()==0) {
+        if (mTableTypes.isEmpty() || mTableTypes.size() == 0) {
             /**
              * 数据库没有数据了，主动去请求数据
              */
-            mHaveData=false;
+            mHaveData = false;
             initData();
             Log.v(TAG, "initData()");
         } else {
             /**
              * 数据库有数据直接去获取
              */
-            mHaveData=true;
+            mHaveData = true;
             initTableData();
             init();
             Log.v(TAG, "initTableData()");
         }
     }
-
-
 
     private void initData() {
         //*******************************************
@@ -234,11 +232,12 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
                 mHandler.removeMessages(GOBack);
                 mHandler.sendEmptyMessageDelayed(GOBack, Constant.DELAY_BACK);
                 Log.v(TAG, "RequestTableData()***");
+                HideInputFromWindow();
             }
         });
         long orgid = getClientId();
         if (orgid == Constant.DESK_ID_DEF_DEFAULT) {
-           //布局默认需要输入OrgID
+            //布局默认需要输入OrgID
         } else {
             mDrawerLayout.setVisibility(View.GONE);
             mInputOrgId.setText(orgid + "", null);
@@ -265,14 +264,6 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
          * data of the TableTypes
          */
         mTableTypes = DatabaseHelper.getsInstance(this).obtainAllTableTypes();//得到数据库中的桌子类型
-//        if (mTableTypes == null || mTableTypes.size()==0) {
-//            /**
-//             * 数据库没有数据了，主动去请求数据
-//             */
-//            mDrawerLayout.setVisibility(View.VISIBLE);
-//            initData();
-//            return;
-//        }
         mSelectedTableId = OrderManager.getInstance(this).getTableId();
         mTablePagerAdapter = new TablePagerAdapter(getFragmentManager());
         //select the Table
@@ -385,7 +376,6 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
         return ClientId;
     }
 
-
     private void setClientId(String ClientId) {
         String data = "{\"OrgID\":" + ClientId + "}";
         Log.v(TAG, "data=" + data);
@@ -416,7 +406,6 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
         }
     }
 
-
     private void parserGson(String data) {
         Gson gson = new Gson();
         Log.v(TAG, "parserGson()=" + data);
@@ -433,7 +422,6 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
         List<TableTypeInfo> ListTableTypeInfo = tableResult.getTableTypeList();
         insertTableData(ListTableInfo, ListTableTypeInfo);
     }
-
 
     private void insertTableData(List<TableInfo> ListTableInfo, List<TableTypeInfo> ListTableTypeInfo) {
         DatabaseHelper databaseHelper = DatabaseHelper.getsInstance(this);
@@ -461,7 +449,6 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
         }
     }
 
-
     /**
      * 根据OrgID主动获取数据
      *
@@ -473,7 +460,7 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
         com.cleverm.smartpen.pushtable.Message message = com.cleverm.smartpen.pushtable.Message.create().messageType(MessageType.NOTIFICATION).header("Notice-Type", "FETCH_ORG_INFO").json(fileVo).build();
         HttpURLConnection conn = null;
         try {
-            URL url = new URL(Constant.DDP_URL+"/cleverm/sockjs/execCommand");
+            URL url = new URL(Constant.DDP_URL + "/cleverm/sockjs/execCommand");
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setDoInput(true);
@@ -494,32 +481,32 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
             Log.v(TAG, "FetchOrgInfoHandler=" + buffer.toString());
             //请求到数据
             if (buffer.toString() != null) {
-                Gson gson0=new Gson();
-                TableData Result=gson0.fromJson(buffer.toString(),TableData.class);
-                String data =Result.getBody();
-                Log.v(TAG, "FetchOrgInfoHandler=msg data="+data);
-                if(data==null){//请求到的数据是空
+                Gson gson0 = new Gson();
+                TableData Result = gson0.fromJson(buffer.toString(), TableData.class);
+                String data = Result.getBody();
+                Log.v(TAG, "FetchOrgInfoHandler=msg data=" + data);
+                if (data == null) {//请求到的数据是空
                     mHandler.sendEmptyMessage(SHOW_INPUY_PSW);
                     Log.v(TAG, "FetchOrgInfoHandler=msg.sendToTarget() data=null");
-                }else {
-                    Gson gson=new Gson();
-                    TableResult tableResult=gson.fromJson(data,TableResult.class);
-                    if(tableResult.getTableList().size()==0 || tableResult.getTableTypeList().size()==0){
+                } else {
+                    Gson gson = new Gson();
+                    TableResult tableResult = gson.fromJson(data, TableResult.class);
+                    if (tableResult.getTableList().size() == 0 || tableResult.getTableTypeList().size() == 0) {
                         mHandler.sendEmptyMessage(SHOW_INPUY_PSW);
                         Log.v(TAG, "FetchOrgInfoHandler=msg.sendToTarget() size()=null");
-                    }else {
+                    } else {
                         Message msg = mHandler.obtainMessage();
                         msg.what = SHOWTABLE;
                         msg.obj = data;
                         msg.sendToTarget();
-                        Log.v(TAG, "FetchOrgInfoHandler=msg.sendToTarget() data="+data);
+                        Log.v(TAG, "FetchOrgInfoHandler=msg.sendToTarget() data=" + data);
                     }
                 }
                 Log.v(TAG, "FetchOrgInfoHandler=msg.sendToTarget()");
             }
             //没有请求到数据
             else {
-               mHandler.sendEmptyMessage(SHOW_INPUY_PSW);
+                mHandler.sendEmptyMessage(SHOW_INPUY_PSW);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -555,5 +542,14 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
 
         }
     };
+
+    /**
+     * 隐藏输入键盘
+     */
+    private void HideInputFromWindow(){
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mInputOrgId.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(mInputOrgId.getWindowToken(), 0);
+    }
 
 }

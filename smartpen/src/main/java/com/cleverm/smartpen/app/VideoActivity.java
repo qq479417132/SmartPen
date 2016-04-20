@@ -681,7 +681,6 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         Log.v(TAG, "AnimationStart=" + id);
         mrlNoticeText.setText(text);
         mHandler.sendEmptyMessageDelayed(STOP_ANIMATION, DELAY_TIME);
-
     }
 
     public class UpdateTableHandlerSuccess extends BroadcastReceiver{
