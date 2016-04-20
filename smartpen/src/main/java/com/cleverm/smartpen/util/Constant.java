@@ -149,7 +149,7 @@ public class Constant {
     /**
      * 后面加进来的新码
      */
-    public static final int ADD_SOUP = 1058;
+    public static final int FONDUE_SOUP = 1058;
     public static final int CHANGE_TABLEWARE = 1059;
     public static final int AWARD = 1055;
     public static final int FINANCIAL = 1057;
@@ -221,16 +221,21 @@ public class Constant {
     public static final String TAB_ID = "id";
     public static final String TAB_DESKID = "DeskId";
 
+    /**
+     * 短信码
+     */
+    public static final int FOOD_ADD_SMS = 1;
+    public static final int WATER_ADD_SMS = 2;
+    public static final int TISSUE_ADD_SMS = 3;
+    public static final int PAY_MONRY_SMS = 4;
+    public static final int OTHER_SERVICE_SMS = 5;
+    public static final int CLEAN_SMS = 20;
+    public static final int PEN_PULL_OUT_SMS = 15;
+    public static final int CASH_PAY_SMS = 16;
+    public static final int UNION_CARD_PAY_SMS = 17;
+    public static final int FONDUE_SOUP_SMS=21;
+    public static final int CHANGE_TABLEWARE_SMS=22;
 
-    public static final int FOOD_ADD = 1;
-    public static final int WATER_ADD = 2;
-    public static final int TISSUE_ADD = 3;
-    public static final int PAY_MONRY = 4;
-    public static final int OTHER_SERVICE = 5;
-    public static final int CLEAN = 20;
-    public static final int PEN_PULL_OUT = 15;
-    public static final int CASH_PAY = 16;
-    public static final int UNION_CARD_PAY = 17;
     public static final int TEMPLATEID_DELAY = 30000;
 
 

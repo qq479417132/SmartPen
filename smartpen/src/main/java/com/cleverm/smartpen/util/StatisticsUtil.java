@@ -115,7 +115,11 @@ public class StatisticsUtil {
     public static final int CLEAN_DESK=28;
     public static final String CLEAN_DESK_DESC="收拾桌面";
 
+    public static final int FONDUE_SOUP_STAT=29;
+    public static final String FONDUE_SOUP_STAT_DESC="火锅加汤";
 
+    public static final int CHANGE_TABLEWARE_STAT=30;
+    public static final String CHANGE_TABLEWARE_STAT_DESC="更换餐具";
 
     //点点笔数据库名
     private static final String DB_NAME="ddb_db";

@@ -59,7 +59,9 @@ public class ScanUtil {
             case Constant.ADD_WATER5:
             case Constant.TISSUE5:
             case Constant.OTHER5:
-            case Constant.CLEAN_DESK: {
+            case Constant.CLEAN_DESK:
+            case Constant.FONDUE_SOUP:
+            case Constant.CHANGE_TABLEWARE:{
                 IntentUtil.goCallService(context,id,isShouldListener);
                 break;
             }
@@ -202,10 +204,7 @@ public class ScanUtil {
                 IntentUtil.goToBuyMyself(context);
                 break;
             }
-            //火锅加汤
-            case Constant.ADD_SOUP:
-                //更换餐具
-            case Constant.CHANGE_TABLEWARE:
+
                 //打赏
             case Constant.AWARD:
                 //金融

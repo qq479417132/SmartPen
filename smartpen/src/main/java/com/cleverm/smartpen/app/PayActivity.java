@@ -22,7 +22,6 @@ import com.cleverm.smartpen.util.NetWorkUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
-import com.umeng.analytics.MobclickAgent;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -101,7 +100,7 @@ public class PayActivity extends BaseActivity {
                 StatisticsUtil.getInstance().insertWithSecondEvent(StatisticsUtil.CALL_PAY,StatisticsUtil.CALL_PAY_DESC+"--"+StatisticsUtil.CALL_PAY_CASH_DESC,StatisticsUtil.CALL_PAY_CASH);
                 mHandler.removeCallbacksAndMessages(null);
                 mHandler.sendEmptyMessageDelayed(GOBack, TIME);
-                NotificateWaiter(Constant.CASH_PAY);
+                NotificateWaiter(Constant.CASH_PAY_SMS);
             }
         });
         mUnionCardPay= (Button) findViewById(R.id.union_pay_card_pay);
@@ -112,7 +111,7 @@ public class PayActivity extends BaseActivity {
                 StatisticsUtil.getInstance().insertWithSecondEvent(StatisticsUtil.CALL_PAY,StatisticsUtil.CALL_PAY_DESC+"--"+StatisticsUtil.CALL_PAY_CARD_DESC,StatisticsUtil.CALL_PAY_CARD);
                 mHandler.removeCallbacksAndMessages(null);
                 mHandler.sendEmptyMessageDelayed(GOBack, TIME);
-                NotificateWaiter(Constant.UNION_CARD_PAY);
+                NotificateWaiter(Constant.UNION_CARD_PAY_SMS);
             }
         });
         mClose= (ImageView) findViewById(R.id.pay_close);

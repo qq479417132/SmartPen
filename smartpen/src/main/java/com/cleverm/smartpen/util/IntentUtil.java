@@ -2,7 +2,6 @@ package com.cleverm.smartpen.util;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -83,7 +82,7 @@ public class IntentUtil {
             case Constant.ORDER_DISHES3:
             case Constant.ORDER_DISHES4:
             case Constant.ORDER_DISHES5: {
-                templateID = Constant.FOOD_ADD;
+                templateID = Constant.FOOD_ADD_SMS;
                 break;
             }
             case Constant.ADD_WATER1:
@@ -91,7 +90,7 @@ public class IntentUtil {
             case Constant.ADD_WATER3:
             case Constant.ADD_WATER4:
             case Constant.ADD_WATER5: {
-                templateID = Constant.WATER_ADD;
+                templateID = Constant.WATER_ADD_SMS;
                 break;
             }
             case Constant.PAY1:
@@ -99,7 +98,7 @@ public class IntentUtil {
             case Constant.PAY3:
             case Constant.PAY4:
             case Constant.PAY5: {
-                templateID = Constant.PAY_MONRY;
+                templateID = Constant.PAY_MONRY_SMS;
                 break;
             }
             case Constant.TISSUE1:
@@ -107,7 +106,7 @@ public class IntentUtil {
             case Constant.TISSUE3:
             case Constant.TISSUE4:
             case Constant.TISSUE5: {
-                templateID = Constant.TISSUE_ADD;
+                templateID = Constant.TISSUE_ADD_SMS;
                 break;
             }
             case Constant.OTHER1:
@@ -115,11 +114,19 @@ public class IntentUtil {
             case Constant.OTHER3:
             case Constant.OTHER4:
             case Constant.OTHER5: {
-                templateID = Constant.OTHER_SERVICE;
+                templateID = Constant.OTHER_SERVICE_SMS;
                 break;
             }
             case Constant.CLEAN_DESK: {
-                templateID = Constant.CLEAN;
+                templateID = Constant.CLEAN_SMS;
+                break;
+            }
+            case Constant.FONDUE_SOUP:{
+                templateID=Constant.FONDUE_SOUP_SMS;
+                break;
+            }
+            case Constant.CHANGE_TABLEWARE:{
+                templateID=Constant.CHANGE_TABLEWARE_SMS;
                 break;
             }
             default: {
@@ -159,28 +166,36 @@ public class IntentUtil {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case Constant.FOOD_ADD: {
-                    mHashMap.put(Constant.FOOD_ADD, false);
+                case Constant.FOOD_ADD_SMS: {
+                    mHashMap.put(Constant.FOOD_ADD_SMS, false);
                     break;
                 }
-                case Constant.WATER_ADD: {
-                    mHashMap.put(Constant.WATER_ADD, false);
+                case Constant.WATER_ADD_SMS: {
+                    mHashMap.put(Constant.WATER_ADD_SMS, false);
                     break;
                 }
-                case Constant.TISSUE_ADD: {
-                    mHashMap.put(Constant.TISSUE_ADD, false);
+                case Constant.TISSUE_ADD_SMS: {
+                    mHashMap.put(Constant.TISSUE_ADD_SMS, false);
                     break;
                 }
-                case Constant.PAY_MONRY: {
-                    mHashMap.put(Constant.PAY_MONRY, false);
+                case Constant.PAY_MONRY_SMS: {
+                    mHashMap.put(Constant.PAY_MONRY_SMS, false);
                     break;
                 }
-                case Constant.OTHER_SERVICE: {
-                    mHashMap.put(Constant.OTHER_SERVICE, false);
+                case Constant.OTHER_SERVICE_SMS: {
+                    mHashMap.put(Constant.OTHER_SERVICE_SMS, false);
                     break;
                 }
-                case Constant.CLEAN: {
-                    mHashMap.put(Constant.CLEAN, false);
+                case Constant.CLEAN_SMS: {
+                    mHashMap.put(Constant.CLEAN_SMS, false);
+                    break;
+                }
+                case Constant.FONDUE_SOUP_SMS:{
+                    mHashMap.put(Constant.FONDUE_SOUP_SMS, false);
+                    break;
+                }
+                case Constant.CHANGE_TABLEWARE_SMS:{
+                    mHashMap.put(Constant.CHANGE_TABLEWARE_SMS, false);
                     break;
                 }
             }

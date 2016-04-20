@@ -1,36 +1,13 @@
 package com.cleverm.smartpen.service;
 
-import android.app.ActivityManager;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
-import android.util.Log;
-import android.widget.Toast;
 
-import com.cleverm.smartpen.app.DemoActivity;
-import com.cleverm.smartpen.app.DiscountActivity;
-import com.cleverm.smartpen.app.DriverActivity;
-import com.cleverm.smartpen.app.EvaluateActivity;
-import com.cleverm.smartpen.app.FutureActivity;
-import com.cleverm.smartpen.app.GameActivity;
-import com.cleverm.smartpen.app.LocalDiscountActivity;
-import com.cleverm.smartpen.app.PayActivity;
-import com.cleverm.smartpen.app.SelectTableActivity;
-import com.cleverm.smartpen.app.VideoActivity;
-import com.cleverm.smartpen.bean.TemplateIDState;
 import com.cleverm.smartpen.util.Constant;
-import com.cleverm.smartpen.util.IntentUtil;
-import com.cleverm.smartpen.util.NetWorkUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.ScanUtil;
-import com.cleverm.smartpen.util.StatisticsUtil;
-import com.cleverm.smartpen.util.WeakHandler;
-
-import java.util.HashMap;
 
 /**
  * Created by 95 on 2015/12/21.
@@ -108,7 +85,7 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
 
     @Override
     public void onDisconnect() {
-        QuickUtils.sendSMSToService(Constant.PEN_PULL_OUT);
+        QuickUtils.sendSMSToService(Constant.PEN_PULL_OUT_SMS);
     }
 
     public class penServiceBind extends Binder {

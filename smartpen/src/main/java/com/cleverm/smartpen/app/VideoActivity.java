@@ -1,7 +1,5 @@
 package com.cleverm.smartpen.app;
 
-import android.app.Activity;
-import android.bluetooth.BluetoothGatt;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,14 +21,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bleframe.library.BleManager;
-import com.bleframe.library.bundle.OnChangedBundle;
-import com.bleframe.library.bundle.OnLeScanBundle;
-import com.bleframe.library.bundle.OnWriteReadBundle;
-import com.bleframe.library.callback.BlatandAPICallback;
-import com.bleframe.library.callback.SimpleBlatandAPICallback;
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.Version.VersionManager;
 import com.cleverm.smartpen.application.CleverM;
@@ -47,7 +38,6 @@ import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.DownloadUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
-import com.cleverm.smartpen.util.ScanUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
 import com.cleverm.smartpen.util.VideoTimeTask;
 import com.cleverm.smartpen.util.VideoUtil;
@@ -85,12 +75,14 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     public static final int GET_PENSERVICE = 3;
     public static final int GET_STUB = 4;
     public static final int DELAY_TIME = 3000;
-    public static final int FOOD_ADD = Constant.FOOD_ADD;
-    public static final int WATER_ADD = Constant.WATER_ADD;
-    public static final int TISSUE_ADD = Constant.TISSUE_ADD;
-    public static final int PAY_MONRY = Constant.PAY_MONRY;
-    public static final int OTHER_SERVICE = Constant.OTHER_SERVICE;
-    public static final int CLEAN = Constant.CLEAN;
+    public static final int FOOD_ADD = Constant.FOOD_ADD_SMS;
+    public static final int WATER_ADD = Constant.WATER_ADD_SMS;
+    public static final int TISSUE_ADD = Constant.TISSUE_ADD_SMS;
+    public static final int PAY_MONRY = Constant.PAY_MONRY_SMS;
+    public static final int OTHER_SERVICE = Constant.OTHER_SERVICE_SMS;
+    public static final int CLEAN = Constant.CLEAN_SMS;
+    public static final int FONDUE_SOUP_SMS=Constant.FONDUE_SOUP_SMS;
+    public static final int CHANGE_TABLEWARE_SMS=Constant.CHANGE_TABLEWARE_SMS;
 
     public static final String VIDEO_ACTIVITY_KEY = "video_activity_key";
     public static final String VIDEO_ACTIVITY_ISSEND = "video_activity_isSend";
@@ -124,7 +116,9 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                 case Constant.PAY5:
                 case Constant.TISSUE5:
                 case Constant.OTHER5:
-                case Constant.CLEAN_DESK:{
+                case Constant.CLEAN_DESK:
+                case Constant.FONDUE_SOUP:
+                case Constant.CHANGE_TABLEWARE: {
                     Log.v(TAG, "AnimationStart(msg.what)=" + msg.what);
                     //xiong change on 20160322
                     //AnimationStart(msg.what);
@@ -199,7 +193,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
 
     private void initBroadcastReceiver() {
         mUpdateTableHandlerSuccess=new UpdateTableHandlerSuccess();
-        registerReceiver(mUpdateTableHandlerSuccess,new IntentFilter(SUCCESSACTION));
+        registerReceiver(mUpdateTableHandlerSuccess, new IntentFilter(SUCCESSACTION));
     }
 
     @Override
@@ -433,6 +427,20 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                 StatisticsUtil.getInstance().insert(StatisticsUtil.CLEAN_DESK,StatisticsUtil.CLEAN_DESK_DESC);
                 break;
             }
+            case Constant.FONDUE_SOUP:{
+                templateID = FONDUE_SOUP_SMS;
+                //统计代码
+                StatisticsUtil.getInstance().insert(StatisticsUtil.FONDUE_SOUP_STAT,StatisticsUtil.FONDUE_SOUP_STAT_DESC);
+                break;
+            }
+            case Constant.CHANGE_TABLEWARE:{
+                templateID = CHANGE_TABLEWARE_SMS;
+                //统计代码
+                StatisticsUtil.getInstance().insert(StatisticsUtil.CHANGE_TABLEWARE_STAT,StatisticsUtil.CHANGE_TABLEWARE_STAT_DESC);
+                break;
+            }
+
+
         }
         long deskId = RememberUtil.getLong(SelectTableActivity.SELECTEDTABLEID, Constant.DESK_ID_DEF_DEFAULT);
         if (deskId == Constant.DESK_ID_DEF_DEFAULT) {
@@ -580,6 +588,16 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                         text = getString(R.string.clean);
                         break;
                     }
+                    case Constant.FONDUE_SOUP:{
+                        mivNoticeImage.setImageResource(R.mipmap.icon_clean);
+                        text = getString(R.string.fondue_soup);
+                        break;
+                    }
+                    case Constant.CHANGE_TABLEWARE:{
+                        mivNoticeImage.setImageResource(R.mipmap.icon_clean);
+                        text = getString(R.string.change_tableware);
+                        break;
+                    }
                 }
                 Log.v(TAG, "AnimationStart=" + id);
                 mrlNoticeText.setText(text);
@@ -646,6 +664,19 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                 text = getString(R.string.clean);
                 break;
             }
+            case Constant.FONDUE_SOUP:{
+                mivNoticeImage.setImageResource(R.mipmap.icon_clean);
+                text = getString(R.string.fondue_soup);
+                break;
+            }
+            case Constant.CHANGE_TABLEWARE:{
+                mivNoticeImage.setImageResource(R.mipmap.icon_clean);
+                text = getString(R.string.change_tableware);
+
+                break;
+            }
+
+
         }
         Log.v(TAG, "AnimationStart=" + id);
         mrlNoticeText.setText(text);

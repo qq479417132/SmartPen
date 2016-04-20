@@ -9,6 +9,7 @@ import com.cleverm.smartpen.ui.FullScreenVideoView;
 
 import org.json.JSONException;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
