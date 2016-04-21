@@ -35,16 +35,17 @@ public class IntentUtil {
 
     /**
      * 从VideoActivity向其他的界面做跳转
+     *
      * @param activity 原Activity.this
-     * @param clazz 要跳转的界面
+     * @param clazz    要跳转的界面
      */
-    public static void startPenddingActivity(Activity activity,Class clazz){
-        Intent intent=new Intent(activity, clazz);
+    public static void startPenddingActivity(Activity activity, Class clazz) {
+        Intent intent = new Intent(activity, clazz);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(intent);
     }
 
-    public static void goCallService(Context service,int id,boolean isShouldListener){
+    public static void goCallService(Context service, int id, boolean isShouldListener) {
         TemplateIDState templateIDState = ChoiceTemplateIDState(id);
         if (!"VideoActivity".equals(penService.mActivityFlag)) {
             Intent intent = new Intent(service, VideoActivity.class);
@@ -55,13 +56,11 @@ public class IntentUtil {
             penService.mActivityFlag = "VideoActivity";
         } else {
             if (NetWorkUtil.hasNetwork()) {
-                if(isShouldListener){
+                if (isShouldListener) {
                     VideoActivity.getVideoActivity().receiveData(templateIDState.getId(), templateIDState.isSend());
-                }else{
-                   VideoActivity.getVideoActivity().receiveData(templateIDState.getId(), templateIDState.isSend());
+                } else {
+                    VideoActivity.getVideoActivity().receiveData(templateIDState.getId(), templateIDState.isSend());
                 }
-
-
             } else {
                 QuickUtils.toast("网络异常，请直接找服务员～");
             }
@@ -121,12 +120,12 @@ public class IntentUtil {
                 templateID = Constant.CLEAN_SMS;
                 break;
             }
-            case Constant.FONDUE_SOUP:{
-                templateID=Constant.FONDUE_SOUP_SMS;
+            case Constant.FONDUE_SOUP: {
+                templateID = Constant.FONDUE_SOUP_SMS;
                 break;
             }
-            case Constant.CHANGE_TABLEWARE:{
-                templateID=Constant.CHANGE_TABLEWARE_SMS;
+            case Constant.CHANGE_TABLEWARE: {
+                templateID = Constant.CHANGE_TABLEWARE_SMS;
                 break;
             }
             default: {
@@ -144,7 +143,6 @@ public class IntentUtil {
         }
         return templateIDState;
     }
-
 
     private static HashMap<Integer, Boolean> mHashMap = new HashMap<Integer, Boolean>();
 
@@ -190,11 +188,11 @@ public class IntentUtil {
                     mHashMap.put(Constant.CLEAN_SMS, false);
                     break;
                 }
-                case Constant.FONDUE_SOUP_SMS:{
+                case Constant.FONDUE_SOUP_SMS: {
                     mHashMap.put(Constant.FONDUE_SOUP_SMS, false);
                     break;
                 }
-                case Constant.CHANGE_TABLEWARE_SMS:{
+                case Constant.CHANGE_TABLEWARE_SMS: {
                     mHashMap.put(Constant.CHANGE_TABLEWARE_SMS, false);
                     break;
                 }
@@ -206,13 +204,12 @@ public class IntentUtil {
      * 30s内短信发送一次
      * ************************************************
      */
-
-
     /**
      * 呼叫结账
+     *
      * @param service
      */
-    public static void goToPayActivity(Context service){
+    public static void goToPayActivity(Context service) {
         if (!"PayActivity".equals(penService.mActivityFlag)) {
             Intent intent = new Intent(service, PayActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
@@ -226,9 +223,10 @@ public class IntentUtil {
 
     /**
      * Demo
+     *
      * @param service
      */
-    public static void goToDemoActivity(Context service){
+    public static void goToDemoActivity(Context service) {
         if (!"DemoActivity".equals(penService.mActivityFlag)) {
             Intent intent = new Intent(service, DemoActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -237,7 +235,7 @@ public class IntentUtil {
         }
     }
 
-    public static void goToEvaluateActivity(Context service){
+    public static void goToEvaluateActivity(Context service) {
         if (!"EvaluateActivity".equals(penService.mActivityFlag)) {
             Intent intent = new Intent(service, EvaluateActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -248,9 +246,10 @@ public class IntentUtil {
 
     /**
      * 代驾服务
+     *
      * @param service
      */
-    public static void goToDriverActivity(Context service){
+    public static void goToDriverActivity(Context service) {
         if (!"DriverActivity".equals(penService.mActivityFlag)) {
             Intent intent = new Intent(service, DriverActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
@@ -264,9 +263,10 @@ public class IntentUtil {
 
     /**
      * 设置桌号
+     *
      * @param service
      */
-    public static void goToSelectTableActivity(Context service){
+    public static void goToSelectTableActivity(Context service) {
         if (!"SelectTableActivity".equals(penService.mActivityFlag)) {
             Intent intent = new Intent(service, SelectTableActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
@@ -278,13 +278,13 @@ public class IntentUtil {
         }
     }
 
-
     /**
      * 优惠专区
+     *
      * @param service
      */
-    public static void goToDiscountActivity(Context service){
-        if(QuickUtils.checkDiscountEmptyData()){
+    public static void goToDiscountActivity(Context service) {
+        if (QuickUtils.checkDiscountEmptyData()) {
             if (!"FutureActivity".equals(penService.mActivityFlag)) {
                 Intent intent = new Intent(service, FutureActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
@@ -296,7 +296,7 @@ public class IntentUtil {
                 service.startActivity(intent);
                 penService.mActivityFlag = "FutureActivity";
             }
-        }else{
+        } else {
             if (!"DiscountActivity".equals(penService.mActivityFlag)) {
                 Intent intent = new Intent(service, DiscountActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
@@ -311,9 +311,10 @@ public class IntentUtil {
 
     /**
      * 本店推荐
+     *
      * @param service
      */
-    public static void goToLocalDiscountActivity(Context service){
+    public static void goToLocalDiscountActivity(Context service) {
         if (!"LocalDiscountActivity".equals(penService.mActivityFlag)) {
             Intent intent = new Intent(service, LocalDiscountActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
@@ -328,17 +329,17 @@ public class IntentUtil {
     /**
      * 启动APP
      */
-    public static void goToLauncherApp(Context context,String packName,int statId,String statDesc){
-        LauncherApp(context,packName,statId,statDesc);
+    public static void goToLauncherApp(Context context, String packName, int statId, String statDesc) {
+        LauncherApp(context, packName, statId, statDesc);
         penService.mActivityFlag = packName;
-
     }
 
     /**
      * 手游试玩
+     *
      * @param context
      */
-    public static void goToH5Game(Context context){
+    public static void goToH5Game(Context context) {
         //手游试玩
         if (!"GAME_ACTIVITY".equals(penService.mActivityFlag)) {
             Intent intent = new Intent(context, GameActivity.class);
@@ -352,7 +353,7 @@ public class IntentUtil {
         }
     }
 
-    public static void goToH5Round(Context context){
+    public static void goToH5Round(Context context) {
         if (!penService.DISCOUNT.equals(penService.mActivityFlag)) {
             Intent intent = new Intent(context, GameActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
@@ -365,7 +366,7 @@ public class IntentUtil {
         }
     }
 
-    public static void goToBuyMyself(Context context){
+    public static void goToBuyMyself(Context context) {
         if (!"FutureActivity".equals(penService.mActivityFlag)) {
             Intent intent = new Intent(context, FutureActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
@@ -379,7 +380,7 @@ public class IntentUtil {
         }
     }
 
-    public static void goToUnknow(Context context){
+    public static void goToUnknow(Context context) {
         if (!penService.UN_KNOW.equals(penService.mActivityFlag)) {
             Intent intent = new Intent(context, FutureActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
@@ -393,17 +394,17 @@ public class IntentUtil {
         }
     }
 
-    private static void LauncherApp(Context context,String packageName, int eventId, String eventDesc) {
+    private static void LauncherApp(Context context, String packageName, int eventId, String eventDesc) {
         try {
             //弹跳APP的统计代码
             StatisticsUtil.getInstance().insert(eventId, eventDesc);
             String topActivityAppName = getTopActivityAppName(context);
 
-            if(isSameFlag(packageName)){
+            if (isSameFlag(packageName)) {
                 return;
             }
 
-            if(topActivityAppName.equals(packageName)){
+            if (topActivityAppName.equals(packageName)) {
                 return;
             }
 
@@ -433,18 +434,19 @@ public class IntentUtil {
 
     /**
      * 这个函数在台电平板中得到的总是点点笔package
+     *
      * @return
      */
-    private static String getTopActivityAppName(Context context){
+    private static String getTopActivityAppName(Context context) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         ActivityManager.RunningTaskInfo info = manager.getRunningTasks(1).get(0);
         String packageName = info.topActivity.getPackageName(); //包名
         return packageName;
     }
 
-    private static boolean isSameFlag(String packageName){
-        if(penService.mActivityFlag!=null||penService.mActivityFlag!=penService.UN_KNOW){
-            if(packageName==penService.mActivityFlag){
+    private static boolean isSameFlag(String packageName) {
+        if (penService.mActivityFlag != null || penService.mActivityFlag != penService.UN_KNOW) {
+            if (packageName == penService.mActivityFlag) {
                 return true;
             }
         }

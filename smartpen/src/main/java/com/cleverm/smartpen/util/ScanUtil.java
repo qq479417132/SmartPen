@@ -3,8 +3,6 @@ package com.cleverm.smartpen.util;
 import android.content.Context;
 import android.util.Log;
 
-import com.cleverm.smartpen.service.penService;
-
 /**
  * Created by xiong,An android project Engineer,on 13/4/2016.
  * Data:13/4/2016  下午 04:23
@@ -26,7 +24,6 @@ public class ScanUtil {
 
     private ScanUtil() {
     }
-
 
     /**
      * 状态值匹配

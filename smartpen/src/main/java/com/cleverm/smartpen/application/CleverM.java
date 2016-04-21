@@ -12,8 +12,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.BatteryManager;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
+import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -28,7 +29,7 @@ import com.bleframe.library.config.BleConfig;
 import com.bleframe.library.log.BleLog;
 import com.bleframe.library.profile.SmartPenProfile;
 import com.bleframe.library.util.BleUtils;
-import com.cleverm.smartpen.app.VideoActivity;
+import com.cleverm.smartpen.bean.TemplateIDState;
 import com.cleverm.smartpen.log.CrashHandler;
 import com.cleverm.smartpen.net.InfoSendSMSVo;
 import com.cleverm.smartpen.net.RequestNet;
@@ -58,19 +59,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * Created by 95 on 2016/1/13.
  */
 public class CleverM extends Application {
-
+    public static final String TAG=CleverM.class.getSimpleName();
 
     private static Application application;
     private static ThinDownloadManager thinDownloadManager;
     private static SQLiteDatabase db;
     private static StatsDao statsDao;
-    
-    public static final String TAG=CleverM.class.getSimpleName();
+
     public static final String PATH= Environment.getExternalStorageDirectory().getPath()+"/logFile/log";
     private static final String PREFS_NAME = "com.Clever.myapp";
     private boolean mSendLOWPOWER=true;
@@ -225,10 +226,6 @@ public class CleverM extends Application {
         }
     };
 
-
-
-
-
     private void initImageLoader() {
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .bitmapConfig(Bitmap.Config.RGB_565)// 设置图片的解码类型
@@ -254,8 +251,6 @@ public class CleverM extends Application {
         db=daoReturnValue.getDb();
         statsDao = daoReturnValue.getStatsDao();
     }
-
-
 
     private void initEvnet() {
         BroadcastEvent.init(this);
@@ -286,7 +281,6 @@ public class CleverM extends Application {
         super.onTerminate();
         onExit();
     }
-
 
     private void initNet() {
         /**
@@ -408,9 +402,61 @@ public class CleverM extends Application {
             e.printStackTrace();
         }
         return result;
-
-
     }
 
+
+    /**
+     * ************************************************
+     * 30s内呼叫结账二级菜单短信发送一次
+     * ************************************************
+     */
+    private static HashMap<Integer, Boolean> mHashMap = new HashMap<Integer, Boolean>();
+
+    public static TemplateIDState getTemplate(int templateID) {
+        TemplateIDState templateIDState = new TemplateIDState();
+        boolean isSend = getTemplateIDState(templateID);
+        if (isSend) {
+            templateIDState.setId(templateID);
+            templateIDState.setIsSend(true);
+        } else {
+            setTemplateIDState(templateID);
+            templateIDState.setId(templateID);
+            templateIDState.setIsSend(false);
+        }
+        return templateIDState;
+    }
+
+    private static boolean getTemplateIDState(int TemplateID) {
+        Boolean flag = mHashMap.get(TemplateID);
+        if (flag == null) {
+            return false;
+        } else {
+            return flag;
+        }
+    }
+
+    private static void setTemplateIDState(int TemplateID) {
+        mHashMap.put(TemplateID, true);
+        mSMSHand.sendEmptyMessageDelayed(TemplateID, Constant.TEMPLATEID_DELAY);
+    }
+
+    private static Handler mSMSHand = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case Constant.CASH_PAY_SMS: {
+                    mHashMap.put(Constant.CASH_PAY_SMS, false);
+                    break;
+                }
+                case Constant.UNION_CARD_PAY_SMS: {
+                    mHashMap.put(Constant.UNION_CARD_PAY_SMS, false);
+                    break;
+                }
+                default:{
+                    break;
+                }
+            }
+        }
+    };
 
 }
