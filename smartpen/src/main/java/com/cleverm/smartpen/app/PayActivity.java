@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import com.alibaba.fastjson.JSON;
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
+import com.cleverm.smartpen.bean.TemplateIDState;
 import com.cleverm.smartpen.net.InfoSendSMSVo;
 import com.cleverm.smartpen.net.RequestNet;
 import com.cleverm.smartpen.pushtable.MessageType;
@@ -33,11 +34,11 @@ import java.net.URL;
 public class PayActivity extends BaseActivity {
 
     public static final String TAG = PayActivity.class.getSimpleName();
-    public static final String SELECTEDTABLEID="SelectedTableId";
-    private Object object=new Object();
+    public static final String SELECTEDTABLEID = "SelectedTableId";
+    private Object object = new Object();
     public static final int GOBack = 200;
     public static final int TIME = 60000;
-    public static final int NotificateWaiterSHOW= 201;
+    public static final int NotificateWaiterSHOW = 201;
     public static final int NotificateWaiterGone = 202;
     public static final int NOTIFICATEWAITERGONE_IMMEDIATELY = 203;
     public static final int NotificateWaiterTIME = 2000;
@@ -56,15 +57,15 @@ public class PayActivity extends BaseActivity {
                     ((CleverM) getApplication()).getpenService().setActivityFlag("VideoActivity");
                     break;
                 }
-                case NotificateWaiterSHOW:{
+                case NotificateWaiterSHOW: {
                     mNotificateWaiter.setVisibility(View.VISIBLE);
                     break;
                 }
-                case NotificateWaiterGone:{
+                case NotificateWaiterGone: {
                     mNotificateWaiter.setVisibility(View.GONE);
                     break;
                 }
-                case NOTIFICATEWAITERGONE_IMMEDIATELY:{
+                case NOTIFICATEWAITERGONE_IMMEDIATELY: {
                     mNotificateWaiter.setVisibility(View.GONE);
                     this.sendEmptyMessage(GOBack);
                     break;
@@ -72,12 +73,12 @@ public class PayActivity extends BaseActivity {
             }
         }
     };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pay_activity);
         initView();
-
     }
 
     @Override
@@ -91,30 +92,30 @@ public class PayActivity extends BaseActivity {
     }
 
     private void initView() {
-        mNotificateWaiter= (LinearLayout) findViewById(R.id.notificate_waiter);
-        mCashPay= (Button) findViewById(R.id.cash_pay);
+        mNotificateWaiter = (LinearLayout) findViewById(R.id.notificate_waiter);
+        mCashPay = (Button) findViewById(R.id.cash_pay);
         mCashPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //统计代码
-                StatisticsUtil.getInstance().insertWithSecondEvent(StatisticsUtil.CALL_PAY,StatisticsUtil.CALL_PAY_DESC+"--"+StatisticsUtil.CALL_PAY_CASH_DESC,StatisticsUtil.CALL_PAY_CASH);
+                StatisticsUtil.getInstance().insertWithSecondEvent(StatisticsUtil.CALL_PAY, StatisticsUtil.CALL_PAY_DESC + "--" + StatisticsUtil.CALL_PAY_CASH_DESC, StatisticsUtil.CALL_PAY_CASH);
                 mHandler.removeCallbacksAndMessages(null);
                 mHandler.sendEmptyMessageDelayed(GOBack, TIME);
                 NotificateWaiter(Constant.CASH_PAY_SMS);
             }
         });
-        mUnionCardPay= (Button) findViewById(R.id.union_pay_card_pay);
+        mUnionCardPay = (Button) findViewById(R.id.union_pay_card_pay);
         mUnionCardPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //统计代码
-                StatisticsUtil.getInstance().insertWithSecondEvent(StatisticsUtil.CALL_PAY,StatisticsUtil.CALL_PAY_DESC+"--"+StatisticsUtil.CALL_PAY_CARD_DESC,StatisticsUtil.CALL_PAY_CARD);
+                StatisticsUtil.getInstance().insertWithSecondEvent(StatisticsUtil.CALL_PAY, StatisticsUtil.CALL_PAY_DESC + "--" + StatisticsUtil.CALL_PAY_CARD_DESC, StatisticsUtil.CALL_PAY_CARD);
                 mHandler.removeCallbacksAndMessages(null);
                 mHandler.sendEmptyMessageDelayed(GOBack, TIME);
                 NotificateWaiter(Constant.UNION_CARD_PAY_SMS);
             }
         });
-        mClose= (ImageView) findViewById(R.id.pay_close);
+        mClose = (ImageView) findViewById(R.id.pay_close);
         mClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -124,33 +125,43 @@ public class PayActivity extends BaseActivity {
     }
 
     private void NotificateWaiter(int payCode) {
-        if(!NetWorkUtil.hasNetwork()){
+        if (!NetWorkUtil.hasNetwork()) {
             QuickUtils.toast("网络异常，请直接找服务员～");
             return;
         }
-        long deskId = RememberUtil.getLong(SELECTEDTABLEID, Constant.DESK_ID_DEF_DEFAULT);;
-        if(deskId==Constant.DESK_ID_DEF_DEFAULT){
+        long deskId = RememberUtil.getLong(SELECTEDTABLEID, Constant.DESK_ID_DEF_DEFAULT);
+        if (deskId == Constant.DESK_ID_DEF_DEFAULT) {
             return;
         }
         final InfoSendSMSVo infoSendSMSVo = new InfoSendSMSVo();
         infoSendSMSVo.setTemplateID(payCode);
         infoSendSMSVo.setTableID(deskId);
-        synchronized (object){
-            new Thread(){
+        if(isSendSMSBerore(payCode)){
+            mHandler.sendEmptyMessage(NotificateWaiterSHOW);
+            mHandler.sendEmptyMessageDelayed(NOTIFICATEWAITERGONE_IMMEDIATELY, NotificateWaiterTIME);
+            return;
+        }
+        synchronized (object) {
+            new Thread() {
                 @Override
                 public void run() {
                     sendMes(infoSendSMSVo);
-                    Log.v(TAG,"NotificateWaiter");
+                    Log.v(TAG, "NotificateWaiter");
                 }
             }.start();
         }
     }
 
-    private void sendMes(InfoSendSMSVo infoSendSMSVo){
+    private boolean isSendSMSBerore(int payCode) {
+        TemplateIDState ts=CleverM.getTemplate(payCode);
+        return ts.isSend();
+    }
+
+    private void sendMes(InfoSendSMSVo infoSendSMSVo) {
         InfoSendSMSVo getSMSVo = RequestNet.getData(infoSendSMSVo);
         if (getSMSVo != null && getSMSVo.getSuccess()) {
             mHandler.sendEmptyMessage(NotificateWaiterSHOW);
-            mHandler.sendEmptyMessageDelayed(NOTIFICATEWAITERGONE_IMMEDIATELY,NotificateWaiterTIME);
+            mHandler.sendEmptyMessageDelayed(NOTIFICATEWAITERGONE_IMMEDIATELY, NotificateWaiterTIME);
             Log.v(TAG, "sendMes===isSuccess");
         } else {
             mHandler.sendEmptyMessage(NotificateWaiterGone);
@@ -159,12 +170,12 @@ public class PayActivity extends BaseActivity {
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         mHandler.removeCallbacksAndMessages(null);
         mHandler.sendEmptyMessageDelayed(GOBack, TIME);
         penService penService = ((CleverM) getApplication()).getpenService();
-        if(penService!=null){
+        if (penService != null) {
             penService.setActivityFlag("PayActivity");
         }
 
@@ -176,7 +187,6 @@ public class PayActivity extends BaseActivity {
         mHandler.removeCallbacksAndMessages(null);
     }
 
-
     /**
      * 主动去请求店铺数据
      */
@@ -187,13 +197,12 @@ public class PayActivity extends BaseActivity {
         infoSendSMSVo.setOrgID(102L);
         infoSendSMSVo.setTableID(145);
 
-
         com.cleverm.smartpen.pushtable.Message message = com.cleverm.smartpen.pushtable.Message.create().messageType(MessageType
                 .NOTIFICATION).header("Notice-Type", "SEND_SMSINTO").json(infoSendSMSVo).build();
         HttpURLConnection conn = null;
         try {
-            URL url = new URL(Constant.DDP_URL+"/cleverm/sockjs/execCommand");
-            Log.v(TAG,"http://120.25.159.173:8080/cleverm/sockjs/execCommand==");
+            URL url = new URL(Constant.DDP_URL + "/cleverm/sockjs/execCommand");
+            Log.v(TAG, "http://120.25.159.173:8080/cleverm/sockjs/execCommand==");
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setDoInput(true);
