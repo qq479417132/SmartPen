@@ -160,7 +160,7 @@ public class CleverM extends Application {
         return oidName;
     }
 
-    public BlatandAPICallback wirelessCallback = new SimpleBlatandAPICallback() {
+        public BlatandAPICallback wirelessCallback = new SimpleBlatandAPICallback() {
         @Override
         public void onNotifyValue(OnChangedBundle onChangedBundle) {
             BleLog.e(TAG+"onNotifyValue="+onChangedBundle.getValue());
