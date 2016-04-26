@@ -16,7 +16,6 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
 
     public static final String DEMO = "DEMO";
 
-
     public static final String TAG = penService.class.getSimpleName();
     private WandAPI mWandAPI;
     private MessageListener messageListener;
@@ -47,7 +46,7 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
 
     @Override
     public void onScan(int id) {
-        ScanUtil.getInstance().onScan(penService.this,id,true);
+        ScanUtil.getInstance().onScan(penService.this,id,messageListener);
     }
 
     public void setActivityFlag(String flag) {

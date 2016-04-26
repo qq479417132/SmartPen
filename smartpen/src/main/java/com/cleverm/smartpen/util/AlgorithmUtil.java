@@ -237,6 +237,9 @@ public class AlgorithmUtil {
      * 1.下载和存储(finished)
      * 2.排序(waiting2.0)
      * 3.裁剪播放(waiting2.0)
+     * //1.先判断服务器实现需要我们去更新
+     * //2.如果不需要更新,直接检查我们的视频目录是否存在视频
+     * //3.根据排序规则进行视频的依次播放
      *
      */
     public void startVideoPlayAlgorithm(FullScreenVideoView videoView,Activity activity){

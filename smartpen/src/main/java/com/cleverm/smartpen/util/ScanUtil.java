@@ -3,6 +3,9 @@ package com.cleverm.smartpen.util;
 import android.content.Context;
 import android.util.Log;
 
+import com.cleverm.smartpen.pushtable.StringUtils;
+import com.cleverm.smartpen.service.penService;
+
 /**
  * Created by xiong,An android project Engineer,on 13/4/2016.
  * Data:13/4/2016  下午 04:23
@@ -29,7 +32,7 @@ public class ScanUtil {
      * 状态值匹配
      * @param id
      */
-    public void onScan(Context context,int id,boolean isShouldListener) {
+    public void onScan(Context context,int id,penService.MessageListener messageListener) {
         Log.v(TAG, "onScan() id=" + id);
         if (id == 0) {
             return;
@@ -59,7 +62,7 @@ public class ScanUtil {
             case Constant.CLEAN_DESK:
             case Constant.FONDUE_SOUP:
             case Constant.CHANGE_TABLEWARE:{
-                IntentUtil.goCallService(context,id,isShouldListener);
+                IntentUtil.goCallService(context,id,messageListener);
                 break;
             }
             //呼叫服务员
@@ -203,7 +206,10 @@ public class ScanUtil {
             }
 
                 //打赏
-            case Constant.AWARD:
+            case Constant.AWARD:{
+                IntentUtil.goToFutureActivity(context,StatisticsUtil.OTHER_GIVE_MONEY, StatisticsUtil.OTHER_GIVE_MONEY_DESC);
+                break;
+            }
                 //金融
             case Constant.FINANCIAL:
                 //未知功能
