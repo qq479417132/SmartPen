@@ -20,7 +20,6 @@ import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.util.Constant;
-import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
 import com.google.gson.Gson;
@@ -57,16 +56,15 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
     private String mEnvirmentTextValue;
     private String meatInputValue;
     private String mequipmentInputValue;
-    public static final int EVALUATE_1 = 20;
-    public static final int EVALUATE_2 = 40;
-    public static final int EVALUATE_3 = 60;
-    public static final int EVALUATE_4 = 80;
-    public static final int EVALUATE_5 = 100;
+    public static final int EVALUATE_1 = 1;
+    public static final int EVALUATE_2 = 2;
+    public static final int EVALUATE_3 = 3;
+    public static final int EVALUATE_4 = 4;
+    public static final int EVALUATE_5 = 5;
     public static final String SELECTEDTABLEID = "SelectedTableId";
     public static final String ORGID ="OrgID";
     public static final String CLIENTID ="clientId";
     public static final String URL = Constant.DDP_URL+"/api/api/v10/evaluation/save";
-
 
     private Handler mHandler = new Handler() {
         @Override
@@ -241,10 +239,11 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void sendToService() {
-        int feelWhole = getRatingBarValue(mgeneralEvaluationRatingBar.getNumStars());
-        int feelFlavor = getRatingBarValue(mtaste.getNumStars());
-        int feelService = getRatingBarValue(mService.getNumStars());
-        int feelEnvironment = getRatingBarValue(mEnvirment.getNumStars());
+        int feelWhole = getRatingBarValue(mgeneralEvaluationRatingBar.getProgress());
+        int feelFlavor = getRatingBarValue(mtaste.getProgress());
+        int feelService = getRatingBarValue(mService.getProgress());
+        int feelEnvironment = getRatingBarValue(mEnvirment.getProgress());
+        Log.v(TAG,"mgeneralEvaluationRatingBar.getNumStars()="+mgeneralEvaluationRatingBar.getNumStars()+" feelWhole="+feelWhole +"  feelFlavor="+feelFlavor+" feelService="+feelService+" feelEnvironment="+feelEnvironment);
         Log.v(TAG,"tableId="+RememberUtil.getLong(SELECTEDTABLEID, Constant.DESK_ID_DEF_DEFAULT)+""+" orgId="+RememberUtil.getString(ORGID, " ")+" clientId="+RememberUtil.getString(CLIENTID, " "));
         OkHttpUtils.post()
                 .url(URL)
@@ -262,7 +261,7 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
                     @Override
                     public void onError(Call call, Exception e) {
                         e.printStackTrace();
-                        Log.v(TAG, "Exception");
+                        Log.v(TAG, "Exception="+e.toString());
                     }
 
                     @Override
@@ -274,6 +273,7 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
 
 
     private int getRatingBarValue(int NumStars) {
+        Log.v(TAG,"NumStars="+NumStars);
         int value = 0;
         switch (NumStars) {
             case EVALUATE_1: {
@@ -301,6 +301,7 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
                 break;
             }
         }
+        Log.v(TAG,"NumStars value="+value);
         return value;
     }
 
