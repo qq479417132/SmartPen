@@ -55,6 +55,7 @@ public class BGABanner extends RelativeLayout {
     private List<String> mTips;
     private LinearLayout mPointRealContainerLl;
     private TextView mTipTv;
+    private int mCrossNum=30000;//Use Integer.MAX_VALUE will be ANR!
     private boolean mAutoPlayAble = true;
     private boolean mIsAutoPlaying = false;
     private int mAutoPlayInterval = 3000;
@@ -292,7 +293,7 @@ public class BGABanner extends RelativeLayout {
 
     private void processAutoPlay() {
         if (mAutoPlayAble) {
-            int zeroItem = Integer.MAX_VALUE / 2 - (Integer.MAX_VALUE / 2) % mViews.size();
+            int zeroItem =mCrossNum / 2 - (mCrossNum / 2) % mViews.size();
             mViewPager.setCurrentItem(zeroItem,true);
 
             startAutoPlay();
@@ -491,7 +492,7 @@ public class BGABanner extends RelativeLayout {
         @Override
         public int getCount() {
             //无限滑动BUG
-            return mAutoPlayAble ? Integer.MAX_VALUE : mViews.size();
+            return mAutoPlayAble ? mCrossNum : mViews.size();
         }
 
         @Override

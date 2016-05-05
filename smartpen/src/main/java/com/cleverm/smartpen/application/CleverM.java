@@ -14,6 +14,7 @@ import android.os.BatteryManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
@@ -42,6 +43,8 @@ import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.cleverm.smartpen.util.ScanUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
+import com.cleverm.smartpen.util.TimerPlanUtil;
+import com.cleverm.smartpen.util.Toastor;
 import com.cleverm.smartpen.util.cache.FileRememberUtil;
 import com.cleverm.smartpen.util.evnet.BroadcastEvent;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -84,6 +87,8 @@ public class CleverM extends Application {
     private static final String sOidText = "oid.txt";
     private static final String sPath= Environment.getExternalStorageDirectory().getAbsolutePath() + "/muyeoid";
     private static final String  sDefaultOid="001";
+    private Toastor toastor;
+    private TimerPlanUtil timer;
 
 
     private penService mpenService;
@@ -115,8 +120,10 @@ public class CleverM extends Application {
     public void onCreate() {
         super.onCreate();
         application=this;
+        initTostar();
         initNet();
         initWirelessPen();
+        initWirelessTimer();
         CrashHandler.getInstance().init(this, PATH);
         MobclickAgent.setCatchUncaughtExceptions(true);
         RememberUtil.init(getApplicationContext(), PREFS_NAME);
@@ -126,6 +133,24 @@ public class CleverM extends Application {
         initEvnet();
         initDataBase();
         mPowerReceiver.register();
+    }
+
+    private void initWirelessTimer() {
+        timer = new TimerPlanUtil.Builder()
+                .listener(new TimerPlanUtil.OnTickListener() {
+                    @Override
+                    public void onTick(long timestampInMilliseconds) {
+                        BleManager.getInstance().startTimerScan();
+                    }
+                })
+                .looper(Looper.getMainLooper())
+                .timerIntervalInSeconds(3)
+                .build();
+        timer.start();
+    }
+
+    private void initTostar() {
+         toastor = new Toastor(this);
     }
 
     private void initWirelessPen() {
@@ -142,6 +167,7 @@ public class CleverM extends Application {
                 build();
         BleManager.getInstance().init(config);
         BleManager.getInstance().onCreate(this, wirelessCallback);
+
     }
 
     /**
@@ -164,8 +190,7 @@ public class CleverM extends Application {
         @Override
         public void onNotifyValue(OnChangedBundle onChangedBundle) {
             BleLog.e(TAG+"onNotifyValue="+onChangedBundle.getValue());
-            ScanUtil instance = ScanUtil.getInstance();
-            instance.onScan(CleverM.this,QuickUtils.hexToString(onChangedBundle.getValue()),false);
+            getpenService().onScan(QuickUtils.hexToString(onChangedBundle.getValue()));
         }
 
         @Override
@@ -176,21 +201,19 @@ public class CleverM extends Application {
 
         @Override
         public boolean onDeviceFound(OnLeScanBundle info) {
-            BleLog.e(TAG+"发现设备");
-            Toast.makeText(CleverM.getApplication(), "发现设备", Toast.LENGTH_LONG).show();
+            BleLog.e(TAG + "发现设备");
             return super.onDeviceFound(info);
         }
 
         @Override
         public void onScanTimeOut() {
-            Toast.makeText(CleverM.getApplication(), "搜索超时", Toast.LENGTH_LONG).show();
             BleLog.e(TAG+"搜索超时");
             super.onScanTimeOut();
         }
 
         @Override
         public boolean onServiceDiscover(BluetoothGatt gatt) {
-            Toast.makeText(CleverM.getApplication(), "蓝牙服务发现", Toast.LENGTH_LONG).show();
+            toastor.showSingleLongToast("蓝牙服务发现");
             BleLog.e(TAG+"蓝牙服务发现");
             return super.onServiceDiscover(gatt);
         }
@@ -207,14 +230,13 @@ public class CleverM extends Application {
 
         @Override
         public void onConnectOff() {
-            Toast.makeText(CleverM.getApplication(), "断开连接", Toast.LENGTH_LONG).show();
+            toastor.showSingleLongToast("断开连接");
             BleLog.e(TAG+"断开连接");
             super.onConnectOff();
         }
 
         @Override
         public void onConnectOn() {
-            Toast.makeText(CleverM.getApplication(), "连接中", Toast.LENGTH_LONG).show();
             BleLog.e(TAG+"连接中");
             super.onConnectOn();
         }

@@ -45,7 +45,7 @@ public class IntentUtil {
         activity.startActivity(intent);
     }
 
-    public static void goCallService(Context service, int id, boolean isShouldListener) {
+    public static void goCallService(Context service, int id,penService.MessageListener messageListener) {
         TemplateIDState templateIDState = ChoiceTemplateIDState(id);
         if (!"VideoActivity".equals(penService.mActivityFlag)) {
             Intent intent = new Intent(service, VideoActivity.class);
@@ -56,10 +56,8 @@ public class IntentUtil {
             penService.mActivityFlag = "VideoActivity";
         } else {
             if (NetWorkUtil.hasNetwork()) {
-                if (isShouldListener) {
-                    VideoActivity.getVideoActivity().receiveData(templateIDState.getId(), templateIDState.isSend());
-                } else {
-                    VideoActivity.getVideoActivity().receiveData(templateIDState.getId(), templateIDState.isSend());
+                if(messageListener!=null){
+                    messageListener.receiveData(templateIDState.getId(), templateIDState.isSend());
                 }
             } else {
                 QuickUtils.toast("网络异常，请直接找服务员～");
@@ -222,6 +220,26 @@ public class IntentUtil {
     }
 
     /**
+     * 敬请期待
+     * @param service
+     * @param eventId
+     * @param eventStr
+     */
+    public static void goToFutureActivity(Context service,int eventId,String eventStr){
+        if (!"FutureActivity".equals(penService.mActivityFlag)) {
+            Intent intent = new Intent(service, FutureActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
+                    Intent.FLAG_ACTIVITY_NEW_TASK |
+                    Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra(StatisticsUtil.FUTURE_INTNET_EVENTID, eventId);
+            intent.putExtra(StatisticsUtil.FUTRUE_INTENT_EVENTDESC, eventStr);
+            service.startActivity(intent);
+            penService.mActivityFlag = "FutureActivity";
+        }
+    }
+
+    /**
      * Demo
      *
      * @param service
@@ -284,7 +302,7 @@ public class IntentUtil {
      * @param service
      */
     public static void goToDiscountActivity(Context service) {
-        if (QuickUtils.checkDiscountEmptyData()) {
+       /* if (QuickUtils.checkDiscountEmptyData()) {
             if (!"FutureActivity".equals(penService.mActivityFlag)) {
                 Intent intent = new Intent(service, FutureActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
@@ -296,7 +314,9 @@ public class IntentUtil {
                 service.startActivity(intent);
                 penService.mActivityFlag = "FutureActivity";
             }
-        } else {
+        } */
+
+        //else {
             if (!"DiscountActivity".equals(penService.mActivityFlag)) {
                 Intent intent = new Intent(service, DiscountActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
@@ -306,7 +326,7 @@ public class IntentUtil {
                 service.startActivity(intent);
                 penService.mActivityFlag = "DiscountActivity";
             }
-        }
+        //}
     }
 
     /**

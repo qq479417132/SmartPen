@@ -58,7 +58,6 @@ import java.util.Timer;
 public class VideoActivity extends BaseActivity implements penService.MessageListener {
 
     public static final String TAG = VideoActivity.class.getSimpleName();
-    public static VideoActivity activity;
     FullScreenVideoView vvAdvertisement;
     private RelativeLayout mrlNotice;
     private ImageView mivNoticeImage;
@@ -151,10 +150,8 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        QuickUtils.log("ActivityClay---onCreate()=" + videoValue);
         unLockScreen();
         setContentView(R.layout.activity_video);
-        activity=this;
         QuickUtils.showHighApiBottomStatusBar();
         initView();
         initBroadcastReceiver();
@@ -226,8 +223,6 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     }
 
 
-
-
     private void initIntent() {
         Intent in = getIntent();
         if (in == null) {
@@ -291,10 +286,6 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
 
 
     private void initData() {
-        //1.先判断服务器实现需要我们去更新
-        //2.如果不需要更新,直接检查我们的视频目录是否存在视频
-        //3.根据排序规则进行视频的依次播放
-        //AlgorithmUtil.getInstance().getSimpleVideo(vvAdvertisement);
         AlgorithmUtil.getInstance().startVideoPlayAlgorithm(vvAdvertisement, this);
     }
 
@@ -316,7 +307,6 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     protected void onPause() {
         super.onPause();
         RememberUtil.putInt(Constant.MEMORY_PLAY_KEY, vvAdvertisement.getCurrentPosition());
-        QuickUtils.log("ActivityClay---onPause()=");
     }
 
     int videoValue = 0;
@@ -332,8 +322,6 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
         /**
          * 因为VideoActivity会被不断的重启,算法太耗时导致必须延迟
          */
-        QuickUtils.log("ActivityClay---onResume()");
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -341,14 +329,12 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
                 vvAdvertisement.start();
             }
         }, 250);
-
     }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        QuickUtils.log("ActivityClay---onDestroy()");
         unregisterReceiver(mUpdateTableHandlerSuccess);
     }
 
@@ -461,10 +447,6 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
      * @param code
      */
     private void sendMessageToService(final InfoSendSMSVo infoSendSMSVo, final int code, final boolean isSend) {
-
-        //QuickUtils.toast("桌号="+infoSendSMSVo.getTableID()+"店铺号="+infoSendSMSVo.getOrgID()+"商品号="+infoSendSMSVo.getClientID());
-
-
         new Thread() {
             @Override
             public void run() {
@@ -703,10 +685,4 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     }
 
 
-    public static VideoActivity getVideoActivity(){
-        if(activity!=null){
-            return activity;
-        }
-        return null;
-    }
 }

@@ -166,17 +166,13 @@ public class DiscountDetailActivity extends BaseBackActivity {
             //读取rollDetailList的第一个数据
             if (rollDetailList.size() > 0) {
                 QuickUtils.displayImage(QuickUtils.spliceUrl(info.getRollDetailList().get(0).getPictruePath(),info.getRollDetailList().get(0).getQiniuPath()),ivDisountImage);
-                //Picasso.with(this).load(QuickUtils.spliceUrl(info.getRollDetailList().get(0).getPictruePath())).into(ivDisountImage);
             } else {
                 ivDisountImage.setImageResource(R.mipmap.discount_background);
             }
         }
         
-        scrollToTop();
-        
-        
+        //scrollToTop();
     }
-
 
 
 
@@ -197,7 +193,6 @@ public class DiscountDetailActivity extends BaseBackActivity {
             View rootView = view_s.get(i);
             ImageView view = (ImageView) rootView.findViewById(R.id.ivDisountImage);
             QuickUtils.displayImage(QuickUtils.spliceUrl(rollDetailList.get(i).getPictruePath(),rollDetailList.get(i).getQiniuPath()), view);
-            //Picasso.with(this).load(QuickUtils.spliceUrl(rollDetailList.get(i).getPictruePath())).placeholder(R.mipmap.discount_background).into(view);
         }
     }
 
@@ -243,14 +238,14 @@ public class DiscountDetailActivity extends BaseBackActivity {
     }
 
     private void scrollToTop() {
-        /*if (info.getTitle() != null && info.getDescriptionText() != null) {
+        if (info.getTitle() != null && info.getDescriptionText() != null) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     findViewById(R.id.svTop).scrollTo(0, 0);
                 }
             }, 100);
-        }*/
+        }
     }
 
     @Override

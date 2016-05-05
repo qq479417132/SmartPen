@@ -97,6 +97,7 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
                 getDiscountDataFromService("0");
             }
         }
+
     }
 
 
@@ -112,6 +113,10 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
             //解析Json
             List<DiscountInfo> discountInfos = ServiceUtil.getInstance().parserDiscountData(json);
             QuickUtils.log("discountInfos=" + discountInfos.size());
+            //如果服务端没有数据,不做逻辑处理
+            if(discountInfos.size()<=0){
+                return;
+            }
             //图片顺序算法
             List<DiscountInfo> listImageSequence = AlgorithmUtil.getInstance().getSimpleImageSequence(discountInfos);
             QuickUtils.log("listImageSequence=" + listImageSequence.size());

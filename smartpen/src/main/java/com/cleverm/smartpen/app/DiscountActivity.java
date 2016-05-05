@@ -21,12 +21,12 @@ public class DiscountActivity extends BaseDiscountActivity{
         return true;
     }
 
-    @Override
+
     protected int onGetEventId() {
         return StatisticsUtil.SERVICE_DISCOUNT;
     }
 
-    @Override
+
     protected String onGetDesc() {
         return StatisticsUtil.SERVICE_DISCOUNT_DESC;
     }

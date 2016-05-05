@@ -1,8 +1,11 @@
 package com.cleverm.smartpen.util;
 
+import android.util.Log;
+
 import com.alibaba.fastjson.JSON;
 import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.bean.DiscountInfo;
+import com.lidroid.xutils.util.LogUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -45,6 +48,7 @@ public class ServiceUtil {
      */
     public void getDiscountData(String orgId, String type, final JsonInterface jsonInterface) {
         String url = Constant.DDP_URL+"/api/api/v10/roll/main/list";
+        Log.e("getDiscountData",url+"orgId="+orgId);
         OkHttpUtils
                 .get()
                 .url(url)
