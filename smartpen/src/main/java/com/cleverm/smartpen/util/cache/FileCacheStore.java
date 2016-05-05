@@ -41,8 +41,7 @@ public class FileCacheStore {
     private Lock readLock = rwl.readLock();//读锁
     private Lock writeLock = rwl.writeLock();//写锁
 
-    private AtomicLong currentBytesSize = new AtomicLong();//用于判断是否map内存容量越界
-    ;
+    private AtomicLong currentBytesSize = new AtomicLong();//用于判断是否map内存容量越界;
 
     /**
      * 指定File存储路径和存储最大字节
