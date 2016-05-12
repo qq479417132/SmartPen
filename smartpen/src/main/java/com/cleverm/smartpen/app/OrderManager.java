@@ -2,8 +2,6 @@ package com.cleverm.smartpen.app;
 
 import android.content.Context;
 
-
-import com.cleverm.smartpen.modle.OrderedCuisine;
 import com.cleverm.smartpen.modle.impl.OrderedCuisineImpl;
 
 import java.util.ArrayList;
@@ -110,7 +108,7 @@ public class OrderManager {
         int totalCuisineCost = 0;
         for (OrderedCuisineImpl orderedCuisine : mOrderFoodCache) {
             totalCuisineCost += orderedCuisine.getPrice() * orderedCuisine
-                .getOrderedCount();
+                    .getOrderedCount();
         }
         return totalCuisineCost;
     }
