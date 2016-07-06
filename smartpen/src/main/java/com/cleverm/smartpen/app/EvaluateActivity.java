@@ -1,6 +1,5 @@
 package com.cleverm.smartpen.app;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,9 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cleverm.smartpen.R;
-import com.cleverm.smartpen.application.CleverM;
-import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.util.Constant;
+import com.cleverm.smartpen.util.IntentUtil;
+import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
 import com.google.gson.Gson;
@@ -74,9 +73,7 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
                     Log.v(TAG, "come hand====");
                     mHandler.removeCallbacksAndMessages(null);
                     HideInputFromWindow();
-                    startActivity(new Intent(EvaluateActivity.this, VideoActivity.class));
-                    EvaluateActivity.this.finish();
-                    ((CleverM) getApplication()).getpenService().setActivityFlag("VideoActivity");
+                    IntentUtil.goBackToVideoActivity(EvaluateActivity.this);
                     break;
                 }
             }
@@ -190,6 +187,7 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(meatInput.getWindowToken(), 0);
         imm.hideSoftInputFromWindow(mequipmentInput.getWindowToken(), 0);
+        mHandler.removeCallbacksAndMessages(null);
         MobclickAgent.onEvent(this, "EVALUATE");
     }
 
@@ -201,15 +199,32 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
                 break;
             }
             case R.id.other_confirm: {
-                insertData();
-                submit();
-                mHandler.sendEmptyMessage(GOBack);
-                //统计点击量
-                MobclickAgent.onEvent(this, "Click");
-                Toast.makeText(this, getString(R.string.service_submit), Toast.LENGTH_LONG).show();
+                if(checkInput()){
+                    insertData();
+                    submit();
+                    mHandler.sendEmptyMessage(GOBack);
+                    //统计点击量
+                    MobclickAgent.onEvent(this, "Click");
+                    Toast.makeText(this, getString(R.string.service_submit), Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(this, getString(R.string.service_submit_empty), Toast.LENGTH_LONG).show();
+                }
+
                 break;
             }
         }
+    }
+
+    private boolean checkInput() {
+        if(mgeneralEvaluationRatingBar.getRating()==0.0f&&
+                mtaste.getRating()==0.0f&&
+                    mService.getRating()==0.0f&&
+                        mEnvirment.getRating()==0.0f&&
+                            (meatInput.getText().toString().trim().equals(""))&&
+                                (mequipmentInput.getText().toString().trim().equals(""))){
+            return false;
+        }
+        return true;
     }
 
     private void submit() {
@@ -261,7 +276,7 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
                     @Override
                     public void onError(Call call, Exception e) {
                         e.printStackTrace();
-                        Log.v(TAG, "Exception="+e.toString());
+                        Log.v(TAG, "Exception=" + e.toString());
                     }
 
                     @Override
@@ -392,11 +407,9 @@ public class EvaluateActivity extends BaseActivity implements View.OnClickListen
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        penService penService = ((CleverM) getApplication()).getpenService();
-        if(penService!=null){
-            penService.setActivityFlag("EvaluateActivity");
-        }
+    protected void onDestroy() {
+        super.onDestroy();
     }
+
+
 }

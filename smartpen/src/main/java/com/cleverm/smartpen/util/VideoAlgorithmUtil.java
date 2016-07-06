@@ -6,26 +6,22 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.cleverm.smartpen.application.CleverM;
+import com.cleverm.smartpen.application.SmartPenApplication;
 import com.cleverm.smartpen.bean.VideoInfo;
 import com.cleverm.smartpen.service.DownloaderDifferenceService;
 import com.cleverm.smartpen.service.DownloaderService;
 import com.cleverm.smartpen.ui.FullScreenVideoView;
 import com.thin.downloadmanager.DefaultRetryPolicy;
 import com.thin.downloadmanager.DownloadRequest;
-import com.thin.downloadmanager.DownloadStatusListener;
 import com.thin.downloadmanager.DownloadStatusListenerV1;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
 import com.zhy.http.okhttp.callback.StringCallback;
 
-import org.json.JSONException;
-
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -302,9 +298,7 @@ public class VideoAlgorithmUtil {
         videoAPI(new videoInterface() {
             @Override
             public void onSucess(String json) {
-
                 try {
-
                     //服务器上的videoId
                     List<VideoInfo> infos = JsonUtil.parser(json, VideoInfo.class);
 
@@ -427,7 +421,7 @@ public class VideoAlgorithmUtil {
                     }
                 });
 
-        CleverM.getThinDownloadManager().add(downloadRequest);
+        SmartPenApplication.getThinDownloadManager().add(downloadRequest);
 
 
     }

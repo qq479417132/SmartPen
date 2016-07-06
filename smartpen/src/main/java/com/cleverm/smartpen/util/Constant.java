@@ -153,10 +153,17 @@ public class Constant {
     public static final int CHANGE_TABLEWARE = 1059;
     public static final int AWARD = 1055;
     public static final int FINANCIAL = 1057;
-    public static final int UN_KNOW1 = 1060;
+    public static final int ROBOT_SHOW = 1060;/**robot show*/
     public static final int UN_KNOW2 = 1061;
     public static final int UN_KNOW3 = 1062;
     public static final int UN_KNOW4 = 1063;
+
+    /**
+     * 呼叫表演码
+     */
+    public static final int CASH_PAY=0x123;
+    public static final int UNION_CARD_PAY=0x124;
+
 
 
     public static final String URL = "http://cn.vonvon.net/quiz/r/546/6116/v1GiNqZBv4fzmVf";
@@ -414,6 +421,21 @@ public class Constant {
     public static final String MEMORY_PLAY_KEY = "MEMORY_PLAY_KEY";
     public static final String MEMORY_PLAY_VIDEO_URI_KEY = "MEMORY_PLAY_VIDEO_URI_KEY";
     public static final String BROADCAST_RESATRT_EVENT = "BROADCAST_RESATRT_EVENT";
+
+
+    /**
+     * Demo video
+     */
+    public static final String DEMO_VIDEO_URL=Constant.DDP_URL+"/api/api/v10/video/get.do";
+    public static final String DEMO_VIDEO_ID="159";
+    public static final String DEMO_VIDEO_TYPE="1";
+
+
+    /**
+     * ActivityFlag
+     */
+    public static  String NEW_FLAG="default";
+
 
 }
 

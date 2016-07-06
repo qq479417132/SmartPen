@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.cleverm.smartpen.app.SelectTableActivity;
-import com.cleverm.smartpen.application.CleverM;
+import com.cleverm.smartpen.application.SmartPenApplication;
 import com.cleverm.smartpen.pushtable.UpdateTableHandler;
 import com.cleverm.smartpen.statistic.dao.DaoMaster;
 import com.cleverm.smartpen.statistic.dao.DaoSession;
@@ -15,7 +15,6 @@ import com.cleverm.smartpen.util.excle.CreateExcel;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -290,10 +289,9 @@ public class StatisticsUtil {
      * @return Long 该自增长的id值,他将会完成timeStay的赋值
      */
     public Long insert(int eventId,String desc){
-
         if(checkValid(eventId)){
             //插入数据库
-            return CleverM.getStatsDao().insert(StatisticsUtil.getInstance().getStasObject(
+            return SmartPenApplication.getStatsDao().insert(StatisticsUtil.getInstance().getStasObject(
                     eventId,
                     getCurrentTimeMillis(),
                     0L,
@@ -320,7 +318,7 @@ public class StatisticsUtil {
     public Long insertWithSecondEvent(int eventId,String desc,Long secondEvent){
 
         //插入数据库
-        return CleverM.getStatsDao().insert(StatisticsUtil.getInstance().getStasObject(
+        return SmartPenApplication.getStatsDao().insert(StatisticsUtil.getInstance().getStasObject(
                 eventId,
                 getCurrentTimeMillis(),
                 0L,
@@ -349,7 +347,7 @@ public class StatisticsUtil {
         //Or Use this SQL
         String SQL2="update t_stats set "+" TIME_STAY ="+ timeStay +" where _id = "+rawId;
 
-        CleverM.getDb().execSQL(SQL,new Object[] {timeStay, rawId});
+        SmartPenApplication.getDb().execSQL(SQL,new Object[] {timeStay, rawId});
     }
 
 
@@ -451,7 +449,7 @@ public class StatisticsUtil {
 
 
     private Cursor exeSql(String sql) {
-        return CleverM.getDb().rawQuery(sql, null);
+        return SmartPenApplication.getDb().rawQuery(sql, null);
     }
 
 

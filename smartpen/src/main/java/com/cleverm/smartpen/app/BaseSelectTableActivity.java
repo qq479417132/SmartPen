@@ -2,7 +2,6 @@ package com.cleverm.smartpen.app;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -25,7 +24,6 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.cleverm.smartpen.R;
-import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.bean.TableData;
 import com.cleverm.smartpen.database.DatabaseHelper;
 import com.cleverm.smartpen.database.TableColumns;
@@ -40,6 +38,7 @@ import com.cleverm.smartpen.pushtable.bean.TableInfo;
 import com.cleverm.smartpen.pushtable.bean.TableResult;
 import com.cleverm.smartpen.pushtable.bean.TableTypeInfo;
 import com.cleverm.smartpen.util.Constant;
+import com.cleverm.smartpen.util.IntentUtil;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.google.gson.Gson;
 
@@ -89,9 +88,7 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
             switch (msg.what) {
                 case GOBack: {
                     Log.v(TAG, "come hand====");
-                    BaseSelectTableActivity.this.finish();
-                    startActivity(new Intent(BaseSelectTableActivity.this, VideoActivity.class));
-                    ((CleverM) getApplication()).getpenService().setActivityFlag("VideoActivity");
+                    IntentUtil.goBackToVideoActivity(BaseSelectTableActivity.this);
                     break;
                 }
                 case SHOWTABLE: {
@@ -239,7 +236,7 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
         if (orgid == Constant.DESK_ID_DEF_DEFAULT) {
             //布局默认需要输入OrgID
         } else {
-            mDrawerLayout.setVisibility(View.GONE);
+            //mDrawerLayout.setVisibility(View.GONE);
             mInputOrgId.setText(orgid + "", null);
             RequestTableData(orgid);
             Log.v(TAG, "RequestTableData()==");
@@ -546,10 +543,16 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
     /**
      * 隐藏输入键盘
      */
-    private void HideInputFromWindow(){
+    private void HideInputFromWindow() {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mInputOrgId.getWindowToken(), 0);
         imm.hideSoftInputFromWindow(mInputOrgId.getWindowToken(), 0);
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mHandler.removeCallbacksAndMessages(null);
+    }
 }

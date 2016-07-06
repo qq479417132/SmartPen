@@ -1,14 +1,12 @@
 package com.cleverm.smartpen.app;
 
-import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.cleverm.smartpen.R;
-import com.cleverm.smartpen.application.CleverM;
-import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.util.Constant;
+import com.cleverm.smartpen.util.IntentUtil;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
 
@@ -43,10 +41,10 @@ public class SelectTableActivity extends BaseSelectTableActivity {
                 break;
         }
         mHandler.removeCallbacksAndMessages(null);
-        Intent intent = new Intent(this, VideoActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        ((CleverM) getApplication()).getpenService().setActivityFlag("VideoActivity");
+        /*Intent intent = new Intent(this, VideoActivity.class);
+        IntentUtil.intentFlagNotClear(intent);
+        startActivity(intent);*/
+        IntentUtil.goBackToVideoActivity(SelectTableActivity.this);
     }
 
     @Override
@@ -71,9 +69,5 @@ public class SelectTableActivity extends BaseSelectTableActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        penService penService = ((CleverM) getApplication()).getpenService();
-        if(penService!=null){
-            penService.setActivityFlag("SelectTableActivity");
-        }
     }
 }

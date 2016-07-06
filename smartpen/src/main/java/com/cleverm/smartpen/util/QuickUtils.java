@@ -2,7 +2,6 @@ package com.cleverm.smartpen.util;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.os.Environment;
 import android.support.annotation.DrawableRes;
 import android.util.Log;
 import android.view.View;
@@ -12,8 +11,7 @@ import android.widget.Toast;
 
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.app.SelectTableActivity;
-import com.cleverm.smartpen.app.VideoActivity;
-import com.cleverm.smartpen.application.CleverM;
+import com.cleverm.smartpen.application.SmartPenApplication;
 import com.cleverm.smartpen.bean.DiscountInfo;
 import com.cleverm.smartpen.net.InfoSendSMSVo;
 import com.cleverm.smartpen.net.RequestNet;
@@ -132,7 +130,7 @@ public class QuickUtils {
 
 
     public static void toast(String message) {
-        Toast.makeText(CleverM.getApplication(), message, Toast.LENGTH_LONG).show();
+        Toast.makeText(SmartPenApplication.getApplication(), message, Toast.LENGTH_LONG).show();
     }
 
     public static void log(String message) {
@@ -519,4 +517,8 @@ public class QuickUtils {
         return true;
     }
 
+    public static String getRunningActivityName(Activity activity) {
+        String contextString = activity.toString();
+        return contextString.substring(contextString.lastIndexOf(".") + 1, contextString.indexOf("@"));
+    }
 }

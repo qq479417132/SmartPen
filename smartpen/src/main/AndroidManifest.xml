@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.cleverm.smartpen" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.cleverm.smartpen">
 
-    <uses-sdk android:minSdkVersion="19" />
+    <uses-sdk android:sharedUserId="android.uid.system"   android:minSdkVersion="19" />
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="ANDROID.PERMISSION.DEVICE_POWER" />
@@ -52,18 +53,25 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
+    <uses-permission android:name="android.permission.FORCE_STOP_PACKAGES"
+        tools:ignore="ProtectedPermissions"/>
+
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
     <application
-        android:name=".application.CleverM"
-        android:icon="@drawable/app"
+        android:name=".application.SmartPenApplication"
+        android:icon="@mipmap/ic_launcher_ddp"
         android:label="@string/app_name"
         android:largeHeap="true"
+        android:persistent="true"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".app.VideoActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/VideoTheme"
-            android:configChanges="keyboardHidden|orientation"
+            android:configChanges="orientation|keyboardHidden|screenSize|navigation"
             android:screenOrientation="userLandscape"
             >
             <intent-filter>
@@ -76,47 +84,53 @@
         </activity>
         <activity
             android:name=".app.DriverActivity"
-            android:configChanges="keyboardHidden|orientation"
+            android:configChanges="orientation|keyboardHidden|screenSize|navigation"
             android:screenOrientation="userLandscape"
              />
         <activity
             android:name=".app.EvaluateActivity"
-            android:configChanges="keyboardHidden|orientation"
+            android:configChanges="orientation|keyboardHidden|screenSize|navigation"
             android:screenOrientation="userLandscape" />
         <activity
             android:name=".app.DemoActivity"
-            android:configChanges="keyboardHidden|orientation"
+            android:configChanges="orientation|keyboardHidden|screenSize|navigation"
             android:screenOrientation="userLandscape"/>
         <activity
             android:name=".app.FutureActivity"
-            android:configChanges="keyboardHidden|orientation"
+            android:configChanges="orientation|keyboardHidden|screenSize|navigation"
             android:screenOrientation="userLandscape" />
         <activity
             android:name=".app.SelectTableActivity"
-            android:configChanges="keyboardHidden|orientation"
+            android:configChanges="orientation|keyboardHidden|screenSize|navigation"
             android:screenOrientation="userLandscape" />
         <activity
             android:name=".app.DiscountActivity"
-            android:configChanges="keyboardHidden|orientation"
+            android:configChanges="orientation|keyboardHidden|screenSize|navigation"
             android:screenOrientation="userLandscape"/>
         <activity
             android:name=".app.LocalDiscountActivity"
-            android:configChanges="keyboardHidden|orientation"
+            android:configChanges="orientation|keyboardHidden|screenSize|navigation"
             android:screenOrientation="userLandscape" />
         <activity
             android:name=".app.DiscountDetailActivity"
             android:theme="@style/DiscountDetailTheme"
-            android:configChanges="keyboardHidden|orientation"
+            android:configChanges="orientation|keyboardHidden|screenSize|navigation"
             android:screenOrientation="userLandscape" />
         <activity
             android:name=".app.GameActivity"
-            android:configChanges="keyboardHidden|orientation"
+            android:configChanges="orientation|keyboardHidden|screenSize|navigation"
             android:screenOrientation="userLandscape"/>
         <activity
             android:name=".app.PayActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="userLandscape" >
-        </activity>
+            android:configChanges="orientation|keyboardHidden|screenSize|navigation"
+            android:screenOrientation="userLandscape" />
+        <activity android:name=".app.DemoVideoActivity"
+            android:theme="@style/VideoTheme"
+            android:configChanges="orientation|keyboardHidden|screenSize|navigation"
+            android:screenOrientation="userLandscape" />
+        <activity android:name=".app.ScrollDiscountActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|navigation"
+            android:screenOrientation="userLandscape" />
 
         <service android:name=".service.penService" />
         <service android:name=".service.ScreenLockListenService" />
@@ -125,6 +139,8 @@
         <service android:name=".service.DownloaderDifferenceService" />
         <service android:name=".service.DownloadPicassoService"/>
         <service android:name="com.bleframe.library.service.BlatandServie"/>
+        <service android:name=".service.OtherService"/>
+        <service android:name=".service.ApolloService"/>
 
         <receiver android:name=".broadcast.BootRestartReceiver" >
             

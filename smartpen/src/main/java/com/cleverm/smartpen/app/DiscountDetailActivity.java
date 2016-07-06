@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,9 +22,9 @@ import com.cleverm.smartpen.ui.CircleIndicator;
 import com.cleverm.smartpen.ui.ListViewForScrollView;
 import com.cleverm.smartpen.ui.banner.BGABanner;
 import com.cleverm.smartpen.ui.banner.NoTouchBGABanner;
+import com.cleverm.smartpen.util.IntentUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.StatisticsUtil;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ import java.util.List;
  * Version:1.0
  * Open source
  */
-public class DiscountDetailActivity extends BaseBackActivity {
+public class DiscountDetailActivity extends BaseActivity {
 
     public static final String INTENT_NAME = "DiscountDetailActivity";
 
@@ -66,6 +67,21 @@ public class DiscountDetailActivity extends BaseBackActivity {
     ViewPager vpView;
     CircleIndicator ciIndicator;
 
+    public static final int GOBack = 200;
+    public static final int TIME = 60000;
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case GOBack: {
+                    finish();
+                    break;
+                }
+            }
+        }
+    };
+
 
     /**
      * 该类不做主事件统计中去,做二级广告id的统计
@@ -82,21 +98,17 @@ public class DiscountDetailActivity extends BaseBackActivity {
     }
 
     @Override
-    protected void onCreate() {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         mContext = this;
         initIntent();
         initContent();
         initView();
         initBanner();
         initData();
+        mHandler.removeCallbacksAndMessages(null);
+        mHandler.sendEmptyMessageDelayed(GOBack, TIME);
     }
-
-    @Override
-    protected ImageView getBackResId() {
-        return (ImageView) findViewById(R.id.ivClose);
-    }
-
-
 
     private void initContent() {
         if (info.getTitle() == null && info.getDescriptionText() == null) {
@@ -133,6 +145,12 @@ public class DiscountDetailActivity extends BaseBackActivity {
         } else {
             ivDisountImage = (ImageView) findViewById(R.id.ivDisountImage);
         }
+        findViewById(R.id.ivClose).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
     }
 
@@ -201,19 +219,19 @@ public class DiscountDetailActivity extends BaseBackActivity {
     private void handlerAd() {
         if (advertisementList.size() == 1) {
             ivDiscountDetailImage1.setVisibility(View.VISIBLE);
-            Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(0).getPictruePath(),advertisementList.get(0).getQiniuPath())).into(ivDiscountDetailImage1);
+            //Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(0).getPictruePath(),advertisementList.get(0).getQiniuPath())).into(ivDiscountDetailImage1);
         } else if (advertisementList.size() == 2) {
             ivDiscountDetailImage1.setVisibility(View.VISIBLE);
-            Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(0).getPictruePath(),advertisementList.get(0).getQiniuPath())).into(ivDiscountDetailImage1);
+            //Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(0).getPictruePath(),advertisementList.get(0).getQiniuPath())).into(ivDiscountDetailImage1);
             ivDiscountDetailImage2.setVisibility(View.VISIBLE);
-            Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(1).getPictruePath(), advertisementList.get(1).getQiniuPath())).into(ivDiscountDetailImage2);
+            //Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(1).getPictruePath(), advertisementList.get(1).getQiniuPath())).into(ivDiscountDetailImage2);
         } else if (advertisementList.size() == 3) {
             ivDiscountDetailImage1.setVisibility(View.VISIBLE);
-            Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(0).getPictruePath(),advertisementList.get(0).getQiniuPath())).into(ivDiscountDetailImage1);
+            //Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(0).getPictruePath(),advertisementList.get(0).getQiniuPath())).into(ivDiscountDetailImage1);
             ivDiscountDetailImage2.setVisibility(View.VISIBLE);
-            Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(1).getPictruePath(),advertisementList.get(1).getQiniuPath())).into(ivDiscountDetailImage2);
+            //Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(1).getPictruePath(),advertisementList.get(1).getQiniuPath())).into(ivDiscountDetailImage2);
             ivDiscountDetailImage3.setVisibility(View.VISIBLE);
-            Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(2).getPictruePath(),advertisementList.get(2).getQiniuPath())).into(ivDiscountDetailImage3);
+            //Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(2).getPictruePath(),advertisementList.get(2).getQiniuPath())).into(ivDiscountDetailImage3);
         }
 
 
@@ -231,7 +249,7 @@ public class DiscountDetailActivity extends BaseBackActivity {
             //通过给ImageView外套了一个RL解决在ViewPager中图片显示不全的BUG
             View rootView = views.get(i);
             ImageView view = (ImageView) rootView.findViewById(R.id.ivDisountImage);
-            Picasso.with(this).load(QuickUtils.spliceUrl(rollDetailList.get(i).getPictruePath(),rollDetailList.get(i).getQiniuPath())).placeholder(R.mipmap.discount_background).into(view);
+            //Picasso.with(this).load(QuickUtils.spliceUrl(rollDetailList.get(i).getPictruePath(),rollDetailList.get(i).getQiniuPath())).placeholder(R.mipmap.discount_background).into(view);
 
         }
 
@@ -249,7 +267,8 @@ public class DiscountDetailActivity extends BaseBackActivity {
     }
 
     @Override
-    protected void onBack() {
-        finish();
+    protected void onPause() {
+        super.onPause();
+        mHandler.removeCallbacksAndMessages(null);
     }
 }

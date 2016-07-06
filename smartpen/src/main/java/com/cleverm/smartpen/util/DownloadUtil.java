@@ -1,17 +1,16 @@
 package com.cleverm.smartpen.util;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.ImageView;
+import android.widget.Toast;
 
-import com.cleverm.smartpen.application.CleverM;
-import com.cleverm.smartpen.bean.DiscountInfo;
+import com.cleverm.smartpen.app.BaseDiscountActivity;
+import com.cleverm.smartpen.application.SmartPenApplication;
 import com.cleverm.smartpen.bean.VideoInfo;
 import com.cleverm.smartpen.service.DownloadPicassoService;
-import com.cleverm.smartpen.service.DownloaderDifferenceService;
 import com.cleverm.smartpen.ui.FullScreenVideoView;
 import com.cleverm.smartpen.util.cache.FileRememberUtil;
+import com.cleverm.smartpen.util.parts.DoDiskLruPart;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -19,7 +18,6 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import org.json.JSONException;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.List;
 
 import okhttp3.Call;
@@ -137,10 +135,12 @@ public class DownloadUtil {
                         if (FileRememberUtil.has(Dir_DISOUNT_JSON)) {
                             FileRememberUtil.put(response, Dir_DISOUNT_JSON, DISOUNT_JSON);
                         }
+                        DoDiskLruPart.getInstance().put(BaseDiscountActivity.AllKey,response);
                         //FileCacheUtil.get(CleverM.getApplication()).put(DISOUNT_JSON, response);
-                        Intent intent = new Intent(CleverM.getApplication(), DownloadPicassoService.class);
+                        Intent intent = new Intent(SmartPenApplication.getApplication(), DownloadPicassoService.class);
                         intent.putExtra(DownloadPicassoService.PICASSO_JSON, response);
-                        CleverM.getApplication().startService(intent);
+                        SmartPenApplication.getApplication().startService(intent);
+
                     }
                 });
 
@@ -165,6 +165,7 @@ public class DownloadUtil {
                             FileRememberUtil.put(response,Dir_DISOUNT_HEADOFFICE_JSON,DISOUNT_HEADOFFICE_JSON);
                         }
                         //FileCacheUtil.get(CleverM.getApplication()).put(DISOUNT_HEADOFFICE_JSON, response);
+                        DoDiskLruPart.getInstance().put(BaseDiscountActivity.OnlyKey,response);
                     }
                 });
 

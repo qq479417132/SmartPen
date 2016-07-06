@@ -55,7 +55,7 @@ public class CommunicationService extends Service {
     private static final String REQUEST_TYPE_UPLOAD_DINING_VO = "REQUEST_TYPE_UPLOAD_DINING_VO";
     private static final String REQUEST_TYPE_UPLOAD_BONUS_VO = "REQUEST_TYPE_UPLOAD_BONUS_VO";
 
-    private static final String WS_URL = "ws://120.25.159.173:8080/cleverm/sockjs/notification";
+    private static final String WS_URL = "ws://www.myee7.com/cleverm/sockjs/notification";
     private static final String SYNCHRO_URL =
         Constant.DDP_URL+"/cleverm/sockjs/execCommand";
     private final WebSocketConnection mConnection = new WebSocketConnection();

@@ -6,8 +6,6 @@ import android.widget.ImageView;
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.bean.DiscountAdInfo;
 import com.cleverm.smartpen.util.QuickUtils;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -30,6 +28,5 @@ public class DiscountDetailAdapter extends QuickAdapter<DiscountAdInfo> {
     public void convert(ViewHolder viewHolder, DiscountAdInfo item, int position) {
         ImageView ivAdapterImage = viewHolder.getView(R.id.ivAdapterImage);
         QuickUtils.displayImage(QuickUtils.spliceUrl(item.getPictruePath(),item.getQiniuPath()), ivAdapterImage);
-        //Picasso.with(mContext).load(QuickUtils.spliceUrl(item.getPictruePath())).resize(330,180).into(ivAdapterImage);
     }
 }

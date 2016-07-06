@@ -27,6 +27,8 @@ public class AlgorithmUtil {
     //逻辑视频目录
     public static final String VIDEO_FILE= Environment.getExternalStorageDirectory().getAbsolutePath() + "/muyevideo";
     public static final String VIDEO_FILE_PLAY = Environment.getExternalStorageDirectory().getAbsolutePath()+"/muyepaly";
+    private static final String BASE_FILE=Environment.getExternalStorageDirectory().getAbsolutePath()+"/muye";
+    public static final String VIDEO_DEMO_FILE=BASE_FILE + File.separator+"muyedemo";
 
     private static AlgorithmUtil INSTANCE =new AlgorithmUtil();
 

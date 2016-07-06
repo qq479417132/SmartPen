@@ -1,7 +1,6 @@
 package com.cleverm.smartpen.app;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,9 +15,8 @@ import android.widget.ImageView;
 
 
 import com.cleverm.smartpen.R;
-import com.cleverm.smartpen.application.CleverM;
-import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.util.Constant;
+import com.cleverm.smartpen.util.IntentUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
 
 
@@ -47,9 +45,7 @@ public class DemoActivity extends BaseActivity {
             switch (msg.what) {
                 case GOBack: {
                     Log.v(TAG, "come hand====");
-                    startActivity(new Intent(DemoActivity.this, VideoActivity.class));
-                    DemoActivity.this.finish();
-                    ((CleverM) getApplication()).getpenService().setActivityFlag("VideoActivity");
+                    IntentUtil.goBackToVideoActivity(DemoActivity.this);
                     break;
                 }
             }
@@ -191,12 +187,5 @@ public class DemoActivity extends BaseActivity {
         return null;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        penService penService = ((CleverM) getApplication()).getpenService();
-        if(penService!=null){
-            penService.setActivityFlag("DemoActivity");
-        }
-    }
+
 }

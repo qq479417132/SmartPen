@@ -19,7 +19,6 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
     public static final String TAG = penService.class.getSimpleName();
     private WandAPI mWandAPI;
     private MessageListener messageListener;
-    public static String mActivityFlag = "VideoActivity";
     public static final String VIDEO_ACTIVITY_KEY = "video_activity_key";
     public static final String VIDEO_ACTIVITY_ISSEND = "video_activity_isSend";
     public static final String WEATHER = "weather";
@@ -49,13 +48,6 @@ public class penService extends Service implements WandAPI.OnScanListener, WandA
         ScanUtil.getInstance().onScan(penService.this,id,messageListener);
     }
 
-    public void setActivityFlag(String flag) {
-        mActivityFlag = flag;
-    }
-
-    public String getActivityFlag() {
-        return mActivityFlag;
-    }
 
     @Override
     public void onCreate() {

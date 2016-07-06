@@ -68,21 +68,21 @@ public class CircleIndicator extends LinearLayout {
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CircleIndicator);
         mIndicatorWidth =
-                typedArray.getDimensionPixelSize(R.styleable.CircleIndicator_ci_width, -1);
+                typedArray.getDimensionPixelSize(R.styleable.CircleIndicator_detail_ci_width, -1);
         mIndicatorHeight =
-                typedArray.getDimensionPixelSize(R.styleable.CircleIndicator_ci_height, -1);
+                typedArray.getDimensionPixelSize(R.styleable.CircleIndicator_detail_ci_height, -1);
         mIndicatorMargin =
-                typedArray.getDimensionPixelSize(R.styleable.CircleIndicator_ci_margin, -1);
+                typedArray.getDimensionPixelSize(R.styleable.CircleIndicator_detail_ci_margin, -1);
 
-        mAnimatorResId = typedArray.getResourceId(R.styleable.CircleIndicator_ci_animator,
+        mAnimatorResId = typedArray.getResourceId(R.styleable.CircleIndicator_detail_ci_animator,
                 R.animator.scale_with_alpha);
         mAnimatorReverseResId =
-                typedArray.getResourceId(R.styleable.CircleIndicator_ci_animator_reverse, 0);
+                typedArray.getResourceId(R.styleable.CircleIndicator_detail_ci_animator_reverse, 0);
         mIndicatorBackgroundResId =
-                typedArray.getResourceId(R.styleable.CircleIndicator_ci_drawable,
+                typedArray.getResourceId(R.styleable.CircleIndicator_detail_ci_drawable,
                         R.drawable.white_radius);
         mIndicatorUnselectedBackgroundResId =
-                typedArray.getResourceId(R.styleable.CircleIndicator_ci_drawable_unselected,
+                typedArray.getResourceId(R.styleable.CircleIndicator_detail_ci_drawable_unselected,
                         mIndicatorBackgroundResId);
         typedArray.recycle();
     }

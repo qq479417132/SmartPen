@@ -122,7 +122,7 @@ public class WandAPI {
             //提示未找到匹配的扫描笔
             Toast.makeText(mContext, R.string.no_matched_wand, Toast
                     .LENGTH_SHORT).show();
-            hand.sendEmptyMessageDelayed(find, 100000);
+            hand.sendEmptyMessageDelayed(find, 1000000);
             return;
         }
 
@@ -137,11 +137,11 @@ public class WandAPI {
                     "product id = " + device.getProductId());
             for (String dev : DEVICES) {
 
-                Log.v(TAG, "dev="+dev);
+                Log.v(TAG, "dev=" + dev);
 
                 if (String.format("%04x:%04x", device.getVendorId(), device.getProductId()).equalsIgnoreCase(dev)) {
 
-                    Log.v(TAG, "device.getVendorId()="+device.getVendorId()+"device.getProductId()="+device.getProductId());
+                    Log.v(TAG, "device.getVendorId()=" + device.getVendorId() + "device.getProductId()=" + device.getProductId());
 
                     if (mUsbManager.hasPermission(device)) {
                         setDevices(device);

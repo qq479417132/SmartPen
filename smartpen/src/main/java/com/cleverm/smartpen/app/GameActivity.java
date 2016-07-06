@@ -15,14 +15,14 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 
 import com.cleverm.smartpen.R;
-import com.cleverm.smartpen.application.CleverM;
-import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.ui.MyWebView;
 import com.cleverm.smartpen.util.Constant;
+import com.cleverm.smartpen.util.IntentUtil;
+import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.StatisticsUtil;
 
 /**
- * Created by 95 on 2016/2/24.
+ * Created by Terry on 2016/2/24.
  */
 public class GameActivity extends BaseActivity implements MyWebView.WebViewTouchEvent {
 
@@ -44,9 +44,7 @@ public class GameActivity extends BaseActivity implements MyWebView.WebViewTouch
                     break;
                 }
                 case EXIT:{
-                    startActivity(new Intent(GameActivity.this, VideoActivity.class));
-                    GameActivity.this.finish();
-                    ((CleverM) getApplication()).getpenService().setActivityFlag("VideoActivity");
+                    IntentUtil.goBackToVideoActivity(GameActivity.this);
                     break;
                 }
                 default:{
@@ -167,18 +165,13 @@ public class GameActivity extends BaseActivity implements MyWebView.WebViewTouch
     @Override
     protected void onResume() {
         super.onResume();
-        penService penService = ((CleverM) getApplication()).getpenService();
+        QuickUtils.log("GAME-ActivityTag=" + Constant.NEW_FLAG);
         if(mURL.equals(Constant.NEARBY_DISCOUNT_URL)){
-            if(penService!=null){
-                penService.setActivityFlag(penService.DISCOUNT);
-            }
+            Constant.NEW_FLAG=Constant.NEARBY_DISCOUNT_URL;
         }else{
-            if(penService!=null){
-                penService.setActivityFlag("GAME_ACTIVITY");
-            }
+            Constant.NEW_FLAG=Constant.URL;
         }
-
-
-
     }
+
+
 }

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.cleverm.smartpen.application.CleverM;
+import com.cleverm.smartpen.application.SmartPenApplication;
 
 /**
  * Created by xiong,An android project Engineer,on 2016/3/3.
@@ -21,7 +21,7 @@ public class NetWorkUtil {
      * @return
      */
     public static boolean hasNetwork() {
-        ConnectivityManager con = (ConnectivityManager) CleverM.getApplication().getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager con = (ConnectivityManager) SmartPenApplication.getApplication().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo workinfo = con.getActiveNetworkInfo();
         if (workinfo == null || !workinfo.isAvailable()) {
             return false;

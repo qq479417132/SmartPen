@@ -3,9 +3,7 @@ package com.cleverm.smartpen.util;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
-import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.bean.DiscountInfo;
-import com.lidroid.xutils.util.LogUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -13,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.zip.CRC32;
 
 import okhttp3.Call;
 
@@ -82,6 +81,36 @@ public class ServiceUtil {
         List<DiscountInfo> list = JSON.parseArray(data, DiscountInfo.class);
         return list;
     }
+
+    public <T> T parserSingleData(String result,Class<T> clazz) throws JSONException {
+        JSONObject json = new JSONObject(result);
+        String data = json.getString("data");
+        T object = JSON.parseObject(data, clazz);
+        return object;
+    }
+
+
+    public void getDemoVideoData(String vBId,String type,final JsonInterface jsonInterface){
+        String url = Constant.DDP_URL+"/api/api/v10/video/get.do";
+        OkHttpUtils.get()
+                .url(url)
+                .addParams("vBId", vBId)
+                .addParams("type", type)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        jsonInterface.onFail(e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        jsonInterface.onSucced(response.toString());
+                    }
+                });
+    }
+
+
 
 
 }

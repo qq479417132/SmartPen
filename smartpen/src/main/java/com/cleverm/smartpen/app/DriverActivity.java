@@ -1,6 +1,5 @@
 package com.cleverm.smartpen.app;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -13,9 +12,8 @@ import android.view.Window;
 import android.widget.ImageView;
 
 import com.cleverm.smartpen.R;
-import com.cleverm.smartpen.application.CleverM;
-import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.util.Constant;
+import com.cleverm.smartpen.util.IntentUtil;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
 import com.github.yoojia.zxing.qrcode.Encoder;
@@ -44,9 +42,7 @@ public class DriverActivity extends BaseActivity {
             switch (msg.what) {
                 case GOBack: {
                     Log.v(TAG, "come hand====");
-                    startActivity(new Intent(DriverActivity.this, VideoActivity.class));
-                    DriverActivity.this.finish();
-                    ((CleverM) getApplication()).getpenService().setActivityFlag("VideoActivity");
+                    IntentUtil.goBackToVideoActivity(DriverActivity.this);
                     break;
                 }
             }
@@ -89,15 +85,6 @@ public class DriverActivity extends BaseActivity {
         mHandler.sendEmptyMessageDelayed(GOBack, TIME);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onEvent(this, "E_JIA");
-        penService penService = ((CleverM) getApplication()).getpenService();
-        if(penService!=null){
-            penService.setActivityFlag("DriverActivity");
-        }
-    }
 
     @Override
     public void onPause() {
@@ -117,7 +104,7 @@ public class DriverActivity extends BaseActivity {
                 .setOutputBitmapHeight(dimension)
                 .build();
         Bitmap Bitmap=mEncoder.encode(code);
-        Log.v(TAG,"code="+code);
+        Log.v(TAG, "code=" + code);
         Drawable drawable =new BitmapDrawable(Bitmap);
         mdriveCode.setBackground(drawable);
     }

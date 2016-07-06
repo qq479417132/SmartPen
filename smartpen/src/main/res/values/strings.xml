@@ -31,6 +31,8 @@
     <string name="clean">请稍等，\n马上为您收拾餐具！</string>
     <string name="fondue_soup">请稍等，\n马上为您火锅加汤！</string>
     <string name="change_tableware">请稍等，\n马上为您更换餐具！</string>
+    <string name="robot_show">请稍等，\n马上为您呼叫Cooky！</string>
+    <string name="robot_show_ok">Wonderful，\Cooky收到消息,马上来您身边！</string>
     <string name="choice_pay">请选择支付方式</string>
     <string name="confirm">提交</string>
     <string name="cancel">取消</string>
@@ -51,6 +53,7 @@
     <string name="good4">好</string>
     <string name="good5">棒棒哒</string>
     <string name="service_submit">此次评价提交成功</string>
+    <string name="service_submit_empty">o(∩_∩)o么么哒亲，给个小评价哈...</string>
     <string name="response_speed">环境:</string>
     <string name="waiting">请稍后</string>
     <string name="isloading">数据正在加载中……</string>
@@ -131,6 +134,7 @@
     <string name="ali_pay">支付宝支付</string>
     <string name="choice_online_pay">&#160;或使用在线支付&#160;</string>
     <string name="notificate_waiter">已通知服务员，请稍等。</string>
+    <string name="notificate_waiter_notice">请稍等，\n已通知服务员，请稍等!</string>
 
 
     <!-- 设置orgid  BaseSelectTableActivity-->

@@ -3,7 +3,6 @@ package com.cleverm.smartpen.util;
 import android.content.Context;
 import android.util.Log;
 
-import com.cleverm.smartpen.pushtable.StringUtils;
 import com.cleverm.smartpen.service.penService;
 
 /**
@@ -207,13 +206,16 @@ public class ScanUtil {
 
                 //打赏
             case Constant.AWARD:{
-                IntentUtil.goToFutureActivity(context,StatisticsUtil.OTHER_GIVE_MONEY, StatisticsUtil.OTHER_GIVE_MONEY_DESC);
+                IntentUtil.goToFutureActivity(context, StatisticsUtil.OTHER_GIVE_MONEY, StatisticsUtil.OTHER_GIVE_MONEY_DESC);
                 break;
             }
-                //金融
-            case Constant.FINANCIAL:
                 //未知功能
-            case Constant.UN_KNOW1:
+            case Constant.ROBOT_SHOW:{
+                IntentUtil.goToRobotShow(context);
+                break;
+            }
+            //金融
+            case Constant.FINANCIAL:
             case Constant.UN_KNOW2:
             case Constant.UN_KNOW3:
             case Constant.UN_KNOW4:{

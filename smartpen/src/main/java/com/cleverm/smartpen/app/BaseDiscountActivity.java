@@ -2,23 +2,22 @@ package com.cleverm.smartpen.app;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cleverm.smartpen.R;
-import com.cleverm.smartpen.application.CleverM;
 import com.cleverm.smartpen.bean.DiscountInfo;
 import com.cleverm.smartpen.ui.banner.BGABanner;
 import com.cleverm.smartpen.util.AlgorithmUtil;
-import com.cleverm.smartpen.util.DownloadUtil;
+import com.cleverm.smartpen.util.IntentUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.ServiceUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
-import com.cleverm.smartpen.util.cache.FileRememberUtil;
-import com.umeng.analytics.MobclickAgent;
-
-import org.json.JSONException;
+import com.cleverm.smartpen.util.parts.DoDiskLruPart;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,39 +30,58 @@ import java.util.List;
  * Version:1.0
  * Open source
  */
-public abstract class BaseDiscountActivity extends BaseBackActivity implements View.OnClickListener {
+@Deprecated
+public abstract class BaseDiscountActivity extends BaseActivity implements View.OnClickListener {
 
+    public static final  String AllKey = "LocalKey";
+    public static final String OnlyKey = "OnlyKey";
 
     private Activity mContext;
-    private boolean isDisountArea;
+    private boolean mAllArea;
     private BGABanner vpImage;
     private ArrayList<String> images;
     private ImageView ivLeft;
     private ImageView ivRight;
     TextView tvDiscountNum;
 
+    private String mAllData = "0";
+    private String mLocalData = "1";
+
+    public static final int GOBack = 200;
+    public static final int TIME = 60000;
+
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case GOBack: {
+                    onBack();
+                    break;
+                }
+            }
+        }
+    };
 
     @Override
-    protected void onCreate() {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_discount);
         mContext = this;
         initIntent();
         initView();
         initDate();
         initClick();
+        mHandler.removeCallbacksAndMessages(null);
+        mHandler.sendEmptyMessageDelayed(GOBack, TIME);
     }
 
-
-    @Override
-    protected ImageView getBackResId() {
-        return (ImageView) findViewById(R.id.ivClose);
-    }
 
     /**
      * 是否是优惠专区
      */
     private void initIntent() {
-        isDisountArea = getSonDiscountArea();
+        mAllArea = getSonDiscountArea();
     }
 
     protected abstract boolean getSonDiscountArea();
@@ -74,27 +92,30 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
         ivLeft = (ImageView) findViewById(R.id.ivLeft);
         ivRight = (ImageView) findViewById(R.id.ivRight);
         tvDiscountNum = (TextView) findViewById(R.id.tvDiscountNum);
+        findViewById(R.id.ivClose).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBack();
+            }
+        });
     }
 
     private void initDate() {
 
-        if (FileRememberUtil.get(DownloadUtil.Dir_DISOUNT_JSON, DownloadUtil.DISOUNT_JSON) != null) {
-            if (isDisountArea) {
-                String json = FileRememberUtil.get(DownloadUtil.Dir_DISOUNT_JSON, DownloadUtil.DISOUNT_JSON);
-                handlerJosn(json);
-            } else {
-                if (FileRememberUtil.get(DownloadUtil.Dir_DISOUNT_HEADOFFICE_JSON, DownloadUtil.DISOUNT_HEADOFFICE_JSON) != null) {
-                    String json = FileRememberUtil.get(DownloadUtil.Dir_DISOUNT_HEADOFFICE_JSON, DownloadUtil.DISOUNT_HEADOFFICE_JSON);
-                    handlerJosn(json);
-                } else {
-                    getDiscountDataFromService("0");
-                }
+
+        if(mAllArea){
+            String value=DoDiskLruPart.getInstance().get(AllKey);
+            if(value != null && value!= null){
+                handlerJosn(value);
+            }else{
+                getDiscountDataFromService(mAllData);
             }
-        } else {
-            if (isDisountArea) {
-                getDiscountDataFromService("1");
-            } else {
-                getDiscountDataFromService("0");
+        }else{
+            String value=DoDiskLruPart.getInstance().get(OnlyKey);
+            if (value!= null && value!= null) {
+                handlerJosn(value);
+            }else{
+                getDiscountDataFromService(mLocalData);
             }
         }
 
@@ -114,7 +135,7 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
             List<DiscountInfo> discountInfos = ServiceUtil.getInstance().parserDiscountData(json);
             QuickUtils.log("discountInfos=" + discountInfos.size());
             //如果服务端没有数据,不做逻辑处理
-            if(discountInfos.size()<=0){
+            if (discountInfos.size() <= 0) {
                 return;
             }
             //图片顺序算法
@@ -127,10 +148,7 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
-
 
     private void initClick() {
         ivLeft.setOnClickListener(this);
@@ -175,7 +193,7 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
                     if (listImageSequence.size() > 0) {
                         DiscountInfo discountInfo = listImageSequence.get(finalPosition);
                         //统计代码
-                        if (isDisountArea) {
+                        if (mAllArea) {
                             StatisticsUtil.getInstance().insertWithSecondEvent(StatisticsUtil.SECOND_DISCOUNT_ACTIVITY, StatisticsUtil.SECOND_DISCOUNT_ACTIVITY_DESC, StatisticsUtil.getInstance().str2Long(discountInfo.getRollMainId()));
                         } else {
                             StatisticsUtil.getInstance().insertWithSecondEvent(StatisticsUtil.SECOND_LOACL_DISCOUNT_ACTIVITY, StatisticsUtil.SECOND_LOACL_DISCOUNT_ACTIVITY_DESC, StatisticsUtil.getInstance().str2Long(discountInfo.getRollMainId()));
@@ -231,31 +249,13 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
 
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onEvent(this, "E_Discount");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        MobclickAgent.onEvent(this, "E_Discount");
-    }
-
-    @Override
     protected void onDestroy() {
-        QuickUtils.log("listImageSequence-onDestroy");
         super.onDestroy();
-
     }
 
-    @Override
     protected void onBack() {
-        //清空List集合
         AlgorithmUtil.getInstance().clearImageSequence();
-        startActivity(new Intent(this, VideoActivity.class));
-        finish();
-        ((CleverM) getApplication()).getpenService().setActivityFlag("VideoActivity");
+        IntentUtil.goBackToVideoActivity(BaseDiscountActivity.this);
     }
 
     private void getDiscountDataFromService(String type) {
@@ -275,5 +275,9 @@ public abstract class BaseDiscountActivity extends BaseBackActivity implements V
 
     }
 
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mHandler.removeCallbacksAndMessages(null);
+    }
 }

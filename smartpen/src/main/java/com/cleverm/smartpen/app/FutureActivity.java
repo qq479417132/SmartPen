@@ -6,12 +6,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 
 import com.cleverm.smartpen.R;
-import com.cleverm.smartpen.application.CleverM;
-import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.util.Constant;
+import com.cleverm.smartpen.util.IntentUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
 
 /**
@@ -28,9 +26,7 @@ public class FutureActivity extends BaseActivity {
             switch (msg.what) {
                 case GOBack: {
                     Log.v(TAG, "come hand====");
-                    FutureActivity.this.finish();
-                    startActivity(new Intent(FutureActivity.this, VideoActivity.class));
-                    ((CleverM) getApplication()).getpenService().setActivityFlag("VideoActivity");
+                    IntentUtil.goBackToVideoActivity(FutureActivity.this);
                     break;
                 }
             }
@@ -88,12 +84,5 @@ public class FutureActivity extends BaseActivity {
         mHandler.removeCallbacksAndMessages(null);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        penService penService = ((CleverM) getApplication()).getpenService();
-        if(penService!=null){
-            penService.setActivityFlag("FutureActivity");
-        }
-    }
+
 }
