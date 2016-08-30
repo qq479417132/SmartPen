@@ -1,4 +1,4 @@
-package com.cleverm.smartpen.bean.evnet;
+package com.cleverm.smartpen.bean.event;
 
 /**
  * Created by xiong,An android project Engineer,on 5/5/2016.

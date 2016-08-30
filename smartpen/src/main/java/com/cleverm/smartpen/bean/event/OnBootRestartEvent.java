@@ -1,4 +1,4 @@
-package com.cleverm.smartpen.bean.evnet;
+package com.cleverm.smartpen.bean.event;
 
 import java.io.Serializable;
 
