@@ -169,9 +169,11 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
                 }else if(Constant.HIDDEN_DOOR_OPEN_ENGINEER.equals(psw)){
                     RememberUtil.putBoolean(Constant.HIDDEN_DOOR_ENGINEER_KEY,true);
                     QuickUtils.toast("工程模式开启！");
+                    QuickUtils.log("工程模式开启！");
                 }else if(Constant.HIDDEN_DOOR_CLOSE_ENGINEER.equals(psw)){
                     RememberUtil.putBoolean(Constant.HIDDEN_DOOR_ENGINEER_KEY,false);
                     QuickUtils.toast("工程模式关闭！");
+                    QuickUtils.log("工程模式关闭！");
                 } else {
                     Toast.makeText(BaseSelectTableActivity.this, getString(R.string.psw_error), Toast.LENGTH_LONG).show();
                 }
