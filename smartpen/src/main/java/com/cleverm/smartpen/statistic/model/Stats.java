@@ -19,6 +19,7 @@ public class Stats {
     private String desc;
     private Long secondid;
     private String querydata;
+    private Boolean flag;
 
     // KEEP FIELDS - put your custom fields here
     // KEEP FIELDS END
@@ -30,7 +31,7 @@ public class Stats {
         this.id = id;
     }
 
-    public Stats(Long id, long actionId, long timePoit, Long timeStay, Long clientId, Long orgId, Long tableId, String desc, Long secondid, String querydata) {
+    public Stats(Long id, long actionId, long timePoit, Long timeStay, Long clientId, Long orgId, Long tableId, String desc, Long secondid, String querydata, Boolean flag) {
         this.id = id;
         this.actionId = actionId;
         this.timePoit = timePoit;
@@ -41,6 +42,7 @@ public class Stats {
         this.desc = desc;
         this.secondid = secondid;
         this.querydata = querydata;
+        this.flag = flag;
     }
 
     public Long getId() {
@@ -121,6 +123,14 @@ public class Stats {
 
     public void setQuerydata(String querydata) {
         this.querydata = querydata;
+    }
+
+    public Boolean getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Boolean flag) {
+        this.flag = flag;
     }
 
     // KEEP METHODS - put your custom methods here

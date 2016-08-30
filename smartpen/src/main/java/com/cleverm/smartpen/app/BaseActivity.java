@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.cleverm.smartpen.application.SmartPenApplication;
 import com.cleverm.smartpen.service.penService;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.QuickUtils;
@@ -73,7 +74,9 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        timeValue = StatisticsUtil.getInstance().onCreate(onGetEventId(),onGetDesc());
+        if(!SmartPenApplication.getSimpleVersionFlag()){
+            timeValue = StatisticsUtil.getInstance().onCreate(onGetEventId(),onGetDesc());
+        }
         MobclickAgent.onResume(this);
         MobclickAgent.onEvent(this, QuickUtils.getRunningActivityName(this));
         Constant.NEW_FLAG=QuickUtils.getRunningActivityName(this);
@@ -82,7 +85,9 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        StatisticsUtil.getInstance().onDestory(timeValue);
+        if(!SmartPenApplication.getSimpleVersionFlag()) {
+            StatisticsUtil.getInstance().onDestory(timeValue);
+        }
         MobclickAgent.onPause(this);
     }
 

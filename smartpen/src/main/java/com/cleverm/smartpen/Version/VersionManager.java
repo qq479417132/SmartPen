@@ -15,7 +15,13 @@ import android.os.Message;
 import android.util.Log;
 
 import com.cleverm.smartpen.R;
+import com.cleverm.smartpen.application.SmartPenApplication;
+import com.cleverm.smartpen.log.FileUtil;
+import com.cleverm.smartpen.util.AlgorithmUtil;
 import com.cleverm.smartpen.util.Constant;
+import com.cleverm.smartpen.util.ThreadManager;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.FileCallBack;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -53,8 +59,29 @@ public class VersionManager {
     public static final String PACKAGE_NAME = "com.cleverm.smartpen";
     public static final String APP_NAME = Constant.APP_NAME;
     public static final String SERVER_IP = Constant.DDP_URL+"/push/105/app/smartpen/";
+    public static final String SERVER_IP_WITHOUT_PEN = Constant.DDP_URL+"/push/105/app/smartwithoutpen/";
     public static final String SERVER_ADDRESS = SERVER_IP + "version.json";
+    public static final String SERVER_ADDRESS_WITHOUTPEN = SERVER_IP_WITHOUT_PEN + "version.json";
     public static final String UPDATESOFTADDRESS = SERVER_IP + "smartpen.apk";
+    public static final String UPDATESOFTADDRESS_WITHOUT_PEN = SERVER_IP_WITHOUT_PEN + "smartwithoutpen.apk";
+
+    private String getServerIp(){
+        if(SmartPenApplication.getSimpleVersionFlag()){
+            return UPDATESOFTADDRESS_WITHOUT_PEN;
+        }else{
+            return UPDATESOFTADDRESS;
+        }
+    }
+
+    private String getServerAddress(){
+        if(SmartPenApplication.getSimpleVersionFlag()){
+            return SERVER_ADDRESS_WITHOUTPEN;
+        }else{
+            return SERVER_ADDRESS;
+        }
+    }
+
+
 
     private Handler mHandler=new Handler(){
         @Override
@@ -77,7 +104,7 @@ public class VersionManager {
         m_progressDlg = new ProgressDialog(context);
         m_progressDlg.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         m_progressDlg.setIndeterminate(false);
-        m_progressDlg.setProgressNumberFormat("%1d KB/%2d KB");
+        //m_progressDlg.setProgressNumberFormat("%1d KB/%2d KB");
         m_progressDlg.setCancelable(false);
         m_appNameStr =APP_NAME;
     }
@@ -86,12 +113,12 @@ public class VersionManager {
      *
      */
     public void uddateVersion(){
-        new Thread(){
+        ThreadManager.getInstance().execute(new Runnable() {
             @Override
             public void run() {
                 post_to_server1();
             }
-        }.start();
+        });
     }
 
     public  void post_to_server1() {
@@ -101,7 +128,7 @@ public class VersionManager {
 //        }
         try {
             HttpClient Client=new DefaultHttpClient();
-            HttpGet get=new HttpGet(SERVER_ADDRESS);
+            HttpGet get=new HttpGet(getServerAddress());
             HttpResponse Response=Client.execute(get);
             if(Response.getStatusLine().getStatusCode()==200){
                 HttpEntity entity=Response.getEntity();
@@ -162,7 +189,7 @@ public class VersionManager {
                                 m_progressDlg.setTitle(context.getString(R.string.isdownloading));
                                 m_progressDlg.setMessage(context.getString(R.string.wait));
                                 m_progressDlg.show();
-                                downFile(UPDATESOFTADDRESS);  //��ʼ����
+                                downFile(getServerIp());
                             }
                         })
                 .setNegativeButton(context.getString(R.string.nochange),
@@ -179,7 +206,8 @@ public class VersionManager {
 
     }
 
-    private  void downFile(final String url) {
+
+    private void oldDownFile(final String url){
         new Thread() {
             public void run() {
                 HttpClient client = new DefaultHttpClient();
@@ -224,6 +252,74 @@ public class VersionManager {
         }.start();
     }
 
+    private  void downFile(final String url) {
+        OkHttpUtils//
+                .get()//
+                .url(url)//
+                .build()//
+                .connTimeOut(60000)
+                .readTimeOut(60000)
+                .writeTimeOut(60000)
+                .execute(new FileCallBack(AlgorithmUtil.DOWNLOAD_APK_FILE, m_appNameStr)//
+                {
+                    @Override
+                    public void inProgress(float progress) {
+                        Log.i("FILE", "onResponse inProgress   :" + progress);
+                        m_progressDlg.setProgress((int) (100 * progress));
+                    }
+
+                    @Override
+                    public void onError(okhttp3.Call call, Exception e) {
+                        Log.i("FILE", "onResponse onError :" + e.getMessage());
+                        dismissProgress();
+                        FileUtil.delete(new File(AlgorithmUtil.DOWNLOAD_APK_FILE, m_appNameStr));
+                        uddateVersion();
+                    }
+
+
+                    @Override
+                    public void onResponse(File file) {
+                        Log.i("FILE", "onResponse onResponse:" + file.getAbsolutePath());
+                        dismissProgress();
+                        installApk(file);
+                    }
+                });
+
+
+    }
+
+
+
+    private void setFileMax(final String url) {
+        ThreadManager.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                HttpClient client = new DefaultHttpClient();
+                HttpGet get = new HttpGet(url);
+                HttpResponse response;
+                try {
+                    response = client.execute(get);
+                    HttpEntity entity = response.getEntity();
+                    long length = entity.getContentLength();
+                    m_progressDlg.setMax((int) length/1024);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void dismissProgress() {
+        try {
+            Activity activity = (Activity) context;
+            if(!activity.isFinishing()){
+                m_progressDlg.cancel();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      *
      */
@@ -239,10 +335,13 @@ public class VersionManager {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                update();
+
+        update();
             }
         });
     }
+
+
 
     /**
      *
@@ -257,7 +356,18 @@ public class VersionManager {
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 
-
+    // 安装应用程序
+    private void installApk(File t) {
+        Intent intent = new Intent();
+        // 安装一个应用对应的action
+        intent.setAction("android.intent.action.VIEW");
+        intent.addCategory("android.intent.category.DEFAULT");
+        // 设置数据和类型
+        intent.setDataAndType(Uri.fromFile(t),
+                "application/vnd.android.package-archive");
+        context.startActivity(intent);
+        android.os.Process.killProcess(android.os.Process.myPid());
+    }
 
     /**
      *

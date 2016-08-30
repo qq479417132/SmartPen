@@ -88,7 +88,6 @@ public class MyWindowManager {
 			WindowManager windowManager = getWindowManager();
 			windowManager.removeView(smallWindow);
 			smallWindow = null;
-			
 		}
 	}
 

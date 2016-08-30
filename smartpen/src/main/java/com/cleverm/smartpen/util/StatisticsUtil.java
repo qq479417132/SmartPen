@@ -3,6 +3,7 @@ package com.cleverm.smartpen.util;
 import android.app.Application;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.cleverm.smartpen.app.SelectTableActivity;
 import com.cleverm.smartpen.application.SmartPenApplication;
@@ -120,8 +121,13 @@ public class StatisticsUtil {
     public static final int CHANGE_TABLEWARE_STAT=30;
     public static final String CHANGE_TABLEWARE_STAT_DESC="更换餐具";
 
+    public static final int VIDEO_AD_DETAIL=31;
+    public static final String VIDEO_AD_DETAIL_DESC="视频广告详情";
+
+
     //点点笔数据库名
-    private static final String DB_NAME="ddb_db";
+    //private static final String DB_NAME="ddb_db";//第一个版本的数据库名称ddb_db，增加flag字段后为了不出现crash,取新名ddb_db2
+    private static final String DB_NAME="ddb_db2";//第一个版本的数据库名称ddb_db，增加flag字段后为了不出现crash,取新名ddb_db2
 
     //用于FutureActivity-Intent参数
     public static final String FUTURE_INTNET_EVENTID="FUTURE_INTNET_EVENTID";
@@ -277,8 +283,8 @@ public class StatisticsUtil {
      * @param querydata
      * @return
      */
-    private Stats getStasObject( int actionId, Long timePoit, Long timeStay, Long clientId, Long orgId, Long tableId, String desc, Long secondid, String querydata){
-        Stats stats = new Stats(null,  actionId,  timePoit,  timeStay,  clientId,  orgId,  tableId,  desc,  secondid,  querydata);
+    private Stats getStasObject( int actionId, Long timePoit, Long timeStay, Long clientId, Long orgId, Long tableId, String desc, Long secondid, String querydata,boolean flag){
+        Stats stats = new Stats(null,  actionId,  timePoit,  timeStay,  clientId,  orgId,  tableId,  desc,  secondid,  querydata,flag);
         return stats;
     }
 
@@ -289,6 +295,7 @@ public class StatisticsUtil {
      * @return Long 该自增长的id值,他将会完成timeStay的赋值
      */
     public Long insert(int eventId,String desc){
+        QuickUtils.log("insert - eventId = " + eventId + "   eventDesc = " + desc);
         if(checkValid(eventId)){
             //插入数据库
             return SmartPenApplication.getStatsDao().insert(StatisticsUtil.getInstance().getStasObject(
@@ -298,7 +305,7 @@ public class StatisticsUtil {
                     getClientId(),
                     getOrgId(),
                     getDeskId(),
-                    desc,null,getEventHappenTime()
+                    desc,null,getEventHappenTime(),false
             ));
         }else{
             return ERROR_AND_NOE_STAISTICS_LONG;
@@ -316,7 +323,7 @@ public class StatisticsUtil {
      * @return
      */
     public Long insertWithSecondEvent(int eventId,String desc,Long secondEvent){
-
+        QuickUtils.log("insert - eventId = " + eventId + "   eventDesc = " + desc+" secondEvent = "+secondEvent);
         //插入数据库
         return SmartPenApplication.getStatsDao().insert(StatisticsUtil.getInstance().getStasObject(
                 eventId,
@@ -325,7 +332,7 @@ public class StatisticsUtil {
                 getClientId(),
                 getOrgId(),
                 getDeskId(),desc,secondEvent,
-                getEventHappenTime()));
+                getEventHappenTime(),false));
     }
 
     /**
@@ -411,7 +418,6 @@ public class StatisticsUtil {
      */
     private Long getClientId(){
         String clientId = RememberUtil.getString(UpdateTableHandler.CLIENTID, DEFALUT_CLIENTID);
-        QuickUtils.log("clientId=" + clientId);
         if(clientId.equals(DEFALUT_CLIENTID)){
             return 8888L;
         }
@@ -424,7 +430,6 @@ public class StatisticsUtil {
      */
     private Long getOrgId(){
         String orgId=RememberUtil.getString(UpdateTableHandler.ORGID, DEFALUT_ORGID);
-        QuickUtils.log("orgId="+orgId);
         if(orgId.equals(DEFALUT_ORGID)){
             return 8888L;
         }
@@ -437,7 +442,6 @@ public class StatisticsUtil {
      */
     private Long getDeskId(){
         long deskId = RememberUtil.getLong(SelectTableActivity.SELECTEDTABLEID, Constant.DESK_ID_DEF_DEFAULT);
-        QuickUtils.log("deskId="+deskId);
         return deskId;
     }
 

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Message {
+
     private Map<String, Object> headers = new HashMap<String, Object>();
     private MessageType messageType;
     private String body;
@@ -107,4 +108,14 @@ public class Message {
         }
     }
 
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "headers=" + headers +
+                ", messageType=" + messageType +
+                ", body='" + body + '\'' +
+                ", headerWapper=" + headerWapper +
+                '}';
+    }
 }

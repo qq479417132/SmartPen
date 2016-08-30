@@ -3,26 +3,24 @@ package com.cleverm.smartpen.app;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.bean.VideoInfo;
-import com.cleverm.smartpen.bean.evnet.DefaultEvent;
-import com.cleverm.smartpen.bean.evnet.OnVideoPlayMemoryEvent;
 import com.cleverm.smartpen.ui.FullScreenVideoView;
 import com.cleverm.smartpen.util.AlgorithmUtil;
 import com.cleverm.smartpen.util.Constant;
+import com.cleverm.smartpen.util.CopyFileUtil;
 import com.cleverm.smartpen.util.DemoVideoUtil;
 import com.cleverm.smartpen.util.FileUtil;
 import com.cleverm.smartpen.util.IntentUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.ServiceUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
-import com.cleverm.smartpen.util.VideoUtil;
-
-import org.greenrobot.eventbus.EventBus;
-import org.json.JSONException;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.FileCallBack;
 
 import java.io.File;
 
@@ -114,7 +112,7 @@ public class DemoVideoActivity extends BaseActivity {
                 try {
                     VideoInfo videoInfo = ServiceUtil.getInstance().parserSingleData(json, VideoInfo.class);
                     if (videoInfo != null) {
-                        DemoVideoUtil.getInstance().prepareOnlineVideo(videoInfo,vvAdvertisement);
+                        downloadDemoVideo(QuickUtils.spliceUrl(videoInfo.getVideoPath(),videoInfo.getQiniuPath()), Constant.DEMO_VIDEO_ID,videoInfo);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -132,5 +130,40 @@ public class DemoVideoActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         initData();
+    }
+
+    @Override
+    public void onUserInteraction() {
+        mHandler.removeMessages(GOBack);
+        mHandler.sendEmptyMessageDelayed(GOBack, TIME);
+        super.onUserInteraction();
+    }
+
+    public void downloadDemoVideo(final String path,final String num,final VideoInfo videoInfo) {
+        OkHttpUtils//
+                .get()//
+                .url(path)//
+                .build()//
+                .connTimeOut(60000)
+                .readTimeOut(60000)
+                .writeTimeOut(60000)
+                .execute(new FileCallBack(AlgorithmUtil.VIDEO_FILE, num + ".mp4") {
+                    @Override
+                    public void inProgress(float progress) {
+                        Log.e("inProgress",""+progress);
+                    }
+
+                    @Override
+                    public void onError(okhttp3.Call call, Exception e) {
+                    }
+
+                    @Override
+                    public void onResponse(File file) {
+                        CopyFileUtil.copyByNIO(AlgorithmUtil.VIDEO_FILE + File.separator + num + ".mp4", AlgorithmUtil.VIDEO_DEMO_FILE + File.separator + num + ".mp4", false);
+                        if(!QuickUtils.isActivityFinish(DemoVideoActivity.this)){
+                            DemoVideoUtil.getInstance().prepareOnlineVideo(videoInfo,vvAdvertisement);
+                        }
+                    }
+                });
     }
 }

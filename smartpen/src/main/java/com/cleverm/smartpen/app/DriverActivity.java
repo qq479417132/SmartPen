@@ -109,5 +109,12 @@ public class DriverActivity extends BaseActivity {
         mdriveCode.setBackground(drawable);
     }
 
+    @Override
+    public void onUserInteraction() {
+        mHandler.removeMessages(GOBack);
+        mHandler.sendEmptyMessageDelayed(GOBack, TIME);
+        super.onUserInteraction();
+    }
+
 
 }

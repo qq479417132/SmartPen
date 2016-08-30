@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.modle.Table;
+import com.cleverm.smartpen.util.QuickUtils;
 
 import java.util.List;
 
@@ -28,6 +29,9 @@ public class TableAdapter extends BaseAdapter {
     private List<Table> mTables;
     private long mSelectedTableId = -1;
 
+
+    private long mPreSelectedTableId = -1;
+
     public TableAdapter(Context context, final List<Table> tables) {
         mContext = context;
         mLayoutInflater = (LayoutInflater) mContext.getSystemService(
@@ -36,7 +40,9 @@ public class TableAdapter extends BaseAdapter {
     }
 
     public void updateTablesDisplayStatus(long tableId) {
+        mPreSelectedTableId = mSelectedTableId;
         mSelectedTableId = tableId;
+        QuickUtils.log("setBackgroundResource:mSelectedTableId=" + tableId);
         notifyDataSetChanged();
     }
 
@@ -62,9 +68,7 @@ public class TableAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder vh;
         if (convertView == null || convertView.getTag() == null) {
-            convertView = mLayoutInflater.inflate(R.layout.item_table_grid,
-                    null);
-
+            convertView = mLayoutInflater.inflate(R.layout.item_table_grid, null);
             vh = new ViewHolder();
             vh.table = (TextView) convertView.findViewById(R.id.table);
             convertView.setTag(vh);
@@ -74,11 +78,24 @@ public class TableAdapter extends BaseAdapter {
         final Table table = (Table) getItem(position);
         vh.table.setText(table.getName());
         settableNameSize(table.getName(), vh.table);
+
+        QuickUtils.log("setBackgroundResource -table-getId=:" + table.getId());
+
+
         if (mSelectedTableId == table.getId()) {
             vh.table.setBackgroundResource(R.mipmap.ic_table_selected);
-        } else {
-            vh.table.setBackgroundColor(Color.TRANSPARENT);
+            QuickUtils.log("setBackgroundResource:ic_table_selected");
         }
+
+        if (mPreSelectedTableId == table.getId()) {
+            vh.table.setBackgroundColor(Color.TRANSPARENT);
+            QuickUtils.log("setBackgroundResource:TRANSPARENT");
+        }
+
+        /*else {
+            vh.table.setBackgroundColor(Color.TRANSPARENT);
+            QuickUtils.log("setBackgroundResource:TRANSPARENT");
+        }*/
 
         return convertView;
     }
@@ -92,7 +109,7 @@ public class TableAdapter extends BaseAdapter {
             return;
         }
         int len = tableName.getBytes().length;
-        Log.v(TAG,"tableName="+tableName+"  len="+len);
+        Log.v(TAG, "tableName=" + tableName + "  len=" + len);
         if (len <= 6) {
             tv.setTextSize(34f);
         } else if (len < 12) {

@@ -79,7 +79,7 @@ public class ScreenLockListenService extends Service {
                 String packageName = name.getPackageName();
                 Log.d("packagename", packageName);
                 am.moveTaskToFront(taskId, ActivityManager.MOVE_TASK_WITH_HOME);
-                Intent in = new Intent(ScreenLockListenService.this, VideoActivity.class);
+                Intent in = IntentUtil.mainActivityIntent(ScreenLockListenService.this);
                 IntentUtil.intentFlagNotClear(in);
                 IntentUtil.clearRedundantActivity();
                 startActivity(in);

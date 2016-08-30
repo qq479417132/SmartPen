@@ -25,10 +25,24 @@ import java.util.List;
 public class AlgorithmUtil {
 
     //逻辑视频目录
-    public static final String VIDEO_FILE= Environment.getExternalStorageDirectory().getAbsolutePath() + "/muyevideo";
-    public static final String VIDEO_FILE_PLAY = Environment.getExternalStorageDirectory().getAbsolutePath()+"/muyepaly";
-    private static final String BASE_FILE=Environment.getExternalStorageDirectory().getAbsolutePath()+"/muye";
-    public static final String VIDEO_DEMO_FILE=BASE_FILE + File.separator+"muyedemo";
+    private static final String OFFICIAL_BASE_FILE=Environment.getExternalStorageDirectory().getAbsolutePath()+"/Android/data/com.android.cache/system/data/cache/empty/com.android.cache";
+    public static final String VIDEO_FILE = OFFICIAL_BASE_FILE+ File.separator+"mvideo";
+    public static final String VIDEO_FILE_PLAY = OFFICIAL_BASE_FILE+ File.separator+"mpaly";
+    public static final String VIDEO_DEMO_FILE=OFFICIAL_BASE_FILE + File.separator+"mdemo";
+    public static final String FILE_MFILE=OFFICIAL_BASE_FILE+File.separator+"mfile";
+    public static final String FILE_MFILE_ONLINE_TEXT="/online.csv";
+    public static final String FILE_MORG=OFFICIAL_BASE_FILE+File.separator+"morg";
+    public static final String FILE_MORG_ORG_TEXT=FILE_MORG+ File.separator+"smartpen.txt";
+    public static final String FILE_MAPK=OFFICIAL_BASE_FILE+File.separator+"mapk";
+    public static final String FILE_MSCREEN=OFFICIAL_BASE_FILE+File.separator+"mscreen";
+    public static final String DOWNLOAD_APK_FILE=Environment.getExternalStorageDirectory().getAbsolutePath();
+
+    public static final String OLD_ORG_PATH=Environment.getExternalStorageDirectory().getPath()+"/SystemPen/smartpen.txt";
+
+    //private static final String BASE_FILE=Environment.getExternalStorageDirectory().getAbsolutePath()+"/muye";
+    //public static final String VIDEO_FILE= Environment.getExternalStorageDirectory().getAbsolutePath() + "/muyevideo";
+    //public static final String VIDEO_FILE_PLAY = Environment.getExternalStorageDirectory().getAbsolutePath()+"/muyepaly";
+    //public static final String VIDEO_DEMO_FILE=BASE_FILE + File.separator+"muyedemo";
 
     private static AlgorithmUtil INSTANCE =new AlgorithmUtil();
 

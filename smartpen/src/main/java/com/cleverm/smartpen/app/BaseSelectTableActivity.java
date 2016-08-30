@@ -2,6 +2,7 @@ package com.cleverm.smartpen.app;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -15,9 +16,11 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,12 +37,15 @@ import com.cleverm.smartpen.modle.impl.TableImpl;
 import com.cleverm.smartpen.modle.impl.TableTypeImpl;
 import com.cleverm.smartpen.pushtable.MessageType;
 import com.cleverm.smartpen.pushtable.OrgProfileVo;
+import com.cleverm.smartpen.pushtable.UpdateTableHandler;
 import com.cleverm.smartpen.pushtable.bean.TableInfo;
 import com.cleverm.smartpen.pushtable.bean.TableResult;
 import com.cleverm.smartpen.pushtable.bean.TableTypeInfo;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.IntentUtil;
+import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
+import com.cleverm.smartpen.util.ThreadManager;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -132,6 +138,8 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
         findViewById(R.id.btn_cancel).setOnClickListener(this);
         findViewById(R.id.btn_confirm).setOnClickListener(this);
         mBtnPsw = (Button) findViewById(R.id.bt_psw);
+        //xiong add this line on 20160725
+        setVersion((TextView)findViewById(R.id.tv_info_version),RememberUtil.getBoolean(Constant.HIDDEN_DOOR_CHARGING_KEY,false));
         mBtnPsw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -148,9 +156,27 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
                         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                         mDrawerLayout.openDrawer(Gravity.RIGHT);
                     }
+                } else if(Constant.HIDDEN_DOOR_OPEN_CHARGING.equals(psw)) {
+                    RememberUtil.putBoolean(Constant.HIDDEN_DOOR_CHARGING_KEY,true);
+                    Toast.makeText(BaseSelectTableActivity.this,"暗门开启,拔出充电宝短信功能立即开放！",Toast.LENGTH_LONG).show();
+                    mPsw.setText("");
+                    setVersion((TextView) findViewById(R.id.tv_info_version), true);
+                }else if(Constant.HIDDEN_DOOR_CLOSE_CHARGING.equals(psw)){
+                    RememberUtil.putBoolean(Constant.HIDDEN_DOOR_CHARGING_KEY,false);
+                    Toast.makeText(BaseSelectTableActivity.this,"暗门关闭,拔出充电宝短信功能立即关闭！",Toast.LENGTH_LONG).show();
+                    mPsw.setText("");
+                    setVersion((TextView) findViewById(R.id.tv_info_version), false);
+                }else if(Constant.HIDDEN_DOOR_OPEN_ENGINEER.equals(psw)){
+                    RememberUtil.putBoolean(Constant.HIDDEN_DOOR_ENGINEER_KEY,true);
+                    QuickUtils.toast("工程模式开启！");
+                }else if(Constant.HIDDEN_DOOR_CLOSE_ENGINEER.equals(psw)){
+                    RememberUtil.putBoolean(Constant.HIDDEN_DOOR_ENGINEER_KEY,false);
+                    QuickUtils.toast("工程模式关闭！");
                 } else {
                     Toast.makeText(BaseSelectTableActivity.this, getString(R.string.psw_error), Toast.LENGTH_LONG).show();
                 }
+
+
                 mPsw.setText("");
                 mHandler.removeMessages(GOBack);
                 mHandler.sendEmptyMessageDelayed(GOBack, Constant.DELAY_BACK);
@@ -213,6 +239,18 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
         }
     }
 
+    private void setVersion(TextView tv,boolean isOpen) {
+        String text;
+        if(isOpen){
+            text="开启";
+        }else{
+            text="关闭";
+        }
+        tv.setText("IP：" + QuickUtils.getIP() + "     " + "VersionName：" + QuickUtils.getVersionName() + "     " + "VersionCode：" + QuickUtils.getVersionCode()+"     " + "充电宝短信："+text);
+    }
+
+
+    private boolean isGetData=false;
     private void initData() {
         //*******************************************
         mOrgIdConfirm.setOnClickListener(new View.OnClickListener() {
@@ -225,7 +263,10 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
                 }
                 mDrawerLayout.setVisibility(View.GONE);
                 setClientId(OrgID);
-                RequestTableData(Long.parseLong(OrgID));
+                //xiong fix bug : double data  (on 20160712)
+                if(!isGetData){
+                    RequestTableData(Long.parseLong(OrgID));
+                }
                 mHandler.removeMessages(GOBack);
                 mHandler.sendEmptyMessageDelayed(GOBack, Constant.DELAY_BACK);
                 Log.v(TAG, "RequestTableData()***");
@@ -233,24 +274,26 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
             }
         });
         long orgid = getClientId();
+        QuickUtils.log("orgid-----------" + orgid);
         if (orgid == Constant.DESK_ID_DEF_DEFAULT) {
             //布局默认需要输入OrgID
         } else {
             //mDrawerLayout.setVisibility(View.GONE);
             mInputOrgId.setText(orgid + "", null);
             RequestTableData(orgid);
+            isGetData=true;
             Log.v(TAG, "RequestTableData()==");
         }
     }
 
     private void RequestTableData(final long OrgId) {
-        new Thread() {
+        ThreadManager.getInstance().execute(new Runnable() {
             @Override
             public void run() {
                 FetchOrgInfoHandler(OrgId);
                 Log.v(TAG, "FetchOrgInfoHandler()");
             }
-        }.start();
+        });
     }
 
     /**
@@ -343,6 +386,10 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
         }
 
         @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+        }
+
+        @Override
         public int getCount() {
             return mTablePagers == null ? 0 : mTablePagers.size();
         }
@@ -375,6 +422,10 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
 
     private void setClientId(String ClientId) {
         String data = "{\"OrgID\":" + ClientId + "}";
+
+        //xiong fixed on 20160715
+        RememberUtil.putString(UpdateTableHandler.ORGID,ClientId);
+
         Log.v(TAG, "data=" + data);
         String path1 = Environment.getExternalStorageDirectory().getPath() + "/SystemPen";
         Log.v(TAG, "path1=" + path1);
@@ -481,7 +532,7 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
                 Gson gson0 = new Gson();
                 TableData Result = gson0.fromJson(buffer.toString(), TableData.class);
                 String data = Result.getBody();
-                Log.v(TAG, "FetchOrgInfoHandler=msg data=" + data);
+                QuickUtils.log(TAG+ "FetchOrgInfoHandler=msg data=" + data);
                 if (data == null) {//请求到的数据是空
                     mHandler.sendEmptyMessage(SHOW_INPUY_PSW);
                     Log.v(TAG, "FetchOrgInfoHandler=msg.sendToTarget() data=null");
@@ -554,5 +605,12 @@ public abstract class BaseSelectTableActivity extends BaseActivity implements Vi
     protected void onPause() {
         super.onPause();
         mHandler.removeCallbacksAndMessages(null);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //重置Fragment的preItem
+        SelectTableFragment.preItem=-1;
     }
 }

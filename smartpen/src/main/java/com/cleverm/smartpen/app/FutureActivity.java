@@ -6,11 +6,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.IntentUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
+import com.cleverm.smartpen.util.parts.DoBlePart;
 
 /**
  * Created by 95 on 2016/2/3.
@@ -36,8 +39,17 @@ public class FutureActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestFullScreen();
         setContentView(R.layout.future_activity);
         initGoBack();
+    }
+
+    private void requestFullScreen() {
+        if(DoBlePart.padNotShield()){
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
     }
 
 

@@ -16,13 +16,11 @@ public class NetworkMonitor {
     private static Map<NetworkChanged, Object> callbacks;
     private static boolean connected;
 
-    public synchronized static void addMonitor(Context context,
-                                               NetworkChanged callback) {
+    public synchronized static void addMonitor(Context context, NetworkChanged callback) {
         if (callbacks == null) {
             callbacks = new HashMap<NetworkChanged, Object>();
         }
         callbacks.put(callback, true);
-
         if (networkStateReceiver == null) {
             context = context.getApplicationContext();
             connected = isConnected(context);
@@ -32,11 +30,9 @@ public class NetworkMonitor {
                     doBroadcast(context);
                 }
             };
-            IntentFilter filter = new IntentFilter(
-                ConnectivityManager.CONNECTIVITY_ACTION);
+            IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
             context.registerReceiver(networkStateReceiver, filter);
         }
-
         notifyConnect(callback);
     }
 
@@ -62,14 +58,11 @@ public class NetworkMonitor {
                 notifyConnect(callback);
             }
         }
-
     }
 
     public static boolean isConnected(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context
-            .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager
-            .getActiveNetworkInfo();
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 

@@ -6,15 +6,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bleframe.library.log.BleLog;
-import com.bleframe.library.util.Toastor;
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.bean.DiscountInfo;
-import com.cleverm.smartpen.ui.banner.BGABanner;
 import com.cleverm.smartpen.ui.infinite.InfiniteIndicator;
 import com.cleverm.smartpen.ui.infinite.page.OnPageClickListener;
 import com.cleverm.smartpen.ui.infinite.page.Page;
@@ -23,8 +25,9 @@ import com.cleverm.smartpen.util.IntentUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.ServiceUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
+import com.cleverm.smartpen.util.ThreadManager;
 import com.cleverm.smartpen.util.UILoader;
-import com.cleverm.smartpen.util.WeakHandler;
+import com.cleverm.smartpen.util.parts.DoBlePart;
 import com.cleverm.smartpen.util.parts.DoDiskLruPart;
 
 import java.util.ArrayList;
@@ -43,7 +46,7 @@ public class ScrollDiscountActivity extends BaseActivity implements View.OnClick
     public static final String TAG="ScrollDiscountActivity：";
 
     public static final  String AllKey = "LocalKey";
-    private String mAllData = "0";
+    private String mAllData = "1";
 
     private Activity mContext;
     private InfiniteIndicator mScrollAdvertIil;
@@ -74,12 +77,21 @@ public class ScrollDiscountActivity extends BaseActivity implements View.OnClick
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestFullScreen();
         setContentView(R.layout.activity_scroll_discount);
         mContext = this;
         initIntent();
         initView();
         initDate();
         initClick();
+    }
+
+    private void requestFullScreen() {
+        if(DoBlePart.padNotShield()){
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
     }
 
 
@@ -98,7 +110,7 @@ public class ScrollDiscountActivity extends BaseActivity implements View.OnClick
 
     private void initDate() {
         String value= DoDiskLruPart.getInstance().get(AllKey);
-        BleLog.e(TAG+value);
+        BleLog.e(TAG + value);
         if(value != null && value!= null){
             handlerJosn(value);
         }else{
@@ -139,12 +151,17 @@ public class ScrollDiscountActivity extends BaseActivity implements View.OnClick
     private void getDiscountDataFromService(String type) {
         ServiceUtil.getInstance().getDiscountData(QuickUtils.getOrgIdFromSp(), type, new ServiceUtil.JsonInterface() {
             @Override
-            public void onSucced(String json) {
+            public void onSucced(final String json) {
                 if (json != null && !json.equals("")) {
                     handlerJosn(json);
-                    BleLog.e(TAG+json);
-                    //存入
-                    DoDiskLruPart.getInstance().put(BaseDiscountActivity.AllKey, json);
+                    BleLog.e(TAG + json);
+                    ThreadManager.getInstance().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            //存入
+                            DoDiskLruPart.getInstance().put(BaseDiscountActivity.AllKey, json);
+                        }
+                    });
                 }
             }
 
@@ -240,6 +257,7 @@ public class ScrollDiscountActivity extends BaseActivity implements View.OnClick
     public void onResume() {
         super.onResume();
         mScrollAdvertIil.start(1000);
+        unLockScreen();
         mHandler.removeCallbacksAndMessages(null);
         mHandler.sendEmptyMessageDelayed(GOBack, TIME);
     }
@@ -253,5 +271,20 @@ public class ScrollDiscountActivity extends BaseActivity implements View.OnClick
         return false;
     }
 
+    private void unLockScreen() {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+    }
 
+
+    /**
+     * 需要与onPause()中mHandler.removeCallbacksAndMessages(null);
+     */
+    @Override
+    public void onUserInteraction() {
+        mHandler.removeMessages(GOBack);
+        mHandler.sendEmptyMessageDelayed(GOBack, TIME);
+        super.onUserInteraction();
+    }
 }

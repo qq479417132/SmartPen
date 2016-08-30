@@ -58,6 +58,7 @@
             android:layout_marginTop="40dp"
             android:drawableLeft="@mipmap/line"
             android:drawableRight="@mipmap/line"
+
             />
 
         <Button
@@ -66,11 +67,11 @@
             android:layout_marginTop="30dp"
             android:layout_gravity="center_horizontal"
             android:text="@string/weixin_pay"
-            android:textColor="#999999"
             android:paddingBottom="5dp"
+            android:textColor="#ffffff"
             android:textSize="@dimen/cash_pay_text_size"
             android:id="@+id/weixin_pay"
-            android:background="@drawable/pay_unable"/>
+            android:background="@drawable/select_phone_pay"/>
 
 
         <Button
@@ -79,11 +80,11 @@
             android:layout_marginTop="20dp"
             android:layout_gravity="center_horizontal"
             android:text="@string/ali_pay"
-            android:textColor="#999999"
             android:paddingBottom="5dp"
+            android:textColor="#ffffff"
             android:id="@+id/ali_pay"
             android:textSize="@dimen/cash_pay_text_size"
-            android:background="@drawable/pay_unable"/>
+            android:background="@drawable/select_phone_pay"/>
     </LinearLayout>
 
     <!-- 显示铃铛-->

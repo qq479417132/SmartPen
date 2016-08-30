@@ -1,8 +1,19 @@
 package com.cleverm.smartpen.util;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.Build;
+import android.os.Debug;
+import android.os.Looper;
 import android.support.annotation.DrawableRes;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -16,7 +27,12 @@ import com.cleverm.smartpen.bean.DiscountInfo;
 import com.cleverm.smartpen.net.InfoSendSMSVo;
 import com.cleverm.smartpen.net.RequestNet;
 import com.cleverm.smartpen.pushtable.UpdateTableHandler;
+import com.cleverm.smartpen.ui.LongPressView;
+import com.cleverm.smartpen.ui.windows.engineer.EngineerUtil;
 import com.cleverm.smartpen.util.cache.FileRememberUtil;
+import com.cleverm.smartpen.util.device.Application;
+import com.cleverm.smartpen.util.device.EasyDeviceInfo;
+import com.google.zxing.oned.EAN13Reader;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -26,11 +42,22 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import org.json.JSONException;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by xiong,An android project Engineer,on 2016/2/19.
@@ -133,9 +160,43 @@ public class QuickUtils {
         Toast.makeText(SmartPenApplication.getApplication(), message, Toast.LENGTH_LONG).show();
     }
 
-    public static void log(String message) {
-        Log.i("MAIN-ACTIVITY", message);
+    public static void threadToast(Activity activity, final String message) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                toast(message);
+            }
+        });
     }
+
+
+    public static void log(String message) {
+        StackTraceElement caller = getCallerStackTraceElement();
+        String tag = generateTag(caller);
+        Log.i(tag, message);
+        if(RememberUtil.getBoolean(Constant.HIDDEN_DOOR_ENGINEER_KEY,false)){
+            EngineerUtil.getInstance().log(tag+log_splite+message);
+        }else{
+            EngineerUtil.getInstance().destory();
+        }
+
+    }
+    public static final String log_splite="  :  ";
+    private static StackTraceElement getCallerStackTraceElement() {
+        return Thread.currentThread().getStackTrace()[4];
+    }
+    private static String customTagPrefix = "";
+    private static String generateTag(StackTraceElement caller) {
+        String tag = "%s.%s(L:%d)";
+        String callerClazzName = caller.getClassName();
+        callerClazzName = callerClazzName.substring(callerClazzName.lastIndexOf(".") + 1);
+        tag = String.format(tag, callerClazzName, caller.getMethodName(), caller.getLineNumber());
+        tag = TextUtils.isEmpty(customTagPrefix) ? tag : customTagPrefix + ":" + tag;
+        return tag;
+    }
+
+
+
 
     public static View getPageView(Activity activity, @DrawableRes int resid) {
         ImageView imageView = new ImageView(activity);
@@ -221,8 +282,29 @@ public class QuickUtils {
      * @return
      */
     public static String getOrgIdFromSp() {
+        String orgID = RememberUtil.getString(UpdateTableHandler.ORGID, "100");
+        Log.e("orgID--------",""+orgID);
         return RememberUtil.getString(UpdateTableHandler.ORGID, "100");
     }
+
+    public static String getOrgIdFromSp(String defaultValue){
+        return RememberUtil.getString(UpdateTableHandler.ORGID, defaultValue);
+    }
+
+    public static  Long getDeskId(){
+        long deskId = RememberUtil.getLong(SelectTableActivity.SELECTEDTABLEID, Constant.DESK_ID_DEF_DEFAULT);
+        return deskId;
+    }
+
+    public static Long getClientId(){
+        String clientId = RememberUtil.getString(UpdateTableHandler.CLIENTID, "");
+        QuickUtils.log("clientId=" + clientId);
+        if(clientId.equals("")){
+            return 8888L;
+        }
+        return Long.parseLong(clientId);
+    }
+
 
     /**
      * 判断目录路径,比如storage/emulated/0/muye是否存在
@@ -290,7 +372,11 @@ public class QuickUtils {
         File[] files = file.listFiles();
 
         if (files != null) {
-            QuickUtils.log("files=" + files.toString());
+            for (File childFile : files) {
+                if (childFile.isDirectory()) {
+                    QuickUtils.log(childFile.getAbsolutePath());
+                }
+            }
         }
 
 
@@ -306,7 +392,11 @@ public class QuickUtils {
         File[] files = file.listFiles();
 
         if (files != null) {
-            QuickUtils.log("files=" + files.toString());
+            for (File childFile : files) {
+                if (childFile.isDirectory()) {
+                    QuickUtils.log(childFile.getAbsolutePath());
+                }
+            }
         }
 
 
@@ -434,11 +524,11 @@ public class QuickUtils {
     }
 
     private static ImageLoader imageLoader = ImageLoader.getInstance();
-    public static void displayImage(String url ,ImageView imageView){
+    public static void displayImage(String url, ImageView imageView){
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                     .bitmapConfig(Bitmap.Config.RGB_565).cacheInMemory()
                     .cacheOnDisc(true).imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-                    .displayer(new SimpleBitmapDisplayer()).build();
+                .displayer(new SimpleBitmapDisplayer()).build();
         imageLoader.displayImage(url, imageView, options, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
@@ -521,4 +611,176 @@ public class QuickUtils {
         String contextString = activity.toString();
         return contextString.substring(contextString.lastIndexOf(".") + 1, contextString.indexOf("@"));
     }
+
+    public static boolean isActivityFinish(Context context){
+        Activity activity = (Activity) context;
+        if(!activity.isFinishing()){
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean isMainThread(){
+        if(Looper.myLooper() == Looper.getMainLooper()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public static String getIP() {
+        WifiManager wifiManager = (WifiManager) SmartPenApplication.getApplication().getSystemService(Context.WIFI_SERVICE);
+        if (!wifiManager.isWifiEnabled()) {
+            //wifiManager.setWifiEnabled(true);
+            return SmartPenApplication.getApplication().getString(R.string.version_unknown);
+        }
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        int ipAddress = wifiInfo.getIpAddress();
+        return intToIp(ipAddress);
+    }
+
+    private static String intToIp(int i) {
+        return (i & 0xFF) + "." + ((i >> 8) & 0xFF) + "." + ((i >> 16) & 0xFF)
+                + "." + (i >> 24 & 0xFF);
+
+    }
+
+    public static String getVersionName() {
+        try {
+            PackageInfo pi = SmartPenApplication.getApplication().getPackageManager().getPackageInfo(SmartPenApplication.getApplication().getPackageName(), 0);
+            return pi.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return SmartPenApplication.getApplication().getString(R.string.version_unknown);
+        }
+    }
+
+    public static int getVersionCode(){
+        try {
+            PackageInfo pi=SmartPenApplication.getApplication().getPackageManager().getPackageInfo(SmartPenApplication.getApplication().getPackageName(), 0);
+            return pi.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return 00000;
+        }
+    }
+
+    /**
+     * pad型号
+     * @return
+     */
+    public static String getPadMode(){
+        Build build = new Build();
+        String model = build.MODEL;
+        return model;
+    }
+
+    /**
+     * 系统版本
+     * @return
+     */
+    public static String getOSVersion(){
+        return Build.VERSION.RELEASE;
+    }
+
+    /**
+     * 获取mac地址
+     * @return
+     */
+    public static String getMacAddress(){
+        WifiManager manager = (WifiManager) SmartPenApplication.getApplication().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo info = manager.getConnectionInfo();
+        if(info!=null){
+            return info.getMacAddress();
+        }else{
+            return "00:00:00:00:00:00";
+        }
+    }
+
+    /**
+     * 获取wifi的信号强度
+     * @return
+     */
+    public static String getWifiRSSI(){
+        WifiManager manager = (WifiManager) SmartPenApplication.getApplication().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo info = manager.getConnectionInfo();
+        if(info!=null){
+            return String.valueOf(info.getRssi());
+        }else{
+            return String.valueOf(-1);
+        }
+    }
+
+    /**
+     * 获取媒体的音量值
+     * @return
+     */
+    public static String getAudioVlaue(){
+        AudioManager mAudioManager = (AudioManager) SmartPenApplication.getApplication().getSystemService(Context.AUDIO_SERVICE);
+        int max = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        return String.valueOf(max);
+    }
+
+    public static String getRAM(){
+        return "可用内存："+String.valueOf(getAvailMemory())+"MB"+" , "+"总内存："+String.valueOf(getTotalMemory()+"MB");
+    }
+
+    /**
+     * 获取android当前可用内存大小
+     * @return
+     */
+    private static long getAvailMemory(){
+        ActivityManager am = (ActivityManager) SmartPenApplication.getApplication().getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
+        am.getMemoryInfo(mi);
+        return mi.availMem/(1024*1024);
+    }
+
+    /**
+     * 获取android总内存大小
+     * @return
+     */
+    private static long getTotalMemory(){
+        String str1 = "/proc/meminfo";// 系统内存信息文件
+        String str2;
+        String[] arrayOfString;
+        long initial_memory = 0;
+        try
+        {
+            FileReader localFileReader = new FileReader(str1);
+            BufferedReader localBufferedReader = new BufferedReader(
+                    localFileReader, 8192);
+            str2 = localBufferedReader.readLine();// 读取meminfo第一行，系统总内存大小
+            arrayOfString = str2.split("\\s+");
+            for (String num : arrayOfString) {
+                Log.i(str2, num + "\t");
+            }
+            initial_memory = Integer.valueOf(arrayOfString[1]).intValue() * 1024;// 获得系统总内存，单位是KB，乘以1024转换为Byte
+            localBufferedReader.close();
+        } catch (IOException e) {
+        }
+        return initial_memory/(1024*1024);
+
+
+    }
+
+    /**
+     * \n 回车(\u000a)
+     * \t 水平制表符(\u0009)
+     * \s 空格(\u0008)
+     * \r 换行(\u000d)
+     * @param str
+     * @return
+     */
+    public static String replaceBlank(String str) {
+        String dest = null;
+        if (str!=null) {
+            Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+            Matcher m = p.matcher(str);
+            dest = m.replaceAll("");
+        }
+        return dest;
+    }
+
+
 }

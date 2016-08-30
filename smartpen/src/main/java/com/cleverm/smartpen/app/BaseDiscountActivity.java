@@ -44,8 +44,8 @@ public abstract class BaseDiscountActivity extends BaseActivity implements View.
     private ImageView ivRight;
     TextView tvDiscountNum;
 
-    private String mAllData = "0";
-    private String mLocalData = "1";
+    private String mAllData = "1";
+    private String mLocalData = "0";
 
     public static final int GOBack = 200;
     public static final int TIME = 60000;
@@ -279,5 +279,12 @@ public abstract class BaseDiscountActivity extends BaseActivity implements View.
     protected void onPause() {
         super.onPause();
         mHandler.removeCallbacksAndMessages(null);
+    }
+
+    @Override
+    public void onUserInteraction() {
+        mHandler.removeMessages(GOBack);
+        mHandler.sendEmptyMessageDelayed(GOBack, TIME);
+        super.onUserInteraction();
     }
 }

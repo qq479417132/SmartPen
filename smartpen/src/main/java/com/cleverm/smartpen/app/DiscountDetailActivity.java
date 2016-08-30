@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import com.cleverm.smartpen.ui.banner.NoTouchBGABanner;
 import com.cleverm.smartpen.util.IntentUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.StatisticsUtil;
+import com.cleverm.smartpen.util.parts.DoBlePart;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,14 +102,21 @@ public class DiscountDetailActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestFullScreen();
         mContext = this;
         initIntent();
         initContent();
         initView();
         initBanner();
         initData();
-        mHandler.removeCallbacksAndMessages(null);
-        mHandler.sendEmptyMessageDelayed(GOBack, TIME);
+    }
+
+    private void requestFullScreen() {
+        if(DoBlePart.padNotShield()){
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
     }
 
     private void initContent() {
@@ -219,19 +228,13 @@ public class DiscountDetailActivity extends BaseActivity {
     private void handlerAd() {
         if (advertisementList.size() == 1) {
             ivDiscountDetailImage1.setVisibility(View.VISIBLE);
-            //Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(0).getPictruePath(),advertisementList.get(0).getQiniuPath())).into(ivDiscountDetailImage1);
         } else if (advertisementList.size() == 2) {
             ivDiscountDetailImage1.setVisibility(View.VISIBLE);
-            //Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(0).getPictruePath(),advertisementList.get(0).getQiniuPath())).into(ivDiscountDetailImage1);
             ivDiscountDetailImage2.setVisibility(View.VISIBLE);
-            //Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(1).getPictruePath(), advertisementList.get(1).getQiniuPath())).into(ivDiscountDetailImage2);
         } else if (advertisementList.size() == 3) {
             ivDiscountDetailImage1.setVisibility(View.VISIBLE);
-            //Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(0).getPictruePath(),advertisementList.get(0).getQiniuPath())).into(ivDiscountDetailImage1);
             ivDiscountDetailImage2.setVisibility(View.VISIBLE);
-            //Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(1).getPictruePath(),advertisementList.get(1).getQiniuPath())).into(ivDiscountDetailImage2);
             ivDiscountDetailImage3.setVisibility(View.VISIBLE);
-            //Picasso.with(this).load(QuickUtils.spliceUrl(advertisementList.get(2).getPictruePath(),advertisementList.get(2).getQiniuPath())).into(ivDiscountDetailImage3);
         }
 
 
@@ -249,7 +252,6 @@ public class DiscountDetailActivity extends BaseActivity {
             //通过给ImageView外套了一个RL解决在ViewPager中图片显示不全的BUG
             View rootView = views.get(i);
             ImageView view = (ImageView) rootView.findViewById(R.id.ivDisountImage);
-            //Picasso.with(this).load(QuickUtils.spliceUrl(rollDetailList.get(i).getPictruePath(),rollDetailList.get(i).getQiniuPath())).placeholder(R.mipmap.discount_background).into(view);
 
         }
 
@@ -271,4 +273,20 @@ public class DiscountDetailActivity extends BaseActivity {
         super.onPause();
         mHandler.removeCallbacksAndMessages(null);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mHandler.removeCallbacksAndMessages(null);
+        mHandler.sendEmptyMessageDelayed(GOBack, TIME);
+    }
+
+    @Override
+    public void onUserInteraction() {
+        mHandler.removeMessages(GOBack);
+        mHandler.sendEmptyMessageDelayed(GOBack, TIME);
+        super.onUserInteraction();
+    }
+
+
 }

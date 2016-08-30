@@ -1,8 +1,14 @@
 package com.cleverm.smartpen.log;
 
+import android.util.Log;
+
+import com.cleverm.smartpen.util.QuickUtils;
+
 import java.io.*;
 
 public class FileUtil {
+
+    private static final String TAG="FileUtil";
 
     public static boolean isFileExist(String filePath) {
         File file = new File(filePath);
@@ -152,4 +158,28 @@ public class FileUtil {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 创建文件夹
+     * @param path
+     */
+    public static void createFile(String path){
+        File file = new File(path);
+        if(!file.exists()&&!file.isDirectory()){
+            Log.e(TAG,"createFile");
+            file.mkdir();
+        }
+    }
+
+
+    public static void createMoreFile(String... route){
+        for(String path : route){
+            File file = new File(path);
+            if(!file.exists()&&!file.isDirectory()){
+                QuickUtils.log("createFile：" + file.toString());
+                file.mkdir();
+            }
+        }
+    }
+
 }

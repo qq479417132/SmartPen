@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.cleverm.smartpen.util.Constant;
+import com.cleverm.smartpen.util.QuickUtils;
 
 
 import org.apache.http.HttpResponse;
@@ -45,6 +46,9 @@ public class RequestNet {
 
         Message message =
                 Message.create().messageType(MessageType.NOTIFICATION).header("Notice-Type", noticeType).json(in).build();
+
+        QuickUtils.log("requestNotice-Message"+message.toString());
+
         return requestByPost(message, outClass);
     }
 

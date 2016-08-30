@@ -22,7 +22,9 @@ import com.cleverm.smartpen.app.LocalDiscountActivity;
 import com.cleverm.smartpen.app.PayActivity;
 import com.cleverm.smartpen.app.ScrollDiscountActivity;
 import com.cleverm.smartpen.app.SelectTableActivity;
+import com.cleverm.smartpen.app.SimpleAppActivity;
 import com.cleverm.smartpen.app.VideoActivity;
+import com.cleverm.smartpen.application.SmartPenApplication;
 import com.cleverm.smartpen.bean.TemplateIDState;
 import com.cleverm.smartpen.bean.evnet.OnDestoryActivityEvent;
 import com.cleverm.smartpen.bean.evnet.OnMessageCallEvent;
@@ -61,7 +63,7 @@ public class IntentUtil {
     public static void goPayServcie(Context context, int id) {
         TemplateIDState templateIDState = ChoiceTemplateIDState(id);
         if (!Constant.NEW_FLAG.equals(VideoActivity.class.getSimpleName())) {
-            Intent intent = new Intent(context, VideoActivity.class);
+            Intent intent = IntentUtil.mainActivityIntent(context);
             intentFlagNotClear(intent);
             clearRedundantActivity();
             context.startActivity(intent);
@@ -77,7 +79,7 @@ public class IntentUtil {
         TemplateIDState templateIDState = ChoiceTemplateIDState(id);
         //不在VideoActivity界面调用
         if (!Constant.NEW_FLAG.equals(VideoActivity.class.getSimpleName())) {
-            Intent intent = new Intent(service, VideoActivity.class);
+            Intent intent =  IntentUtil.mainActivityIntent(service);
             intentFlagNotClear(intent);
             clearRedundantActivity();
             //intent.putExtra(penService.VIDEO_ACTIVITY_KEY, 1);
@@ -165,6 +167,17 @@ public class IntentUtil {
                 templateID = Constant.UNION_CARD_PAY_SMS;
                 break;
             }
+
+            case Constant.WEIXIN_PAY:{
+                templateID=Constant.WEIXIN_PAY_SMS;
+                break;
+            }
+
+            case Constant.ALI_PAY:{
+                templateID=Constant.ALI_PAY_SMS;
+                break;
+            }
+
             default: {
                 break;
             }
@@ -246,6 +259,14 @@ public class IntentUtil {
                 }
                 case Constant.UNION_CARD_PAY_SMS: {
                     mHashMap.put(Constant.UNION_CARD_PAY_SMS, false);
+                    break;
+                }
+                case Constant.WEIXIN_PAY_SMS:{
+                    mHashMap.put(Constant.WEIXIN_PAY_SMS,false);
+                    break;
+                }
+                case Constant.ALI_PAY_SMS:{
+                    mHashMap.put(Constant.ALI_PAY_SMS,false);
                     break;
                 }
 
@@ -403,6 +424,19 @@ public class IntentUtil {
         }
     }
 
+    public static void goToH5(Context context,String url){
+        if (!Constant.NEW_FLAG.equals(url)) {
+            Intent intent = new Intent(context, GameActivity.class);
+            intentFlagNotClear(intent);
+            clearRedundantActivity();
+            intent.putExtra(penService.GAME_URL,url);
+            context.startActivity(intent);
+            Constant.NEW_FLAG = url;
+        }
+    }
+
+
+
     public static void goToH5Round(Context context) {
         QuickUtils.log("ActivityTag=" + Constant.NEW_FLAG);
         if (!Constant.NEW_FLAG.equals(Constant.NEARBY_DISCOUNT_URL)) {
@@ -506,20 +540,21 @@ public class IntentUtil {
      * 保持栈内永远只有VideoActivity和当前顶Activity
      */
     public static void clearRedundantActivity() {
-
         for (final Activity activityTask : BaseActivity.mActivityGroup) {
-
-            QuickUtils.log("activityTask=" + activityTask);
-            if (!QuickUtils.getRunningActivityName(activityTask).equals("VideoActivity")) {
+            String mainActivityFlag;
+            if(SmartPenApplication.getSimpleVersionFlag()){
+                mainActivityFlag=SimpleAppActivity.class.getSimpleName();
+            }else{
+                mainActivityFlag=VideoActivity.class.getSimpleName();
+            }
+            if (!QuickUtils.getRunningActivityName(activityTask).equals(mainActivityFlag)) {
                 if (activityTask != null) {
-                    QuickUtils.log("activityTask-finish=" + activityTask);
                     //为了兼容有线笔，必须在使用事件机制.不可直接finish()
                     EventBus.getDefault().postSticky(new OnDestoryActivityEvent(activityTask));
                     //activityTask.finish();
                     BaseActivity.mActivityGroup.remove(activityTask);
                 }
             }
-
             //会出现内部装载2个VideoActivity的情况,剔除ArrayList中的相同元素
             for (int i = 0; i < BaseActivity.mActivityGroup.size() - 1; i++) {
                 for (int j = BaseActivity.mActivityGroup.size() - 1; j > i; j--) {
@@ -530,12 +565,10 @@ public class IntentUtil {
                 }
             }
         }
-
-        QuickUtils.log("activityTask.size()=" + BaseActivity.mActivityGroup.size());
     }
 
     public static void goBackToVideoActivity(Activity activity) {
-        Intent intent = new Intent(activity, VideoActivity.class);
+        Intent intent = IntentUtil.mainActivityIntent(activity);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(intent);
         activity.finish();
@@ -557,7 +590,7 @@ public class IntentUtil {
 
     public static void goToRobotShow(Context service) {
         if (!Constant.NEW_FLAG.equals(VideoActivity.class.getSimpleName())) {
-            Intent intent = new Intent(service, VideoActivity.class);
+            Intent intent = IntentUtil.mainActivityIntent(service);
             intentFlagNotClear(intent);
             clearRedundantActivity();
             service.startActivity(intent);
@@ -579,6 +612,16 @@ public class IntentUtil {
         }
     }
 
+
+    public static Intent mainActivityIntent(Context context){
+        Intent intent;
+        if(SmartPenApplication.getApplication().getSimpleVersionFlag()){
+             intent = new Intent(context, SimpleAppActivity.class);
+        }else{
+             intent = new Intent(context, VideoActivity.class);
+        }
+        return intent;
+    }
 
 
 

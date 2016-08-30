@@ -123,8 +123,6 @@ public class VideoAlgorithmUtil {
      */
     public void downloadVideoFirst(final String path, final String num) {
 
-        Log.e("videoUrl","videoUrl"+path);
-
         //存储的地址为storage/emulated/0/muye/木爷我们的视频.mp4
         OkHttpUtils//
                 .get()//
@@ -328,7 +326,7 @@ public class VideoAlgorithmUtil {
                         }
                     }
 
-                    Log.e("copyFile", "LocalList.size()="+LocalList.size());
+                    QuickUtils.log("copyFile："+"LocalList.size()=" + LocalList.size());
 
                     //Step2:若服务器，本地也有,则比对大小,然后决定是否删除.删除后重新得到新的localList集合
                     for(int i = 0; i < files.length; i++){
@@ -338,12 +336,12 @@ public class VideoAlgorithmUtil {
                             for(int j =0 ; j<infos.size();j++){
                                 String ser_id = String.valueOf(infos.get(j).getVideoId());
                                 String loc_id = QuickUtils.subVideoEnd(files[i].getName());
-                                Log.e("copyFile","ser_id="+ser_id+"/loc_id="+loc_id);
+                                QuickUtils.log("copyFile：" + "ser_id=" + ser_id + "/loc_id=" + loc_id);
                                 if(ser_id.equals(loc_id)){
-                                    Log.e("copyFile","ser_id2="+ser_id+"/loc_id2="+loc_id);
+                                    QuickUtils.log("copyFile：" + "ser_id2=" + ser_id + "/loc_id2=" + loc_id);
                                     Long Service_VideoSize = infos.get(j).getVideoSize();
                                     long Local_VideoSize = getVideoFileLength(AlgorithmUtil.VIDEO_FILE +File.separator+QuickUtils.subVideoEnd(files[i].getName() + ".mp4"));
-                                    Log.e("copyFile","Service_VideoSize="+Service_VideoSize+"/Local_VideoSize="+Local_VideoSize);
+                                    QuickUtils.log("copyFile：" + "Service_VideoSize=" + Service_VideoSize + "/Local_VideoSize=" + Local_VideoSize);
                                     if(Local_VideoSize!=Service_VideoSize){
 
                                         QuickUtils.deleteFile(AlgorithmUtil.VIDEO_FILE +File.separator+QuickUtils.subVideoEnd(files[i].getName() + ".mp4"));
@@ -355,7 +353,7 @@ public class VideoAlgorithmUtil {
                         }
                     }
 
-                    Log.e("copyFile", "LocalList.remove.size()="+LocalList.size());
+                    QuickUtils.log("copyFile：" + "LocalList.remove.size()=" + LocalList.size());
 
                     //Step3:服务器有,本地无(本地没有服务器的那个key)
                     downloadDifferVideoByService(activity,infos,LocalList);

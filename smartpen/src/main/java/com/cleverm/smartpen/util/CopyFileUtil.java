@@ -120,18 +120,18 @@ public class CopyFileUtil {
 
         long start = System.currentTimeMillis();
 
-        Log.e("copyFile","srcFileName="+sourcePath+"/destFileName="+destPath);
+        QuickUtils.log("copyFile："+"srcFileName="+sourcePath+"/destFileName="+destPath);
 
         File source = new File(sourcePath);
 
         // 判断源文件是否存在
         if (!source.exists()) {
             MESSAGE = "源文件：" + sourcePath + "不存在！";
-            Log.e("copyFile",MESSAGE);
+            QuickUtils.log("copyFile："+MESSAGE);
             return false;
         } else if (!source.isFile()) {
             MESSAGE = "复制文件失败，源文件：" + sourcePath + "不是一个文件！";
-            Log.e("copyFile", MESSAGE);
+            QuickUtils.log("copyFile：" + MESSAGE);
             return false;
         }
 
@@ -179,7 +179,7 @@ public class CopyFileUtil {
                     sourceCh.close();
                 if (destCh != null)
                     destCh.close();
-                Log.e("copyFile","copy耗时"+(end-start));
+                QuickUtils.log("copyFile：" + "copy耗时" + (end - start));
             } catch (IOException e) {
                 e.printStackTrace();
             }

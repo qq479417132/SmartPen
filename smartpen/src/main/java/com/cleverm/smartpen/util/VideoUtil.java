@@ -6,9 +6,14 @@ import android.util.Log;
 import android.widget.VideoView;
 
 
+import com.cleverm.smartpen.application.SmartPenApplication;
 import com.cleverm.smartpen.bean.VideoInfo;
+import com.cleverm.smartpen.bean.evnet.OnVideoBackEvent;
 import com.cleverm.smartpen.log.FileUtil;
+import com.google.zxing.client.result.VINParsedResult;
 import com.iflytek.cloud.Setting;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.List;
@@ -48,6 +53,10 @@ public class VideoUtil {
         mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
+                if(checkHaveVideo()){
+                    prepareLocalVideo(AlgorithmUtil.VIDEO_FILE_PLAY,0);
+                    return;
+                }
                 videoIndex++;
                 if (videoIndex >= videoUrls.length) {
                     videoIndex = 0;
@@ -56,6 +65,16 @@ public class VideoUtil {
                 mVideoView.start();
             }
         });
+    }
+
+    private boolean checkHaveVideo() {
+        String[] videoURIs = getVideoURIs(AlgorithmUtil.VIDEO_FILE_PLAY);
+        if(videoURIs!= null){
+            if(videoURIs.length>0){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void prepareOnlineVideo(final VideoInfo video) {
@@ -89,38 +108,36 @@ public class VideoUtil {
             return;
         }
 
+        postVideoId(videoUrls[videoIndex]);
         mVideoView.setVideoPath(videoUrls[videoIndex]);
 
-
-        if (RememberUtil.getInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY, 0) != 0) {
-            try {
-                mVideoView.setVideoPath(videoUrls[RememberUtil.getInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY, 0)]);
-                videoIndex = RememberUtil.getInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY, 0);
-            } catch (Exception e) {
-                e.printStackTrace();
-                mVideoView.setVideoPath(videoUrls[0]);
-                RememberUtil.putInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY, 0);
-                videoIndex = 0;
+        if(!SmartPenApplication.getSimpleVersionFlag()){
+            if (RememberUtil.getInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY, 0) != 0) {
+                try {
+                    mVideoView.setVideoPath(videoUrls[RememberUtil.getInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY, 0)]);
+                    videoIndex = RememberUtil.getInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY, 0);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    mVideoView.setVideoPath(videoUrls[0]);
+                    RememberUtil.putInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY, 0);
+                    videoIndex = 0;
+                }
+            }
+            if (currentPosition != 0) {
+                mVideoView.seekTo(currentPosition);
+            }
+            if (RememberUtil.getInt(Constant.MEMORY_PLAY_KEY, 0) != 0) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Notice：seekTo是异步操作,因为seekTo在低端pad很卡顿，所以将它已去除
+                        if (false) {
+                            mVideoView.seekTo(RememberUtil.getInt(Constant.MEMORY_PLAY_KEY, 0));
+                        }
+                    }
+                }, 50);
             }
         }
-
-
-        if (currentPosition != 0) {
-            mVideoView.seekTo(currentPosition);
-        }
-
-        if (RememberUtil.getInt(Constant.MEMORY_PLAY_KEY, 0) != 0) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //Notice：seekTo是异步操作,因为seekTo在低端pad很卡顿，所以将它已去除
-                    if (false) {
-                        mVideoView.seekTo(RememberUtil.getInt(Constant.MEMORY_PLAY_KEY, 0));
-                    }
-                }
-            }, 50);
-        }
-
 
         mVideoView.start();
 
@@ -129,11 +146,13 @@ public class VideoUtil {
             public void onCompletion(MediaPlayer mediaPlayer) {
                 //重置一次VideoView.因为VideoView会每次都运行,所以无需重置
                 String[] videoUrls = getVideoURIs(mPath);
-                if(videoUrls!=null){
+
+                if (videoUrls != null) {
                     videoIndex++;
                     if (videoIndex >= videoUrls.length) {
                         videoIndex = 0;
                     }
+                    postVideoId(videoUrls[videoIndex]);
                     mVideoView.setVideoPath(videoUrls[videoIndex]);
                     RememberUtil.putInt(Constant.MEMORY_PLAY_VIDEO_URI_KEY, videoIndex);
                     mVideoView.start();
@@ -147,7 +166,7 @@ public class VideoUtil {
                 //重置一次VideoView.因为VideoView会每次都运行,所以无需重置
                 String[] videoUrls = getVideoURIs(mPath);
                 videoIndex++;
-                if(videoUrls!=null){
+                if (videoUrls != null) {
                     if (videoIndex >= videoUrls.length) {
                         videoIndex = 0;
                     }
@@ -159,6 +178,8 @@ public class VideoUtil {
             }
         });
     }
+
+
 
     /**
      * 获取本地视频数组
@@ -209,6 +230,25 @@ public class VideoUtil {
             }
         }
         return videoUrls;
+    }
+
+    private void postVideoId(String url){
+        int videoId = 0;
+        try {
+            videoId = getVideoId(url);
+            EventBus.getDefault().postSticky(new OnVideoBackEvent(videoId));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private int getVideoId(String videoUrl)throws Exception{
+        int start = videoUrl.lastIndexOf("/");
+        int end = videoUrl.lastIndexOf(".");
+        String substring = videoUrl.substring(start+1, end);
+        int i = Integer.parseInt(substring);
+        return i;
     }
 
 

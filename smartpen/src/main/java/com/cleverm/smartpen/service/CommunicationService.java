@@ -25,6 +25,7 @@ import com.cleverm.smartpen.pushtable.RestaurantVo;
 import com.cleverm.smartpen.pushtable.UpdateTableHandler;
 import com.cleverm.smartpen.pushtable.Utils;
 import com.cleverm.smartpen.util.Constant;
+import com.cleverm.smartpen.util.ThreadManager;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.HttpHandler;
@@ -69,11 +70,16 @@ public class CommunicationService extends Service {
             if (mConnectClient == null) {
                 return;
             }
-            com.cleverm.smartpen.pushtable.Message message =
+            final com.cleverm.smartpen.pushtable.Message message =
                     com.cleverm.smartpen.pushtable.Message.create().boardNumber(
                     Utils.getSerialNumber(CommunicationService.this)).messageType(
                     MessageType.PING).build();
-            mConnectClient.sendMessage(message);
+            ThreadManager.getInstance().execute(new Runnable() {
+                @Override
+                public void run() {
+                    mConnectClient.sendMessage(message);
+                }
+            });
             mHandler.postDelayed(this, DELAY_HEART_BEAT);
         }
     };

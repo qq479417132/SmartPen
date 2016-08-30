@@ -10,6 +10,7 @@ import com.cleverm.smartpen.util.NetWorkUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
+import com.cleverm.smartpen.util.ThreadManager;
 
 /**
  * Created by xiong,An android project Engineer,on 18/5/2016.
@@ -152,28 +153,37 @@ public class DoSmsSendPart {
                 doStatistic(StatisticsUtil.CALL_PAY, StatisticsUtil.CALL_PAY_DESC + "--" + StatisticsUtil.CALL_PAY_CARD_DESC, StatisticsUtil.CALL_PAY_CARD);
                 break;
             }
+            case Constant.WEIXIN_PAY:{
+                templateID = Constant.WEIXIN_PAY_SMS;
+                doStatistic(StatisticsUtil.CALL_PAY, StatisticsUtil.CALL_PAY_DESC + "--" + StatisticsUtil.CALL_PAY_WEIXIN_DESC, StatisticsUtil.CALL_PAY_WEIXIN);
+                break;
+            }
+            case Constant.ALI_PAY:{
+                templateID = Constant.ALI_PAY_SMS;
+                doStatistic(StatisticsUtil.CALL_PAY, StatisticsUtil.CALL_PAY_DESC + "--" + StatisticsUtil.CALL_PAY_ALIPAY_DESC, StatisticsUtil.CALL_PAY_ALIPAY);
+                break;
+            }
         }
         return templateID;
     }
 
 
     private void doStatistic(final int key,final String describe){
-        new Thread(new Runnable() {
+        ThreadManager.getInstance().execute(new Runnable() {
             @Override
             public void run() {
                 StatisticsUtil.getInstance().insert(key, describe);
             }
-        }).start();
-
+        });
     }
 
     private void doStatistic(final int key,final String describe,final Long secondKey){
-        new Thread(new Runnable() {
+        ThreadManager.getInstance().execute(new Runnable() {
             @Override
             public void run() {
                 StatisticsUtil.getInstance().insertWithSecondEvent(key, describe, secondKey);
             }
-        }).start();
+        });
     }
 
 

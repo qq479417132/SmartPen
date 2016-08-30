@@ -120,8 +120,7 @@ public class WandAPI {
         if (deviceList.isEmpty()) {
             Log.v(TAG, "deviceList.isEmpty()");
             //提示未找到匹配的扫描笔
-            Toast.makeText(mContext, R.string.no_matched_wand, Toast
-                    .LENGTH_SHORT).show();
+            //Toast.makeText(mContext, R.string.no_matched_wand, Toast.LENGTH_SHORT).show();
             hand.sendEmptyMessageDelayed(find, 1000000);
             return;
         }

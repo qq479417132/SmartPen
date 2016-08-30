@@ -15,6 +15,8 @@ import com.cleverm.smartpen.adapter.TableAdapter;
 import com.cleverm.smartpen.app.OrderManager;
 import com.cleverm.smartpen.database.DatabaseHelper;
 import com.cleverm.smartpen.modle.Table;
+import com.cleverm.smartpen.util.QuickUtils;
+
 import java.util.List;
 
 
@@ -85,20 +87,22 @@ public class SelectTableFragment extends Fragment {
         return mFragmentView;
     }
 
+    public static long preItem=-1;
+
     private void initView() {
         mTablesGridView = (GridView) mFragmentView.findViewById(R.id.gv_tables);
         mTablesGridView.setAdapter(mTableAdapter);
-        mTablesGridView.setOnItemClickListener(new AdapterView
-            .OnItemClickListener() {
+        mTablesGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int
-                position, long id) {
-                mOnTableAdapterListener.onTableSelected(mTables.get(position)
-                    .getId());
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                QuickUtils.log("mTables.get(position).getId()"+mTables.get(position).getId()+"\nOrderManager.getInstance(getActivity()).getTableId()="+OrderManager.getInstance(getActivity()).getTableId()+"\npreItem="+preItem);
+                if((mTables.get(position).getId()!=preItem&&mTables.get(position).getId()!=OrderManager.getInstance(getActivity()).getTableId())||(preItem!=-1&&mTables.get(position).getId()!=preItem)){
+                    preItem=mTables.get(position).getId();
+                    mOnTableAdapterListener.onTableSelected(mTables.get(position).getId());
+                }
             }
         });
-        updateTablesDisplayStatus(OrderManager.getInstance(getActivity())
-            .getTableId());
+        updateTablesDisplayStatus(OrderManager.getInstance(getActivity()).getTableId());
     }
 
     public void updateTablesDisplayStatus(long selectedTableId) {

@@ -3,19 +3,13 @@ package com.cleverm.smartpen.app;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
-import com.alibaba.fastjson.JSON;
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.SmartPenApplication;
-import com.cleverm.smartpen.bean.TemplateIDState;
-import com.cleverm.smartpen.net.InfoSendSMSVo;
-import com.cleverm.smartpen.net.RequestNet;
-import com.cleverm.smartpen.pushtable.MessageType;
+import com.cleverm.smartpen.bean.evnet.OnPayEvent;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.IntentUtil;
 import com.cleverm.smartpen.util.NetWorkUtil;
@@ -23,11 +17,7 @@ import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import org.greenrobot.eventbus.EventBus;
 
 
 public class PayActivity extends BaseActivity implements View.OnClickListener {
@@ -77,6 +67,8 @@ public class PayActivity extends BaseActivity implements View.OnClickListener {
         mCashPay.setOnClickListener(this);
         mUnionCardPay.setOnClickListener(this);
         mClose.setOnClickListener(this);
+        findViewById(R.id.ali_pay).setOnClickListener(this);
+        findViewById(R.id.weixin_pay).setOnClickListener(this);
     }
 
 
@@ -99,10 +91,47 @@ public class PayActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.cash_pay:
-                IntentUtil.goPayServcie(PayActivity.this,Constant.CASH_PAY);
+                if(checkEvent()){
+                    if(SmartPenApplication.getSimpleVersionFlag()){
+                        EventBus.getDefault().postSticky(new OnPayEvent(SimpleAppActivity.MessageCode.CASH_PAY));
+                        finish();
+                    }else{
+                        IntentUtil.goPayServcie(PayActivity.this,Constant.CASH_PAY);
+                    }
+                }
                 break;
             case R.id.union_pay_card_pay:
-                IntentUtil.goPayServcie(PayActivity.this,Constant.UNION_CARD_PAY);
+                if(checkEvent()){
+                    if(SmartPenApplication.getSimpleVersionFlag()){
+                        EventBus.getDefault().postSticky(new OnPayEvent(SimpleAppActivity.MessageCode.UNION_CARD_PAY));
+                        finish();
+                    }else{
+                        IntentUtil.goPayServcie(PayActivity.this,Constant.UNION_CARD_PAY);
+                    }
+                }
+                break;
+
+            case R.id.weixin_pay:
+                if(checkEvent()){
+                    if(SmartPenApplication.getSimpleVersionFlag()){
+                        EventBus.getDefault().postSticky(new OnPayEvent(SimpleAppActivity.MessageCode.WEIXIN_PAY));
+                        finish();
+                    }else{
+                        IntentUtil.goPayServcie(PayActivity.this,Constant.WEIXIN_PAY);
+                    }
+
+                }
+                break;
+
+            case R.id.ali_pay:
+                if(checkEvent()){
+                    if(SmartPenApplication.getSimpleVersionFlag()){
+                        EventBus.getDefault().postSticky(new OnPayEvent(SimpleAppActivity.MessageCode.ALI_PAY));
+                        finish();
+                    }else{
+                        IntentUtil.goPayServcie(PayActivity.this,Constant.ALI_PAY);
+                    }
+                }
                 break;
 
             case R.id.pay_close:
@@ -110,5 +139,27 @@ public class PayActivity extends BaseActivity implements View.OnClickListener {
                 break;
 
         }
+    }
+
+
+
+    private boolean checkEvent() {
+        long deskId = RememberUtil.getLong(SelectTableActivity.SELECTEDTABLEID, Constant.DESK_ID_DEF_DEFAULT);
+        if (!NetWorkUtil.hasNetwork()) {
+            QuickUtils.toast("网络异常，请直接找服务员!");
+            return false;
+        }
+        if (deskId == Constant.DESK_ID_DEF_DEFAULT) {
+            QuickUtils.toast("桌号未设置，请直接找服务员!");
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onUserInteraction() {
+        mHandler.removeMessages(GOBack);
+        mHandler.sendEmptyMessageDelayed(GOBack, TIME);
+        super.onUserInteraction();
     }
 }

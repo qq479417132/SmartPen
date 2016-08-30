@@ -40,6 +40,7 @@ import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.cleverm.smartpen.util.SchedulingUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
+import com.cleverm.smartpen.util.UpdateTableUtil;
 import com.cleverm.smartpen.util.VideoUtil;
 import com.cleverm.smartpen.util.WeakHandler;
 import com.cleverm.smartpen.util.excle.CreateExcel;
@@ -106,6 +107,7 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Fix bug double message
         if (!isTaskRoot()) {
             finish();
             return;
@@ -379,11 +381,12 @@ public class VideoActivity extends BaseActivity implements penService.MessageLis
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onBootRestartEvent(OnBootRestartEvent event) {
         EventBus.getDefault().removeStickyEvent(event);
+        new VersionManager(this).uddateVersion();
         goUpdateVideo();
         initCacheJson();
         initStats();
         SchedulingUtil.doOnDemo(this);
-        new VersionManager(this).uddateVersion();
+        UpdateTableUtil.getInstance().goNewTable();
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)

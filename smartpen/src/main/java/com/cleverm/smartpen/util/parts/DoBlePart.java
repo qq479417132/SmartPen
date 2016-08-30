@@ -22,11 +22,12 @@ import com.bleframe.library.log.BleLog;
 import com.bleframe.library.profile.SmartPenProfile;
 import com.bleframe.library.util.BleUtils;
 import com.bleframe.library.util.TimerPlanUtil;
+import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.SmartPenApplication;
+import com.cleverm.smartpen.ui.windows.FixSplashScreenView;
 import com.cleverm.smartpen.ui.windows.MyWindowManager;
-import com.cleverm.smartpen.util.QuickUtils;
+import com.cleverm.smartpen.util.ThreadManager;
 import com.cleverm.smartpen.util.service.PenUtil;
-
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -59,6 +60,9 @@ public class DoBlePart {
     private static Context mContext;
 
 
+    private static final String MainService="0000fff0-0000-1000-8000-00805f9b34fb";
+    private static final String WriteChar="0000fff5-0000-1000-8000-00805f9b34fb";
+
     /**
      * 初始化蓝牙笔
      *
@@ -81,6 +85,28 @@ public class DoBlePart {
         BleManager.getInstance().onCreate(context, wirelessCallback);
         initWirelessPenTimer();
         //initBatteryTimer();
+        initHeartBeat();
+    }
+
+
+    private static void initHeartBeat() {
+        TimerPlanUtil timer =new TimerPlanUtil.Builder()
+                .listener(new TimerPlanUtil.OnTickListener() {
+                    @Override
+                    public void onTick(long l) {
+                        ThreadManager.getInstance().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                byte[] val = new byte[1];
+                                val[0] = 0121;
+                                BleManager.getInstance().send(MainService, WriteChar, null, val, BleConfig.WriteReadAttribute.CHARACTERISTIC);
+                            }
+                        });
+                    }
+                }).looper(Looper.getMainLooper())
+                .timerIntervalInSeconds(2)
+                .build();
+        timer.start();
     }
 
     /**
@@ -105,7 +131,7 @@ public class DoBlePart {
     }
 
     /**
-     * 5秒扫描Timer,防止部分型号pad会扫描断掉的硬件bug
+     * 8秒扫描Timer,防止部分型号pad会扫描断掉的硬件bug
      */
     private static void initWirelessPenTimer() {
         TimerPlanUtil timer = new TimerPlanUtil.Builder()
@@ -116,7 +142,7 @@ public class DoBlePart {
                     }
                 })
                 .looper(Looper.getMainLooper())
-                .timerIntervalInSeconds(5)
+                .timerIntervalInSeconds(8)
                 .build();
         timer.start();
     }
@@ -126,12 +152,24 @@ public class DoBlePart {
      * @param context
      */
     public static void openBLEPen(final Context context){
-        if(DoBlePart.padNotShield()){
-            MyWindowManager.createSmallWindow();
+        if(DoBlePart.padNotShield() && !SmartPenApplication.getSimpleVersionFlag()){
+             MyWindowManager.createSmallWindow();
              DoBlePart.initWirelessPen(context);
              //startANRSolution();
         }
+        if(!DoBlePart.padNotShield()){
+            new FixSplashScreenView().add();
+        }
     }
+
+    public static void closedBLEPen(){
+        if(DoBlePart.padNotShield()&&!SmartPenApplication.getSimpleVersionFlag()){
+            MyWindowManager.removeSmallWindow();
+            BleManager.getInstance().openCloseGatt();
+        }
+    }
+
+
 
     /**
      * ANR捕获并处理:如果发生ANR,那么就直接重启pad蓝牙硬件模块
@@ -151,7 +189,7 @@ public class DoBlePart {
      * 是否屏蔽该pad型号
      * @return
      */
-    private static boolean padNotShield(){
+    public static boolean padNotShield(){
         String padMode = getPadMode();
         if(padMode.contains(sPadMode)){
             return false;
@@ -231,9 +269,14 @@ public class DoBlePart {
     public static BlatandAPICallback wirelessCallback = new SimpleBlatandAPICallback() {
         @Override
         public void onNotifyValue(OnChangedBundle onChangedBundle) {
-            Toast.makeText(SmartPenApplication.getApplication(), hexToString(onChangedBundle.getValue())+"", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(SmartPenApplication.getApplication(), hexToString(onChangedBundle.getValue())+"", Toast.LENGTH_SHORT).show();
             BleLog.e(TAG + "onNotifyValue=" + onChangedBundle.getValue());
-            PenUtil.getInstance().getPenServcie().onScan(hexToString(onChangedBundle.getValue()));
+            if(onChangedBundle.getValue().equals("5102030405")||onChangedBundle.getValue().equals("0102030405")){
+                return;
+            }
+            if(hexToString(onChangedBundle.getValue())!=-1){
+                PenUtil.getInstance().getPenServcie().onScan(hexToString(onChangedBundle.getValue()));
+            }
         }
 
         @Override
@@ -263,6 +306,7 @@ public class DoBlePart {
 
         @Override
         public void onWriteValue(OnWriteReadBundle info) {
+            BleLog.e(TAG + "   onWriteValue:"+info.getWriteReadValue());
             super.onWriteValue(info);
         }
 
@@ -321,8 +365,14 @@ public class DoBlePart {
      *
      * @return
      */
-    public static int hexToString(String hexadecimal) {
-        return Integer.valueOf(hexadecimal, 16);
+    public static Integer hexToString(String hexadecimal) {
+        Integer integer=-1;
+        try {
+            integer = Integer.valueOf(hexadecimal, 16);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return integer;
     }
 
 

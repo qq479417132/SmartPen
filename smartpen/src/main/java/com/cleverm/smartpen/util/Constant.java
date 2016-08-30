@@ -164,10 +164,18 @@ public class Constant {
     public static final int CASH_PAY=0x123;
     public static final int UNION_CARD_PAY=0x124;
 
+    public static final int WEIXIN_PAY=0X125;
+    public static final int ALI_PAY=0X126;
+
 
 
     public static final String URL = "http://cn.vonvon.net/quiz/r/546/6116/v1GiNqZBv4fzmVf";
     public static final String NEARBY_DISCOUNT_URL = "http://sh.meituan.com/?utm_campaign=sogou&utm_medium=organic&utm_source=sogou&utm_content=homepage&utm_term=%25E7%25BE%258E%25E5%259B%25A2%25E7%25BD%2591";
+    //public static final String NEARBY_DISCOUNT_URL = "http://i.meituan.com/";
+
+    public static final String URL_H5_WANGWANG="http://www.hotkidclub.com/aoyun/index.html?partner=robot";
+
+
     public static final String MAIN_VIDEO_PATH = Environment.getExternalStorageDirectory().getPath() +
             "/muye/mainVideo";
     public static final String AD_VIDEO_PATH = Environment.getExternalStorageDirectory().getPath() + "/muye/ad";
@@ -216,6 +224,15 @@ public class Constant {
     public static final String APP_NAME = "美味点点笔";
     public static final String PSW = "160323";
 
+    public static final String HIDDEN_DOOR_OPEN_CHARGING="1107";
+    public static final String HIDDEN_DOOR_CLOSE_CHARGING="2207";
+    public static final String HIDDEN_DOOR_CHARGING_KEY="OutOfChargingKey";
+
+    public static final String HIDDEN_DOOR_OPEN_ENGINEER="9900";
+    public static final String HIDDEN_DOOR_CLOSE_ENGINEER="9910";
+    public static final String HIDDEN_DOOR_ENGINEER_KEY="ENGINEERMODEL";
+
+
     public static final String SHARE = "CleverM";
 
     public static final String KEY_ID = "key_id";
@@ -231,17 +248,20 @@ public class Constant {
     /**
      * 短信码
      */
-    public static final int FOOD_ADD_SMS = 1;
-    public static final int WATER_ADD_SMS = 2;
-    public static final int TISSUE_ADD_SMS = 3;
-    public static final int PAY_MONRY_SMS = 4;
-    public static final int OTHER_SERVICE_SMS = 5;
-    public static final int CLEAN_SMS = 20;
-    public static final int PEN_PULL_OUT_SMS = 15;
-    public static final int CASH_PAY_SMS = 16;
-    public static final int UNION_CARD_PAY_SMS = 17;
-    public static final int FONDUE_SOUP_SMS=21;
-    public static final int CHANGE_TABLEWARE_SMS=22;
+    public static final int FOOD_ADD_SMS = 1;//点餐加菜
+    public static final int WATER_ADD_SMS = 2;//添加茶水
+    public static final int TISSUE_ADD_SMS = 3;//湿巾纸巾
+    public static final int PAY_MONRY_SMS = 4;//呼叫结账
+    public static final int OTHER_SERVICE_SMS = 5;//其他服务
+    public static final int CLEAN_SMS = 20;//收拾桌面
+    public static final int PEN_PULL_OUT_SMS = 15;//笔拔出
+    public static final int CASH_PAY_SMS = 16;//现金支付
+    public static final int UNION_CARD_PAY_SMS = 17;//银行卡支付
+    public static final int FONDUE_SOUP_SMS=21;//火锅加汤
+    public static final int CHANGE_TABLEWARE_SMS=22;//更换餐具
+    public static final int WEIXIN_PAY_SMS=18;//微信支付
+    public static final int ALI_PAY_SMS=19;//支付宝支付
+    public static final int OUT_OF_CHARGING=23;//充电宝断开
 
     public static final int TEMPLATEID_DELAY = 30000;
 
@@ -435,6 +455,8 @@ public class Constant {
      * ActivityFlag
      */
     public static  String NEW_FLAG="default";
+
+    public static int VIDEO_WANGWANG_ID=235;
 
 
 }
