@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.SmartPenApplication;
-import com.cleverm.smartpen.bean.evnet.OnPayEvent;
+import com.cleverm.smartpen.bean.event.OnPayEvent;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.IntentUtil;
 import com.cleverm.smartpen.util.NetWorkUtil;

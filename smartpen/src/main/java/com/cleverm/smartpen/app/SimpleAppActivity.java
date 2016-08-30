@@ -19,13 +19,13 @@ import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.Version.VersionManager;
 import com.cleverm.smartpen.application.SmartPenApplication;
 import com.cleverm.smartpen.bean.DiscountInfo;
-import com.cleverm.smartpen.bean.evnet.OnBootRestartEvent;
-import com.cleverm.smartpen.bean.evnet.OnChangeAnimNoticeEvent;
-import com.cleverm.smartpen.bean.evnet.OnDestoryActivityEvent;
-import com.cleverm.smartpen.bean.evnet.OnOutOfChargingEvent;
-import com.cleverm.smartpen.bean.evnet.OnPayEvent;
-import com.cleverm.smartpen.bean.evnet.OnToastEvent;
-import com.cleverm.smartpen.bean.evnet.OnVideoBackEvent;
+import com.cleverm.smartpen.bean.event.OnBootRestartEvent;
+import com.cleverm.smartpen.bean.event.OnChangeAnimNoticeEvent;
+import com.cleverm.smartpen.bean.event.OnDestoryActivityEvent;
+import com.cleverm.smartpen.bean.event.OnOutOfChargingEvent;
+import com.cleverm.smartpen.bean.event.OnPayEvent;
+import com.cleverm.smartpen.bean.event.OnToastEvent;
+import com.cleverm.smartpen.bean.event.OnVideoBackEvent;
 import com.cleverm.smartpen.database.DatabaseHelper;
 import com.cleverm.smartpen.modle.TableType;
 import com.cleverm.smartpen.net.InfoSendSMSVo;
@@ -457,14 +457,6 @@ public class SimpleAppActivity extends BaseActivity implements View.OnClickListe
         initView();
         initListener();
         initData();
-        SimpleStatisticsLogic.getInstance().start(this);
-
-        //
-        VideoPCUtil.getInstance().start(this);
-        //
-        new InformationOnline().start(this, InformationOnline.Time.REBOOT);
-        new InformationOnline().start(this, InformationOnline.Time.TWELVE_AM);
-        new InformationOnline().start(this, InformationOnline.Time.SEVEN_PM);
 
     }
 
@@ -540,9 +532,18 @@ public class SimpleAppActivity extends BaseActivity implements View.OnClickListe
     private void initData() {
         mDispatch = new Dispatch();
         EventBus.getDefault().register(this);
+        SimpleStatisticsLogic.getInstance().start(this);
         VideoManager.getInstance().initVideoEngine(mVideoFsvv, this);
         RememberUtil.putBoolean(Constant.BROADCAST_RESATRT_EVENT, false);
         checkNetState();
+        doTimerClock();
+    }
+
+    private void doTimerClock() {
+        VideoPCUtil.getInstance().start(this);//PC Video
+        new InformationOnline().start(this, InformationOnline.Time.REBOOT);//Clock
+        new InformationOnline().start(this, InformationOnline.Time.TWELVE_AM);
+        new InformationOnline().start(this, InformationOnline.Time.SEVEN_PM);
     }
 
     private void checkNetState() {
@@ -560,7 +561,6 @@ public class SimpleAppActivity extends BaseActivity implements View.OnClickListe
         return StatisticsUtil.BACK_VIDEO_DESC;
     }
 
-    private static int clieck_id =0;
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -575,8 +575,6 @@ public class SimpleAppActivity extends BaseActivity implements View.OnClickListe
                 break;
 
             case R.id.iv_call_pay:
-                //handlerMessage(PAY);
-                //IntentUtil.goToPayActivity(this);
                 handlerPayMessage();
                 doStatistic(StatisticsUtil.CALL_PAY, StatisticsUtil.CALL_PAY_DESC);
                 break;
@@ -587,8 +585,6 @@ public class SimpleAppActivity extends BaseActivity implements View.OnClickListe
                 break;
 
             case R.id.iv_go_discount://优惠专区
-
-
                 /*if (isHaveData) {
                     IntentUtil.goToDiscountActivity(mContext);
                 } else {
@@ -596,11 +592,8 @@ public class SimpleAppActivity extends BaseActivity implements View.OnClickListe
                 }
                 hidePayLevitate();
                 doStatistic(StatisticsUtil.SERVICE_DISCOUNT,StatisticsUtil.SERVICE_DISCOUNT_DESC);*/
-
                 Intent intent = new Intent(this,LuckyDrawActivity.class);
                 startActivity(intent);
-
-
                 break;
 
             case R.id.iv_go_shop://在线商场--统计代码在goToLauncherApp()
@@ -790,17 +783,8 @@ public class SimpleAppActivity extends BaseActivity implements View.OnClickListe
                 break;
         }
 
-
         boolean templateIDState = DoSmsSendPart.getInstance().getTemplateIDState(templateID);
-
-
-
-        Log.e("SendSMS","templateIDState="+templateIDState+"");
-
-
         DoSmsSendPart.getInstance().setTemplateIDState(templateID,templateIDState);
-
-
         return templateIDState;
     }
 
@@ -914,6 +898,10 @@ public class SimpleAppActivity extends BaseActivity implements View.OnClickListe
         DownloadUtil.cacheDiscountJson(QuickUtils.getOrgIdFromSp());
     }
 
+    /**
+     * 统计数据
+     */
+    @Deprecated
     private void initStats() {
         ThreadManager.getInstance().execute(new Runnable() {
             @Override

@@ -1,11 +1,8 @@
 package com.cleverm.smartpen.util;
 
 import com.cleverm.smartpen.app.SelectTableActivity;
-import com.cleverm.smartpen.bean.evnet.OnToastEvent;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
-
-import org.greenrobot.eventbus.EventBus;
 
 import okhttp3.Call;
 

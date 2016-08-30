@@ -2,16 +2,13 @@ package com.cleverm.smartpen.util;
 
 import android.media.MediaPlayer;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.VideoView;
 
 
 import com.cleverm.smartpen.application.SmartPenApplication;
 import com.cleverm.smartpen.bean.VideoInfo;
-import com.cleverm.smartpen.bean.evnet.OnVideoBackEvent;
+import com.cleverm.smartpen.bean.event.OnVideoBackEvent;
 import com.cleverm.smartpen.log.FileUtil;
-import com.google.zxing.client.result.VINParsedResult;
-import com.iflytek.cloud.Setting;
 
 import org.greenrobot.eventbus.EventBus;
 

@@ -6,21 +6,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.cleverm.smartpen.bean.evnet.OnOutOfChargingEvent;
 import com.cleverm.smartpen.net.InfoSendSMSVo;
 import com.cleverm.smartpen.net.RequestNet;
 import com.cleverm.smartpen.util.Constant;
-import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
-import com.cleverm.smartpen.util.SmsAPIUtil;
 import com.cleverm.smartpen.util.ThreadManager;
-import com.cleverm.smartpen.util.service.ApolloUtil;
-
-import org.greenrobot.eventbus.EventBus;
-
-import java.util.concurrent.Executors;
 
 /**
  * Created by xiong,An android project Engineer,on 17/5/2016.

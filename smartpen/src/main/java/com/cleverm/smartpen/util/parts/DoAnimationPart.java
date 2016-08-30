@@ -3,15 +3,10 @@ package com.cleverm.smartpen.util.parts;
 
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.MainThread;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.cleverm.smartpen.R;
 import com.cleverm.smartpen.application.SmartPenApplication;
-import com.cleverm.smartpen.bean.evnet.OnChangeAnimNoticeEvent;
+import com.cleverm.smartpen.bean.event.OnChangeAnimNoticeEvent;
 import com.cleverm.smartpen.util.Constant;
 
 import org.greenrobot.eventbus.EventBus;

@@ -5,7 +5,6 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
@@ -26,11 +25,10 @@ import com.cleverm.smartpen.app.SimpleAppActivity;
 import com.cleverm.smartpen.app.VideoActivity;
 import com.cleverm.smartpen.application.SmartPenApplication;
 import com.cleverm.smartpen.bean.TemplateIDState;
-import com.cleverm.smartpen.bean.evnet.OnDestoryActivityEvent;
-import com.cleverm.smartpen.bean.evnet.OnMessageCallEvent;
-import com.cleverm.smartpen.bean.evnet.OnRobotShowEvent;
+import com.cleverm.smartpen.bean.event.OnDestoryActivityEvent;
+import com.cleverm.smartpen.bean.event.OnMessageCallEvent;
+import com.cleverm.smartpen.bean.event.OnRobotShowEvent;
 import com.cleverm.smartpen.service.penService;
-import com.cleverm.smartpen.util.parts.DoAnimationPart;
 import com.cleverm.smartpen.util.service.ApolloUtil;
 
 import org.greenrobot.eventbus.EventBus;
