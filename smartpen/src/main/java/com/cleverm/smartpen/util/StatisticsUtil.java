@@ -124,6 +124,24 @@ public class StatisticsUtil {
     public static final int VIDEO_AD_DETAIL=31;
     public static final String VIDEO_AD_DETAIL_DESC="视频广告详情";
 
+    public static final int APP_PRIZE_GOIN=32;
+    public static final String APP_PRIZE_GOIN_DESC="抽奖活动";
+
+    public static final int APP_PRIZE_CLICKDRAW=33;
+    public static final String APP_PRIZE_CLICKDRAW_DESC="点击抽奖";
+
+    public static final int APP_PRIZE_INPUTPHONE=34;
+    public static final String APP_PRIZE_INPUTPHONE_DESC="输入手机号";
+
+    public static final int APP_PRIZE_RECEIVEGOODS=35;
+    public static final String APP_PRIZE_RECEIVEGOODS_DESC="领取奖品";
+
+    //主事件为36，二级事件值为 该云端奖券的prizeID值
+    public static final int APP_PRIZE_SERVER_LUCKYID=36;
+    public static final String APP_PRIZE_SERVER_LUCKYID_DESC="云端奖券";
+
+
+
 
     //点点笔数据库名
     //private static final String DB_NAME="ddb_db";//第一个版本的数据库名称ddb_db，增加flag字段后为了不出现crash,取新名ddb_db2

@@ -19,8 +19,8 @@ import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.RememberUtil;
 import com.cleverm.smartpen.util.StatisticsUtil;
 import com.cleverm.smartpen.util.cache.FileRememberUtil;
-import com.cleverm.smartpen.util.device.EasyDeviceInfo;
-import com.cleverm.smartpen.util.evnet.BroadcastEvent;
+import com.cleverm.smartpen.util.common.EasyCommonInfo;
+import com.cleverm.smartpen.util.event.BroadcastEvent;
 import com.cleverm.smartpen.util.excle.CreateExcel;
 import com.cleverm.smartpen.util.parts.DoBlePart;
 import com.cleverm.smartpen.util.service.ApolloUtil;
@@ -57,23 +57,68 @@ public class SmartPenApplication extends Application {
      */
     private static  boolean isSimpleVersion=true;
 
+    /**
+     * 是否废弃功能
+     */
+    private boolean negativeDiscard = false;
+
+    /**
+     * 是否debug模式
+     */
+    public static boolean isDebug=false;
+
+
     @Override
     public void onCreate() {
         super.onCreate();
         application=this;
-        initNet();
-        DoBlePart.openBLEPen(this);
-        CrashHandler.getInstance().init(this, PATH);
-        MobclickAgent.setCatchUncaughtExceptions(true);
-        RememberUtil.init(getApplicationContext(), PREFS_NAME);
-        FileRememberUtil.init(getApplicationContext());
-        initImageLoader();
-        initDownloader();
-        initEvnet();
-        initDataBase();
-        PowerReceiver.getInstance().register(this);
+        initSystemListener();
+        initFileAndDatabase();
+        initImageManager();
     }
 
+
+    private void initSystemListener() {
+        DoBlePart.openBLEPen(this);
+        wakeUpAndUnlock(this);
+        ScreenLockUtil.getInstance().bindService(this);
+        PowerReceiver.getInstance().register(this);
+        MobclickAgent.setCatchUncaughtExceptions(true);
+    }
+
+    private void initFileAndDatabase() {
+        RememberUtil.init(getApplicationContext(), PREFS_NAME);
+        FileRememberUtil.init(getApplicationContext());
+        initDownloader();
+        initEvent();
+        initDataBase();
+    }
+
+
+    private void initImageManager() {
+        initImageLoader();
+    }
+
+
+    /**
+     * 废弃功能代码,关闭
+     * use on onCreate()
+     */
+    @Deprecated
+    private void discard() {
+        if(negativeDiscard){
+            //abandon  long communication
+            Intent intent = new Intent(this, CommunicationService.class);
+            intent.setAction(Constant.ACTION_CONNECT_SOCKET);
+            startService(intent);
+            //abandon pen service
+            PenUtil.getInstance().bindService(this);
+            //abandon apollo dance
+            ApolloUtil.getInstance().bindService(this);
+            //abandon crash log
+            CrashHandler.getInstance().init(this, PATH);
+        }
+    }
 
 
     private void initImageLoader() {
@@ -103,13 +148,13 @@ public class SmartPenApplication extends Application {
                 AlgorithmUtil.FILE_MFILE, AlgorithmUtil.FILE_MORG,
                 AlgorithmUtil.FILE_MSCREEN, CreateExcel.EXPORT_PATH
         );
-        EasyDeviceInfo.getInstance().FILE().copyByNIO(new File(AlgorithmUtil.OLD_ORG_PATH),new File(AlgorithmUtil.FILE_MORG_ORG_TEXT),false);
+        EasyCommonInfo.getInstance().FILE().copyByNIO(new File(AlgorithmUtil.OLD_ORG_PATH),new File(AlgorithmUtil.FILE_MORG_ORG_TEXT),false);
         StatisticsUtil.DaoReturnValue daoReturnValue = StatisticsUtil.getInstance().onInit(this);
         db=daoReturnValue.getDb();
         statsDao = daoReturnValue.getStatsDao();
     }
 
-    private void initEvnet() {
+    private void initEvent() {
         BroadcastEvent.init(this);
     }
 
@@ -143,15 +188,7 @@ public class SmartPenApplication extends Application {
         onExit();
     }
 
-    private void initNet() {
-        wakeUpAndUnlock(this);
-        Intent intent = new Intent(this, CommunicationService.class);
-        intent.setAction(Constant.ACTION_CONNECT_SOCKET);
-        startService(intent);
-        PenUtil.getInstance().bindService(this);
-        ScreenLockUtil.getInstance().bindService(this);
-        ApolloUtil.getInstance().bindService(this);
-    }
+
 
     public static void wakeUpAndUnlock(Context context){
         KeyguardManager km= (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
@@ -168,18 +205,22 @@ public class SmartPenApplication extends Application {
         wl.release();
     }
 
+    /**
+     * 废弃功能
+     * use on onExit()
+     */
+    @Deprecated
     private void closeNet() {
         Intent intent = new Intent(this, CommunicationService.class);
         intent.setAction(Constant.ACTION_CONNECT_SOCKET);
         stopService(intent);
         PenUtil.getInstance().unbindServcie(this);
         ApolloUtil.getInstance().unbindService(this);
-        ScreenLockUtil.getInstance().unbindServcie(this);
     }
 
     public void onExit(){
-        closeNet();
         DoBlePart.closedBLEPen();
+        ScreenLockUtil.getInstance().unbindServcie(this);
         PowerReceiver.getInstance().unregister(this);
         System.exit(0);
     }

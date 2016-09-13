@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -36,6 +35,7 @@ import com.cleverm.smartpen.ui.LongPressView;
 import com.cleverm.smartpen.util.Constant;
 import com.cleverm.smartpen.util.DownloadUtil;
 import com.cleverm.smartpen.util.IntentUtil;
+import com.cleverm.smartpen.util.LuckyDrawUtil;
 import com.cleverm.smartpen.util.NetWorkUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.RememberUtil;
@@ -525,6 +525,11 @@ public class SimpleAppActivity extends BaseActivity implements View.OnClickListe
         findViewById(R.id.iv_levitate_pay_unioncard).setOnClickListener(this);
         findViewById(R.id.iv_levitate_pay_cash).setOnClickListener(this);
         findViewById(R.id.iv_ad_detail).setOnClickListener(this);
+        findViewById(R.id.iv_go_lucky).setOnClickListener(this);
+
+        AnimationDrawable frameAnim = (AnimationDrawable) getResources().getDrawable(R.drawable.lucky_goin_common_fram);
+        findViewById(R.id.iv_go_lucky).setBackgroundDrawable(frameAnim);
+        frameAnim.start();
 
     }
 
@@ -540,10 +545,11 @@ public class SimpleAppActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void doTimerClock() {
-        VideoPCUtil.getInstance().start(this);//PC Video
+        //VideoPCUtil.getInstance().start(this);//PC Video
         new InformationOnline().start(this, InformationOnline.Time.REBOOT);//Clock
         new InformationOnline().start(this, InformationOnline.Time.TWELVE_AM);
         new InformationOnline().start(this, InformationOnline.Time.SEVEN_PM);
+        LuckyDrawUtil.getInstance().getPrizeList();//Lucky
     }
 
     private void checkNetState() {
@@ -585,15 +591,19 @@ public class SimpleAppActivity extends BaseActivity implements View.OnClickListe
                 break;
 
             case R.id.iv_go_discount://优惠专区
-                /*if (isHaveData) {
+                if (isHaveData) {
                     IntentUtil.goToDiscountActivity(mContext);
                 } else {
                     IntentUtil.goToUnknow(mContext);
                 }
                 hidePayLevitate();
-                doStatistic(StatisticsUtil.SERVICE_DISCOUNT,StatisticsUtil.SERVICE_DISCOUNT_DESC);*/
-                Intent intent = new Intent(this,LuckyDrawActivity.class);
-                startActivity(intent);
+                doStatistic(StatisticsUtil.SERVICE_DISCOUNT,StatisticsUtil.SERVICE_DISCOUNT_DESC);
+
+                break;
+
+            case R.id.iv_go_lucky:
+                IntentUtil.goToLuckyActivity(SimpleAppActivity.this);
+                doStatistic(StatisticsUtil.APP_PRIZE_GOIN, StatisticsUtil.APP_PRIZE_GOIN_DESC);
                 break;
 
             case R.id.iv_go_shop://在线商场--统计代码在goToLauncherApp()
@@ -852,11 +862,15 @@ public class SimpleAppActivity extends BaseActivity implements View.OnClickListe
             findViewById(R.id.iv_ad_detail).setVisibility(View.VISIBLE);
             mAdAnim.setBackgroundResource(R.drawable.frame_video_wangwang);
             AnimationDrawable mAdanimDrawable = (AnimationDrawable) mAdAnim.getBackground();
-            mAdanimDrawable.start();
+            if(mAdanimDrawable!=null){
+                mAdanimDrawable.start();
+            }
         }else{
             findViewById(R.id.iv_ad_detail).setVisibility(View.INVISIBLE);
             AnimationDrawable mAdanimDrawable = (AnimationDrawable) mAdAnim.getBackground();
-            mAdanimDrawable.stop();
+            if(mAdanimDrawable!=null){
+                mAdanimDrawable.stop();
+            }
         }
     }
 

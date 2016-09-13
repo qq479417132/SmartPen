@@ -20,4 +20,12 @@ public class JsonUtil {
         List list = JSON.parseArray(data, clazz);
         return list;
     }
+
+    public static final <T> T parserObject(String result,Class<T> clazz) throws JSONException{
+        JSONObject json = new JSONObject(result);
+        String data = json.getString("data");
+        T object = JSON.parseObject(data, clazz);
+        return object;
+    }
+
 }

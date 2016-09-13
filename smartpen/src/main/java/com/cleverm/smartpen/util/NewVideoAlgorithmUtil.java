@@ -8,6 +8,7 @@ package com.cleverm.smartpen.util;
  * Version:1.0
  * Open source
  */
+@Deprecated
 public class NewVideoAlgorithmUtil {
 
     private NewVideoAlgorithmUtil INSTANCE = new NewVideoAlgorithmUtil();
@@ -23,12 +24,7 @@ public class NewVideoAlgorithmUtil {
      * 3.这些操作都级联到paly目录  进行copy操作
      */
     public static void startFirstTime(){
-
-        //在线播放,并下载
-
-
-
-
+        //@Deprecated
     }
 
 

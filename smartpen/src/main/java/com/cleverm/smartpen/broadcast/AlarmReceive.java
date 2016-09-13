@@ -8,7 +8,7 @@ import com.alibaba.fastjson.JSON;
 import com.cleverm.smartpen.util.AlgorithmUtil;
 import com.cleverm.smartpen.util.QuickUtils;
 import com.cleverm.smartpen.util.ThreadManager;
-import com.cleverm.smartpen.util.device.EasyDeviceInfo;
+import com.cleverm.smartpen.util.common.EasyCommonInfo;
 import com.cleverm.smartpen.util.online.InformationOnline;
 import com.cleverm.smartpen.util.online.JsonStaus;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -17,8 +17,6 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import okhttp3.Call;
@@ -147,7 +145,7 @@ public class AlarmReceive extends BroadcastReceiver {
     }
 
     private String getBoardNo() {
-        return EasyDeviceInfo.getInstance().PHONE().IMEI();
+        return EasyCommonInfo.getInstance().PHONE().IMEI();
     }
 
     /**
@@ -156,7 +154,7 @@ public class AlarmReceive extends BroadcastReceiver {
      * @return
      */
     private String getProductPower() {
-        return EasyDeviceInfo.getInstance().PHONE().batteryPercentage() + "%";
+        return EasyCommonInfo.getInstance().PHONE().batteryPercentage() + "%";
     }
 
     /**
@@ -165,7 +163,7 @@ public class AlarmReceive extends BroadcastReceiver {
      * @return
      */
     private String getProductGlobalIp() {
-        return EasyDeviceInfo.getInstance().IP().global();
+        return EasyCommonInfo.getInstance().IP().global();
     }
 
     /**
@@ -174,7 +172,7 @@ public class AlarmReceive extends BroadcastReceiver {
      * @return
      */
     private String getProductLocalIp() {
-        return EasyDeviceInfo.getInstance().IP().v4();
+        return EasyCommonInfo.getInstance().IP().v4();
     }
 
     /**
@@ -191,11 +189,11 @@ public class AlarmReceive extends BroadcastReceiver {
     }
 
     private String getSoftVersionCode() {
-        return String.valueOf(EasyDeviceInfo.getInstance().APP().versionCode());
+        return String.valueOf(EasyCommonInfo.getInstance().APP().versionCode());
     }
 
     private String getSoftVersionName() {
-        return EasyDeviceInfo.getInstance().APP().versionName();
+        return EasyCommonInfo.getInstance().APP().versionName();
     }
 
     /**
@@ -205,7 +203,7 @@ public class AlarmReceive extends BroadcastReceiver {
      * @return
      */
     private String getChargeStatus() {
-        boolean isCharging = EasyDeviceInfo.getInstance().PHONE().deviceCharging();
+        boolean isCharging = EasyCommonInfo.getInstance().PHONE().deviceCharging();
         if (isCharging) {
             return "0";
         }
@@ -213,19 +211,19 @@ public class AlarmReceive extends BroadcastReceiver {
     }
 
     private String getRamStatus() {
-        return EasyDeviceInfo.getInstance().RAM().information();
+        return EasyCommonInfo.getInstance().RAM().information();
     }
 
     private String getRomStatus() {
-        return EasyDeviceInfo.getInstance().ROM().information();
+        return EasyCommonInfo.getInstance().ROM().information();
     }
 
     private String getVolume() {
-        return EasyDeviceInfo.getInstance().PHONE().audioValue();
+        return EasyCommonInfo.getInstance().PHONE().audioValue();
     }
 
     private String getWifiStatus() {
-        return EasyDeviceInfo.getInstance().IP().wifiRssi();
+        return EasyCommonInfo.getInstance().IP().wifiRssi();
     }
 
     private String getQiniuPath() {
@@ -233,19 +231,19 @@ public class AlarmReceive extends BroadcastReceiver {
     }
 
     private String getMacAddress() {
-        return EasyDeviceInfo.getInstance().IP().mac();
+        return EasyCommonInfo.getInstance().IP().mac();
     }
 
     private String getPadMode() {
-        return EasyDeviceInfo.getInstance().PHONE().padMode();
+        return EasyCommonInfo.getInstance().PHONE().padMode();
     }
 
     private String getOSVersion() {
-        return EasyDeviceInfo.getInstance().APP().versionOs();
+        return EasyCommonInfo.getInstance().APP().versionOs();
     }
 
     private String getTimestamp() {
-        return EasyDeviceInfo.getInstance().PHONE().timeMillis();
+        return EasyCommonInfo.getInstance().PHONE().timeMillis();
     }
 
 
@@ -253,7 +251,7 @@ public class AlarmReceive extends BroadcastReceiver {
         ThreadManager.getInstance().execute(new Runnable() {
             @Override
             public void run() {
-                EasyDeviceInfo.getInstance().FILE().write(new File(AlgorithmUtil.FILE_MFILE + AlgorithmUtil.FILE_MFILE_ONLINE_TEXT), wirteText(json,isSuccess));
+                EasyCommonInfo.getInstance().FILE().write(new File(AlgorithmUtil.FILE_MFILE + AlgorithmUtil.FILE_MFILE_ONLINE_TEXT), wirteText(json,isSuccess));
             }
         });
     }
@@ -266,17 +264,17 @@ public class AlarmReceive extends BroadcastReceiver {
      * @return
      */
     private String wirteText(String json,boolean isSucess) {
-        String read = EasyDeviceInfo.getInstance().FILE().read(new File(AlgorithmUtil.FILE_MFILE + AlgorithmUtil.FILE_MFILE_ONLINE_TEXT));
+        String read = EasyCommonInfo.getInstance().FILE().read(new File(AlgorithmUtil.FILE_MFILE + AlgorithmUtil.FILE_MFILE_ONLINE_TEXT));
         if(read==null){
             String firstLine="Date,EXT_TYPE,Boolean"+"\r\n";
-            EasyDeviceInfo.getInstance().FILE().write(new File(AlgorithmUtil.FILE_MFILE + AlgorithmUtil.FILE_MFILE_ONLINE_TEXT),firstLine);
+            EasyCommonInfo.getInstance().FILE().write(new File(AlgorithmUtil.FILE_MFILE + AlgorithmUtil.FILE_MFILE_ONLINE_TEXT),firstLine);
         }else{
             QuickUtils.log("文件中内容="+read);
         }
 
         JsonStaus bean = JSON.parseObject(json, JsonStaus.class);
         String timestamp = bean.getTimestamp();
-        String date=EasyDeviceInfo.getInstance().TIME().convertTimestamp(timestamp);
+        String date= EasyCommonInfo.getInstance().TIME().convertTimestamp(timestamp);
         String type="EXT_TYPE";
         String productStatusTypeId = bean.getProductStatusTypeId();
         if (productStatusTypeId.equals("1")) {

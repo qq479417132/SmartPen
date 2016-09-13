@@ -8,6 +8,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cleverm.smartpen.R;
+import com.cleverm.smartpen.util.LuckyDrawUtil;
+import com.cleverm.smartpen.util.QuickUtils;
 
 /**
  * Created by xiong,An android project Engineer,on 29/8/2016.
@@ -59,6 +61,11 @@ public class LuckyItem extends RelativeLayout{
             mItemImage.setImageBitmap(bitmap);
         }
     }
+
+    public void setImageUrl(String url){
+        QuickUtils.displayImage(LuckyDrawUtil.getInstance().URL_SPLITE_IMAGE+url, mItemImage);
+    }
+
 
     public void setImageText(String text){
         if(mItemText!=null){

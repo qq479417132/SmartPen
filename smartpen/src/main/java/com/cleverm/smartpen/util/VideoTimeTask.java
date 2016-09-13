@@ -15,6 +15,7 @@ import java.util.TimerTask;
  * Version:1.0
  * Open source
  */
+@Deprecated
 public class VideoTimeTask extends TimerTask {
 
     private FullScreenVideoView vvAdvertisement;

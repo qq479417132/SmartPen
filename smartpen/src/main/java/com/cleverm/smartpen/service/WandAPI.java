@@ -14,11 +14,9 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.cleverm.smartpen.R;
-import com.cleverm.smartpen.util.evnet.util.BroadcastCx;
-import com.cleverm.smartpen.util.evnet.util.BroadcastUtil;
+import com.cleverm.smartpen.util.event.util.BroadcastCx;
+import com.cleverm.smartpen.util.event.util.BroadcastUtil;
 
 import java.util.HashMap;
 import java.util.Iterator;

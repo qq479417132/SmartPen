@@ -10,7 +10,6 @@ import android.media.AudioManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
-import android.os.Debug;
 import android.os.Looper;
 import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
@@ -27,12 +26,9 @@ import com.cleverm.smartpen.bean.DiscountInfo;
 import com.cleverm.smartpen.net.InfoSendSMSVo;
 import com.cleverm.smartpen.net.RequestNet;
 import com.cleverm.smartpen.pushtable.UpdateTableHandler;
-import com.cleverm.smartpen.ui.LongPressView;
 import com.cleverm.smartpen.ui.windows.engineer.EngineerUtil;
 import com.cleverm.smartpen.util.cache.FileRememberUtil;
-import com.cleverm.smartpen.util.device.Application;
-import com.cleverm.smartpen.util.device.EasyDeviceInfo;
-import com.google.zxing.oned.EAN13Reader;
+import com.cleverm.smartpen.util.common.EasyCommonInfo;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -46,14 +42,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -173,9 +163,19 @@ public class QuickUtils {
     public static void log(String message) {
         StackTraceElement caller = getCallerStackTraceElement();
         String tag = generateTag(caller);
-        Log.i(tag, message);
+        if(SmartPenApplication.isDebug){
+            Log.i(tag, message);
+        }
         if(RememberUtil.getBoolean(Constant.HIDDEN_DOOR_ENGINEER_KEY,false)){
-            EngineerUtil.getInstance().log(tag+log_splite+message);
+            String time = EasyCommonInfo.getInstance().TIME().convertTimestamp(System.currentTimeMillis() + "");
+            final String text = time+"  "+tag+log_splite+message;
+            EngineerUtil.getInstance().log(text);
+            ThreadManager.getInstance().execute(new Runnable() {
+                @Override
+                public void run() {
+                    EasyCommonInfo.getInstance().FILE().write(new File(AlgorithmUtil.FILE_MFILE + AlgorithmUtil.FILE_MFILE_DEBUG_TEXT), text+"\r\n");
+                }
+            });
         }else{
             EngineerUtil.getInstance().destory();
         }
@@ -780,6 +780,25 @@ public class QuickUtils {
             dest = m.replaceAll("");
         }
         return dest;
+    }
+
+
+    public static void doStatistic(final int eventId, final String eventDesc) {
+        ThreadManager.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                StatisticsUtil.getInstance().insert(eventId, eventDesc);
+            }
+        });
+    }
+
+    public static void doStatistic(final int eventId, final String eventDesc, final Long secondEventId) {
+        ThreadManager.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                StatisticsUtil.getInstance().insertWithSecondEvent(eventId, eventDesc, secondEventId);
+            }
+        });
     }
 
 

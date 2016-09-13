@@ -2,6 +2,7 @@ package com.cleverm.smartpen.ui.lucky;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -12,6 +13,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.cleverm.smartpen.R;
+import com.cleverm.smartpen.util.WeakHandler;
+
+import java.util.List;
 
 /**
  * Created by xiong,An android project Engineer,on 29/8/2016.
@@ -23,12 +27,18 @@ import com.cleverm.smartpen.R;
  */
 public class LuckyView extends RelativeLayout {
 
-    private static final int DEF_MIN_WIDTH = 200;
+    private static final String TAG=LuckyView.class.getSimpleName();
+
+    private static final int DEF_MIN_WIDTH = 350;
     private static final int DEF_MIN_HEIGHT = 200;
 
+    private static final int ITEM_WIDTH=263;
+    private static final int ITEM_HEIGHT=158;
+
     private static final int PRIZE_COUNT = 8;
-    private Runnable mLuckyRunnable;
+    private LuckyRunnable mLuckyRunnable;
     private ImageView mViewStart;
+    RelativeLayout mLuckyOutbg;
 
 
     private Handler mHandler = new Handler(getContext().getMainLooper());
@@ -59,6 +69,8 @@ public class LuckyView extends RelativeLayout {
         mViewStart = (ImageView) findViewById(R.id.util_lucky_view_start);
         mViewStart.setOnClickListener(onClickStart());
 
+        mLuckyOutbg = (RelativeLayout) findViewById(R.id.util_lucky_outbg);
+
         mLuckyItem[0] = (LuckyItem) findViewById(R.id.util_lucky_view_1);
         mLuckyItem[1] = (LuckyItem) findViewById(R.id.util_lucky_view_2);
         mLuckyItem[2] = (LuckyItem) findViewById(R.id.util_lucky_view_3);
@@ -76,37 +88,40 @@ public class LuckyView extends RelativeLayout {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.LuckyView);
         Drawable startSrc = typedArray.getDrawable(R.styleable.LuckyView_startSrc);
         Drawable startBackgroud = typedArray.getDrawable(R.styleable.LuckyView_startBackgroud);
-        Drawable prizeBackgroud = typedArray.getDrawable(R.styleable.LuckyView_prizeBackgroud);
         typedArray.recycle();
 
         mViewStart.setImageDrawable(startSrc);
         if(startBackgroud==null){
-            mViewStart.setBackgroundResource(R.drawable.lucky_draw_btn_selector);
+            mViewStart.setBackgroundResource(R.drawable.lucky_draw_start_selector);
         }else{
             mViewStart.setBackgroundDrawable(startBackgroud);
         }
-        for(int i =0;i<mLuckyItem.length;i++){
-            if(prizeBackgroud==null){
+
+        for (int i = 0; i < mLuckyItem.length; i++) {
+            //if (prize_backgroud == null) {
                 mLuckyItem[i].setBackgroundResource(R.drawable.lucky_draw_item_selector);
-            }else{
-                mLuckyItem[i].setBackgroundDrawable(prizeBackgroud);
-            }
+            //} else {
+             //   mLuckyItem[i].setBackgroundDrawable(prize_backgroud);
+            //}
         }
+
+        AnimationDrawable frameAnim = (AnimationDrawable) getResources().getDrawable(R.drawable.lucky_draw_outbg_fram);
+        mLuckyOutbg.setBackgroundDrawable(frameAnim);
+        frameAnim.start();
+
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if(getMeasuredWidth()!=0&&getMeasuredHeight()!=0){
+        if(getMeasuredWidth()!= 0 && getMeasuredHeight() != 0){
             initMeasureView(getMeasuredWidth(), getMeasuredHeight());
         }
     }
 
     private void initMeasureView(int width, int height) {
-
         mWidth = width;
         mHeight = height;
-
         // 如果大小小于最小值，则重新设置大小为最小值
         if (width < DEF_MIN_WIDTH || height < DEF_MIN_HEIGHT) {
             if (width < DEF_MIN_WIDTH) {
@@ -118,40 +133,47 @@ public class LuckyView extends RelativeLayout {
             setMeasuredDimension(mWidth, mHeight);
             return;
         }
-
-        // 设置 奖品Imte及开始按钮的大小
-        float size = (float) (((width < height ? width : height) - dp2px(8) * 2.0) / 3.0);
+        // 设置 奖品Item及开始按钮的大小
         ViewGroup.LayoutParams lp = mViewStart.getLayoutParams();
-        lp.width = (int) size;
-        lp.height = (int) size;
+        lp.width = (int) ITEM_WIDTH;
+        lp.height = (int) ITEM_HEIGHT;
         mViewStart.setLayoutParams(lp);
         for (int i = 0; i < mLuckyItem.length; i++) {
             lp = mLuckyItem[i].getLayoutParams();
-            lp.width = (int) size;
-            lp.height = (int) size;
+            lp.width = (int) ITEM_WIDTH;
+            lp.height = (int) ITEM_HEIGHT;
             mLuckyItem[i].setLayoutParams(lp);
         }
 
 
     }
 
+    private boolean isRunning=false;
+
     private OnLuckyRotationListener luckyDrawRotation() {
         return new OnLuckyRotationListener() {
             @Override
             public void startRotation() {
+                isRunning=true;
                 mViewStart.setEnabled(false);
                 setKeepScreenOn(true);
                 if (mOnLuckyDrawListener != null) {
-                    mOnLuckyDrawListener.stop();
+                    mOnLuckyDrawListener.start();
                 }
             }
 
             @Override
             public void stopRotation() {
-                mViewStart.setEnabled(true);
+                isRunning=false;
+                new WeakHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mViewStart.setEnabled(true);
+                    }
+                },500);
                 setKeepScreenOn(false);
                 if (mOnLuckyDrawListener != null) {
-                    mOnLuckyDrawListener.start();
+                    mOnLuckyDrawListener.stop();
                 }
             }
         };
@@ -179,10 +201,10 @@ public class LuckyView extends RelativeLayout {
         private OnLuckyRotationListener mRotationListener;
 
         private final int MIN_TIME_INTERVAL = 200;		// 最小时间间隔
-        private final int MAX_TIME_INTERVAL = 800;		// 最大时间间隔
-        private int mTimeInterval = 800;               // 时间间隔
+        private final int MAX_TIME_INTERVAL = 400;		// 最大时间间隔
+        private int mTimeInterval = 400;               // 时间间隔
         private int mEnd;                               // 停止位置
-        private final int ROTATION_COUNT = 3;          // 高速旋转的圈数
+        private final int ROTATION_COUNT = 1;          // 高速旋转的圈数
         private boolean isStop;                         // 是否停止状态
         private boolean isDeceleration;                 // 是否开始减速
 
@@ -374,6 +396,49 @@ public class LuckyView extends RelativeLayout {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getContext().getResources().getDisplayMetrics());
     }
 
+    public void stop(int end) {
+        mLuckyRunnable.stop(end);
+    }
+
+    public void clean() {
+        for (int i = 0; i < mLuckyItem.length; i++) {
+            mLuckyItem[i].setSelected(false);
+        }
+        mViewStart.setEnabled(false);
+        setKeepScreenOn(false);
+    }
+
+    public void setPrizeResources(List<Integer> res){
+        if(mLuckyItem!=null){
+            for(int i =0; i < (mLuckyItem.length < res.size() ? mLuckyItem.length : res.size());i++){
+                mLuckyItem[i].setImageResource(res.get(i));
+            }
+        }
+    }
+
+    public void setPrizeImageUrl(List<String> urls){
+        if(mLuckyItem!=null){
+            for(int i =0; i < (mLuckyItem.length < urls.size() ? mLuckyItem.length : urls.size());i++){
+                mLuckyItem[i].setImageUrl(urls.get(i));
+            }
+        }
+    }
 
 
+    public void setPrizeText(List<String> text){
+        if(mLuckyItem!=null){
+            for(int i =0; i < (mLuckyItem.length < text.size() ? mLuckyItem.length : text.size());i++){
+                mLuckyItem[i].setImageText(text.get(i));
+            }
+        }
+    }
+
+
+    public void setStartEnable(boolean enable){
+        mViewStart.setEnabled(enable);
+    }
+
+    public boolean isRunning() {
+        return isRunning;
+    }
 }

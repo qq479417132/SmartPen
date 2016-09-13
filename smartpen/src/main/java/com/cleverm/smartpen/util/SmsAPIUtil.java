@@ -14,6 +14,7 @@ import okhttp3.Call;
  * Version:1.0
  * Open source
  */
+@Deprecated
 public class SmsAPIUtil {
 
     private static final String TAG = "SmsAPIUtil：";

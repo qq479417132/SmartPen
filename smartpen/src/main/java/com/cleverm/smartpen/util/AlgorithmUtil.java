@@ -31,10 +31,12 @@ public class AlgorithmUtil {
     public static final String VIDEO_DEMO_FILE=OFFICIAL_BASE_FILE + File.separator+"mdemo";
     public static final String FILE_MFILE=OFFICIAL_BASE_FILE+File.separator+"mfile";
     public static final String FILE_MFILE_ONLINE_TEXT="/online.csv";
+    public static final String FILE_MFILE_DEBUG_TEXT="/debug.deb";
     public static final String FILE_MORG=OFFICIAL_BASE_FILE+File.separator+"morg";
     public static final String FILE_MORG_ORG_TEXT=FILE_MORG+ File.separator+"smartpen.txt";
     public static final String FILE_MAPK=OFFICIAL_BASE_FILE+File.separator+"mapk";
     public static final String FILE_MSCREEN=OFFICIAL_BASE_FILE+File.separator+"mscreen";
+
     public static final String DOWNLOAD_APK_FILE=Environment.getExternalStorageDirectory().getAbsolutePath();
 
     public static final String OLD_ORG_PATH=Environment.getExternalStorageDirectory().getPath()+"/SystemPen/smartpen.txt";

@@ -18,6 +18,7 @@ import com.cleverm.smartpen.app.EvaluateActivity;
 import com.cleverm.smartpen.app.FutureActivity;
 import com.cleverm.smartpen.app.GameActivity;
 import com.cleverm.smartpen.app.LocalDiscountActivity;
+import com.cleverm.smartpen.app.LuckyDrawActivity;
 import com.cleverm.smartpen.app.PayActivity;
 import com.cleverm.smartpen.app.ScrollDiscountActivity;
 import com.cleverm.smartpen.app.SelectTableActivity;
@@ -379,6 +380,18 @@ public class IntentUtil {
             service.startActivity(intent);
         }
     }
+
+    public static void goToLuckyActivity(Context service){
+        QuickUtils.log("ActivityTag=" + Constant.NEW_FLAG);
+        if (!Constant.NEW_FLAG.equals(LuckyDrawActivity.class.getSimpleName())) {
+            Intent intent = new Intent(service, LuckyDrawActivity.class);
+            intentFlagNotClear(intent);
+            clearRedundantActivity();
+            service.startActivity(intent);
+        }
+    }
+
+
 
     /**
      * 本店推荐
