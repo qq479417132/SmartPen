@@ -1,56 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+              xmlns:app="http://schemas.android.com/apk/com.cleverm.smartpen"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@mipmap/icon_lucky_bg"
+              android:orientation="vertical">
 
-
-
-    android:background="#EA4323"
-    android:orientation="horizontal">
 
     <FrameLayout
-        android:layout_weight="8"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.cleverm.smartpen.ui.lucky.LuckyView
-            android:id="@+id/lv_luck_draw"
+        <ImageView
+            android:id="@+id/ll_lucky_back"
+            android:background="@drawable/select_lucky_draw_back"
             android:layout_width="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="24dp"
             android:layout_height="wrap_content"/>
 
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
+        android:layout_marginTop="23dp"
+        android:background="@mipmap/icon_lucky_title"/>
 
     </FrameLayout>
 
-
     <LinearLayout
-        android:layout_weight="2"
-        android:layout_width="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:layout_height="wrap_content">
-
-       <TextView
-           android:text="活动细则"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="23dp"
+        android:orientation="horizontal">
 
 
-        <TextView
-            android:text="
-            1.原则“人人有奖，永不落空”；\n
-            2.可多次抽奖；\n
-            3.输入手机号或者扫描二维码才能领取奖品"
+        <com.cleverm.smartpen.ui.lucky.LuckyView
+            android:id="@+id/lv_luck_draw"
+            android:layout_marginLeft="63dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_weight="6"
+            app:startBackgroud="@drawable/lucky_draw_start_selector"
+            app:startSrc="@android:color/transparent"/>
 
+
+        <LinearLayout
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="21dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="90dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/icon_lucky_notice"
+                />
+
+
+
+
+
+        </LinearLayout>
 
 
     </LinearLayout>
-
-
-
-
 
 
 </LinearLayout>

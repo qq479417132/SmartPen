@@ -5,7 +5,6 @@
     <declare-styleable name="LuckyView">
         <attr name="startSrc" format="reference"/>
         <attr name="startBackgroud" format="color|reference"/>
-        <attr name="prizeBackgroud" format="color|reference"/>
     </declare-styleable>
 
 </resources>

@@ -312,12 +312,25 @@
             android:layout_marginLeft="10dp"
             android:background="@drawable/select_simple_game"/>
 
+
+        <!--优惠专区-->
         <ImageView
             android:id="@+id/iv_go_discount"
             android:layout_width="88dp"
             android:layout_height="88dp"
             android:layout_marginLeft="10dp"
+            android:visibility="gone"
             android:background="@drawable/select_simple_discount"/>
+
+        !--抽奖专区-->
+        <ImageView
+            android:id="@+id/iv_go_lucky"
+            android:layout_width="88dp"
+            android:layout_height="88dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/select_simple_lucky"/>
+
+
 
 
         <RelativeLayout

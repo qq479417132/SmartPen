@@ -135,6 +135,9 @@
         <activity android:name=".app.LuckyDrawActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|navigation"
             android:screenOrientation="userLandscape" />
+        <activity android:name=".app.LuckyDetailActivity"
+                  android:configChanges="orientation|keyboardHidden|screenSize|navigation"
+                  android:screenOrientation="userLandscape" />
 
         <service android:name=".service.penService" />
         <service android:name=".service.ScreenLockListenService" />
