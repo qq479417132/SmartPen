@@ -23,7 +23,7 @@
         android:layout_height="166dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="26dp"
-        android:background="@mipmap/icon_lucky_detail_winning"/>
+        android:background="@mipmap/icon_lucky_detail_big_winning.png"/>
 
 
     <ImageView
